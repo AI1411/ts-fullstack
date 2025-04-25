@@ -1,0 +1,7 @@
+{
+  "name": "ts-fullstack",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ]
+}
