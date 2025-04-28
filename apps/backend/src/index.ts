@@ -2,7 +2,7 @@ import {Hono} from 'hono'
 import {cors} from 'hono/cors'
 import {zValidator} from '@hono/zod-validator'
 import {z} from 'zod'
-import {todosTable, usersTable} from './db/schema'
+import {notificationsTable, tasksTable, teamsTable, todosTable, usersTable} from './db/schema'
 import {drizzle} from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import {eq} from 'drizzle-orm'
@@ -36,6 +36,30 @@ const todoSchema = z.object({
   title: z.string().min(2),
   description: z.string().nullable().optional(),
   status: z.string().optional().default('PENDING'),
+})
+
+const teamSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(2),
+  description: z.string().nullable().optional(),
+})
+
+const taskSchema = z.object({
+  id: z.number().optional(),
+  user_id: z.number(),
+  team_id: z.number(),
+  title: z.string().min(2),
+  description: z.string().nullable().optional(),
+  status: z.string().optional().default('PENDING'),
+  due_date: z.string().nullable().optional(),
+})
+
+const notificationSchema = z.object({
+  id: z.number().optional(),
+  user_id: z.number(),
+  title: z.string().min(2),
+  message: z.string().min(2),
+  is_read: z.boolean().optional().default(false),
 })
 
 // ユーザーCRUD
@@ -220,11 +244,326 @@ const baseRoutes = app
     return c.json({message: 'Hello Hono!'})
   })
 
+// Teams CRUD
+const teamRoutes = app
+  // Create team
+  .post('/teams', zValidator('json', teamSchema, (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const {name, description} = c.req.valid('json')
+    const db = getDB(c)
+    try {
+      const team = await db.insert(teamsTable).values({
+        name,
+        description,
+      }).returning()
+      return c.json({team: team[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get all teams
+  .get('/teams', async (c) => {
+    const db = getDB(c)
+    try {
+      const teams = await db.select().from(teamsTable)
+      return c.json({teams})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get team by id
+  .get('/teams/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const team = await db.select().from(teamsTable).where(eq(teamsTable.id, id))
+      if (!team.length) {
+        return c.json({error: 'Team not found'}, 404)
+      }
+      return c.json({team: team[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Update team
+  .put('/teams/:id', zValidator('json', teamSchema.partial(), (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const data = c.req.valid('json')
+    const db = getDB(c)
+    try {
+      const updatedTeam = await db.update(teamsTable)
+        .set({...data, updated_at: new Date()})
+        .where(eq(teamsTable.id, id))
+        .returning()
+      if (!updatedTeam.length) {
+        return c.json({error: 'Team not found'}, 404)
+      }
+      return c.json({team: updatedTeam[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Delete team
+  .delete('/teams/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const deletedTeam = await db.delete(teamsTable)
+        .where(eq(teamsTable.id, id))
+        .returning()
+      if (!deletedTeam.length) {
+        return c.json({error: 'Team not found'}, 404)
+      }
+      return c.json({message: 'Team deleted successfully'})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+
+// Tasks CRUD
+const taskRoutes = app
+  // Create task
+  .post('/tasks', zValidator('json', taskSchema, (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const {user_id, team_id, title, description, status, due_date} = c.req.valid('json')
+    const db = getDB(c)
+    try {
+      const task = await db.insert(tasksTable).values({
+        user_id,
+        team_id,
+        title,
+        description,
+        status: status || 'PENDING',
+        due_date: due_date ? new Date(due_date) : null,
+      }).returning()
+      return c.json({task: task[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get all tasks
+  .get('/tasks', async (c) => {
+    const db = getDB(c)
+    try {
+      const tasks = await db.select().from(tasksTable)
+      return c.json({tasks})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get tasks by user id
+  .get('/users/:userId/tasks', async (c) => {
+    const userId = parseInt(c.req.param('userId'))
+    const db = getDB(c)
+    try {
+      const tasks = await db.select().from(tasksTable).where(eq(tasksTable.user_id, userId))
+      return c.json({tasks})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get tasks by team id
+  .get('/teams/:teamId/tasks', async (c) => {
+    const teamId = parseInt(c.req.param('teamId'))
+    const db = getDB(c)
+    try {
+      const tasks = await db.select().from(tasksTable).where(eq(tasksTable.team_id, teamId))
+      return c.json({tasks})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get task by id
+  .get('/tasks/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const task = await db.select().from(tasksTable).where(eq(tasksTable.id, id))
+      if (!task.length) {
+        return c.json({error: 'Task not found'}, 404)
+      }
+      return c.json({task: task[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Update task
+  .put('/tasks/:id', zValidator('json', taskSchema.partial(), (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const data = c.req.valid('json')
+    const db = getDB(c)
+
+    // Handle due_date conversion if it exists
+    const updateData = {...data};
+    if (data.due_date) {
+      updateData.due_date = new Date(data.due_date);
+    }
+
+    try {
+      const updatedTask = await db.update(tasksTable)
+        .set({...updateData, updated_at: new Date()})
+        .where(eq(tasksTable.id, id))
+        .returning()
+      if (!updatedTask.length) {
+        return c.json({error: 'Task not found'}, 404)
+      }
+      return c.json({task: updatedTask[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Delete task
+  .delete('/tasks/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const deletedTask = await db.delete(tasksTable)
+        .where(eq(tasksTable.id, id))
+        .returning()
+      if (!deletedTask.length) {
+        return c.json({error: 'Task not found'}, 404)
+      }
+      return c.json({message: 'Task deleted successfully'})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+
+// Notifications CRUD
+const notificationRoutes = app
+  // Create notification
+  .post('/notifications', zValidator('json', notificationSchema, (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const {user_id, title, message, is_read} = c.req.valid('json')
+    const db = getDB(c)
+    try {
+      const notification = await db.insert(notificationsTable).values({
+        user_id,
+        title,
+        message,
+        is_read: is_read || false,
+      }).returning()
+      return c.json({notification: notification[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get all notifications
+  .get('/notifications', async (c) => {
+    const db = getDB(c)
+    try {
+      const notifications = await db.select().from(notificationsTable)
+      return c.json({notifications})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get notifications by user id
+  .get('/users/:userId/notifications', async (c) => {
+    const userId = parseInt(c.req.param('userId'))
+    const db = getDB(c)
+    try {
+      const notifications = await db.select().from(notificationsTable).where(eq(notificationsTable.user_id, userId))
+      return c.json({notifications})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Get notification by id
+  .get('/notifications/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const notification = await db.select().from(notificationsTable).where(eq(notificationsTable.id, id))
+      if (!notification.length) {
+        return c.json({error: 'Notification not found'}, 404)
+      }
+      return c.json({notification: notification[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Update notification
+  .put('/notifications/:id', zValidator('json', notificationSchema.partial(), (result, c) => {
+    if (!result.success) {
+      return c.json({error: result.error.issues[0].message}, 400)
+    }
+  }), async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const data = c.req.valid('json')
+    const db = getDB(c)
+    try {
+      const updatedNotification = await db.update(notificationsTable)
+        .set({...data, updated_at: new Date()})
+        .where(eq(notificationsTable.id, id))
+        .returning()
+      if (!updatedNotification.length) {
+        return c.json({error: 'Notification not found'}, 404)
+      }
+      return c.json({notification: updatedNotification[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Mark notification as read
+  .put('/notifications/:id/read', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const updatedNotification = await db.update(notificationsTable)
+        .set({is_read: true, updated_at: new Date()})
+        .where(eq(notificationsTable.id, id))
+        .returning()
+      if (!updatedNotification.length) {
+        return c.json({error: 'Notification not found'}, 404)
+      }
+      return c.json({notification: updatedNotification[0]})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+  // Delete notification
+  .delete('/notifications/:id', async (c) => {
+    const id = parseInt(c.req.param('id'))
+    const db = getDB(c)
+    try {
+      const deletedNotification = await db.delete(notificationsTable)
+        .where(eq(notificationsTable.id, id))
+        .returning()
+      if (!deletedNotification.length) {
+        return c.json({error: 'Notification not found'}, 404)
+      }
+      return c.json({message: 'Notification deleted successfully'})
+    } catch (error: any) {
+      return c.json({error: error.message}, 500)
+    }
+  })
+
 // すべてのルートを結合
 const route = app
   .route('/', baseRoutes)
   .route('/', userRoutes)
   .route('/', todoRoutes)
+  .route('/', teamRoutes)
+  .route('/', taskRoutes)
+  .route('/', notificationRoutes)
 
 export type AppType = typeof route
 

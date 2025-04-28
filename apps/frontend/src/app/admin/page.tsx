@@ -6,7 +6,7 @@ import {useQuery} from "@tanstack/react-query";
 import StatisticsCard from "@/components/admin/dashboard/StatisticsCard";
 import RecentActivity from "@/components/admin/dashboard/RecentActivity";
 import Chart from "@/components/admin/dashboard/Chart";
-import {RiCheckLine, RiTaskLine, RiTimeLine, RiUserLine} from "react-icons/ri";
+import {RiCheckLine, RiTaskLine, RiTimeLine, RiUserLine, RiTeamLine, RiNotificationLine} from "react-icons/ri";
 
 // Todo型定義
 type Todo = {
@@ -33,12 +33,12 @@ type User = {
 const getTodos = async () => {
   const res = await client.todos.$get();
   const data = await res.json();
-  
+
   // Check if the response contains an error
   if ('error' in data) {
     throw new Error(data.error);
   }
-  
+
   return data.todos as Todo[];
 };
 
@@ -46,12 +46,12 @@ const getTodos = async () => {
 const getUsers = async () => {
   const res = await client.users.$get();
   const data = await res.json();
-  
+
   // Check if the response contains an error
   if ('error' in data) {
     throw new Error(data.error);
   }
-  
+
   return data.users as User[];
 };
 
@@ -126,6 +126,39 @@ export default function AdminDashboard() {
                   <span className="font-medium">ユーザー管理</span>
                 </div>
                 <span className="text-sm">{users.length} 件</span>
+              </Link>
+
+              <Link
+                href="/admin/tasks"
+                className="flex items-center justify-between rounded-md bg-green-50 p-4 text-green-600 transition-colors hover:bg-green-100 dark:bg-green-500/10 dark:text-green-400 dark:hover:bg-green-500/20"
+              >
+                <div className="flex items-center gap-3">
+                  <RiTaskLine className="h-6 w-6"/>
+                  <span className="font-medium">タスク管理</span>
+                </div>
+                <span className="text-sm">新機能</span>
+              </Link>
+
+              <Link
+                href="/admin/teams"
+                className="flex items-center justify-between rounded-md bg-orange-50 p-4 text-orange-600 transition-colors hover:bg-orange-100 dark:bg-orange-500/10 dark:text-orange-400 dark:hover:bg-orange-500/20"
+              >
+                <div className="flex items-center gap-3">
+                  <RiTeamLine className="h-6 w-6"/>
+                  <span className="font-medium">チーム管理</span>
+                </div>
+                <span className="text-sm">新機能</span>
+              </Link>
+
+              <Link
+                href="/admin/notifications"
+                className="flex items-center justify-between rounded-md bg-red-50 p-4 text-red-600 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20"
+              >
+                <div className="flex items-center gap-3">
+                  <RiNotificationLine className="h-6 w-6"/>
+                  <span className="font-medium">通知管理</span>
+                </div>
+                <span className="text-sm">新機能</span>
               </Link>
             </div>
           </div>
