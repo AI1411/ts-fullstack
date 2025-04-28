@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { RiDashboardLine, RiTaskLine, RiUserLine, RiHome2Line } from "react-icons/ri";
+import { RiDashboardLine, RiTaskLine, RiUserLine, RiHome2Line, RiTeamLine, RiNotificationLine } from "react-icons/ri";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -84,6 +84,39 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 >
                   <RiUserLine className="text-xl" />
                   ユーザー管理
+                </Link>
+              </li>
+
+              {/* タスク管理 */}
+              <li>
+                <Link
+                  href="/admin/tasks"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/tasks') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiTaskLine className="text-xl" />
+                  タスク管理
+                </Link>
+              </li>
+
+              {/* チーム管理 */}
+              <li>
+                <Link
+                  href="/admin/teams"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/teams') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiTeamLine className="text-xl" />
+                  チーム管理
+                </Link>
+              </li>
+
+              {/* 通知管理 */}
+              <li>
+                <Link
+                  href="/admin/notifications"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/notifications') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiNotificationLine className="text-xl" />
+                  通知管理
                 </Link>
               </li>
             </ul>
