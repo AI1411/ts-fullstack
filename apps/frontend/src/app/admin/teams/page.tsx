@@ -1,7 +1,7 @@
 'use client'
 
-import TeamList from "@/components/admin/TeamList";
-import TeamForm from "@/components/admin/TeamForm";
+import TeamList from "@/features/admin/teams/components/TeamList";
+import TeamForm from "@/features/admin/teams/components/TeamForm";
 
 export default function TeamsPage() {
   return (
@@ -12,12 +12,12 @@ export default function TeamsPage() {
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">チーム一覧</h2>
             </div>
-            <TeamList />
+            <TeamList/>
           </div>
         </div>
-        
+
         <div className="lg:col-span-1">
-          <TeamForm />
+          <TeamForm/>
         </div>
       </div>
     </div>

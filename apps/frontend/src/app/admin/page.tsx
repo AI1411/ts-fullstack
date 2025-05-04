@@ -1,12 +1,13 @@
 'use client'
 
 import Link from "next/link";
-import {client} from "@/utils/client";
 import {useQuery} from "@tanstack/react-query";
-import StatisticsCard from "@/components/admin/dashboard/StatisticsCard";
-import RecentActivity from "@/components/admin/dashboard/RecentActivity";
-import Chart from "@/components/admin/dashboard/Chart";
-import {RiCheckLine, RiTaskLine, RiTimeLine, RiUserLine, RiTeamLine, RiNotificationLine} from "react-icons/ri";
+import StatisticsCard from "@/features/admin/dashboard/components/StatisticsCard";
+import RecentActivity from "@/features/admin/dashboard/components/RecentActivity";
+import Chart from "@/features/admin/dashboard/components/Chart";
+import {RiCheckLine, RiNotificationLine, RiTaskLine, RiTeamLine, RiTimeLine, RiUserLine} from "react-icons/ri";
+import {todoService} from "@/features/admin/todos/services";
+import {userService} from "@/features/admin/users/services";
 
 // Todo型定義
 type Todo = {
@@ -29,36 +30,11 @@ type User = {
   updated_at: string;
 };
 
-// Todo一覧を取得する関数
-const getTodos = async () => {
-  const res = await client.todos.$get();
-  const data = await res.json();
-
-  // Check if the response contains an error
-  if ('error' in data) {
-    throw new Error(data.error);
-  }
-
-  return data.todos as Todo[];
-};
-
-// ユーザー一覧を取得する関数
-const getUsers = async () => {
-  const res = await client.users.$get();
-  const data = await res.json();
-
-  // Check if the response contains an error
-  if ('error' in data) {
-    throw new Error(data.error);
-  }
-
-  return data.users as User[];
-};
 
 export default function AdminDashboard() {
   // Todoとユーザーのデータを取得
-  const {data: todos = []} = useQuery({queryKey: ['todos'], queryFn: getTodos});
-  const {data: users = []} = useQuery({queryKey: ['users'], queryFn: getUsers});
+  const {data: todos = []} = useQuery({queryKey: ['todos'], queryFn: todoService.getTodos});
+  const {data: users = []} = useQuery({queryKey: ['users'], queryFn: userService.getUsers});
 
   // 完了済みTodoの数を計算
   const completedTodos = todos.filter((todo: Todo) => todo.status === 'COMPLETED').length;

@@ -1,7 +1,7 @@
 'use client'
 
-import Todos from "@/components/Todos";
-import TodoInput from "@/components/TodoInput";
+import TodoList from "@/features/admin/todos/components/TodoList";
+import TodoInput from "@/features/admin/todos/components/TodoInput";
 import Link from "next/link";
 
 export default function Home() {
@@ -16,8 +16,8 @@ export default function Home() {
           管理画面へ
         </Link>
       </div>
-      <TodoInput />
-      <Todos />
+      <TodoInput/>
+      <TodoList/>
     </div>
   );
 }

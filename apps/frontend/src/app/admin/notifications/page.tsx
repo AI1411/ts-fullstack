@@ -1,7 +1,7 @@
 'use client'
 
-import NotificationList from "@/components/admin/NotificationList";
-import NotificationForm from "@/components/admin/NotificationForm";
+import NotificationList from "@/features/admin/notifications/components/NotificationList";
+import NotificationForm from "@/features/admin/notifications/components/NotificationForm";
 
 export default function NotificationsPage() {
   return (
@@ -12,12 +12,12 @@ export default function NotificationsPage() {
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">通知一覧</h2>
             </div>
-            <NotificationList />
+            <NotificationList/>
           </div>
         </div>
-        
+
         <div className="lg:col-span-1">
-          <NotificationForm />
+          <NotificationForm/>
         </div>
       </div>
     </div>
