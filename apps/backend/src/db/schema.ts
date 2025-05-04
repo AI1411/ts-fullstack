@@ -106,3 +106,36 @@ export const subTasksTable = pgTable("sub_tasks", {
     updatedAtIdx: index("idx_sub_tasks_updated_at").on(table.updated_at)
   };
 });
+
+export const chatsTable = pgTable("chats", {
+  id: serial("id").primaryKey(),
+  creator_id: integer("creator_id").references(() => usersTable.id, {onDelete: "cascade"}).notNull(),
+  recipient_id: integer("recipient_id").references(() => usersTable.id, {onDelete: "cascade"}).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    creatorIdIdx: index("idx_chats_creator_id").on(table.creator_id),
+    recipientIdIdx: index("idx_chats_recipient_id").on(table.recipient_id),
+    createdAtIdx: index("idx_chats_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_chats_updated_at").on(table.updated_at)
+  };
+});
+
+export const chatMessagesTable = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  chat_id: integer("chat_id").references(() => chatsTable.id, {onDelete: "cascade"}).notNull(),
+  sender_id: integer("sender_id").references(() => usersTable.id, {onDelete: "cascade"}).notNull(),
+  content: text("content").notNull(),
+  is_read: boolean("is_read").default(false),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    chatIdIdx: index("idx_chat_messages_chat_id").on(table.chat_id),
+    senderIdIdx: index("idx_chat_messages_sender_id").on(table.sender_id),
+    isReadIdx: index("idx_chat_messages_is_read").on(table.is_read),
+    createdAtIdx: index("idx_chat_messages_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_chat_messages_updated_at").on(table.updated_at)
+  };
+});
