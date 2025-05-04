@@ -15,6 +15,13 @@
       "when": 1745829570778,
       "tag": "0001_productive_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746333992299,
+      "tag": "0002_numerous_angel",
+      "breakpoints": true
     }
   ]
 }

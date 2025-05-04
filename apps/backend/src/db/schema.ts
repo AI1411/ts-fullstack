@@ -86,3 +86,23 @@ export const notificationsTable = pgTable("notifications", {
     updatedAtIdx: index("idx_notifications_updated_at").on(table.updated_at)
   };
 });
+
+export const subTasksTable = pgTable("sub_tasks", {
+  id: serial("id").primaryKey(),
+  task_id: integer("task_id").references(() => tasksTable.id, {onDelete: "cascade"}).notNull(),
+  title: varchar("title", {length: 255}).notNull(),
+  description: text("description"),
+  status: varchar("status", {length: 64}).default("PENDING"),
+  due_date: timestamp("due_date"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    taskIdIdx: index("idx_sub_tasks_task_id").on(table.task_id),
+    titleIdx: index("idx_sub_tasks_title").on(table.title),
+    statusIdx: index("idx_sub_tasks_status").on(table.status),
+    dueDateIdx: index("idx_sub_tasks_due_date").on(table.due_date),
+    createdAtIdx: index("idx_sub_tasks_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_sub_tasks_updated_at").on(table.updated_at)
+  };
+});

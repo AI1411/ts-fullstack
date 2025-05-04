@@ -5,6 +5,9 @@ import {useState} from "react";
 import {taskService} from "../services";
 import {userService} from "@/features/admin/users/services";
 import {teamService} from "@/features/admin/teams/services";
+import SubTaskList from "@/features/admin/sub-tasks/components/SubTaskList";
+import SubTaskForm from "@/features/admin/sub-tasks/components/SubTaskForm";
+import {RiAddLine, RiArrowDownSLine, RiArrowRightSLine} from "react-icons/ri";
 
 // Task型定義
 type Task = {
@@ -33,6 +36,8 @@ type User = {
 const TaskList = () => {
   const queryClient = useQueryClient();
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [expandedTaskId, setExpandedTaskId] = useState<number | null>(null);
+  const [showSubTaskForm, setShowSubTaskForm] = useState<number | null>(null);
   const [editFormData, setEditFormData] = useState({
     title: "",
     description: "",
@@ -149,6 +154,26 @@ const TaskList = () => {
     return team ? team.name : '-';
   };
 
+  // タスクの展開/折りたたみを切り替える
+  const toggleExpand = (taskId: number) => {
+    if (expandedTaskId === taskId) {
+      setExpandedTaskId(null);
+    } else {
+      setExpandedTaskId(taskId);
+    }
+    // サブタスクフォームを閉じる
+    setShowSubTaskForm(null);
+  };
+
+  // サブタスクフォームの表示/非表示を切り替える
+  const toggleSubTaskForm = (taskId: number) => {
+    if (showSubTaskForm === taskId) {
+      setShowSubTaskForm(null);
+    } else {
+      setShowSubTaskForm(taskId);
+    }
+  };
+
   if (isLoading) return <div className="text-center py-4">読み込み中...</div>;
   if (error) return <div className="text-center py-4 text-red-500">エラーが発生しました</div>;
 
@@ -170,7 +195,8 @@ const TaskList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
         {tasks?.map(task => (
-          <tr key={task.id}>
+          <>
+            <tr key={task.id} className={expandedTaskId === task.id ? 'bg-gray-50' : ''}>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{task.id}</td>
             <td className="px-6 py-4 whitespace-nowrap">
               {editingTaskId === task.id ? (
@@ -275,39 +301,76 @@ const TaskList = () => {
               )}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              {editingTaskId === task.id ? (
-                <>
-                  <button
-                    onClick={() => handleUpdate(task.id)}
-                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                  >
-                    保存
-                  </button>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    キャンセル
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleEdit(task)}
-                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                  >
-                    編集
-                  </button>
-                  <button
-                    onClick={() => handleDelete(task.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    削除
-                  </button>
-                </>
-              )}
+              <div className="flex items-center justify-end space-x-2">
+                {editingTaskId === task.id ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdate(task.id)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      保存
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      キャンセル
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => toggleExpand(task.id)}
+                      className="text-gray-600 hover:text-gray-900 flex items-center"
+                    >
+                      {expandedTaskId === task.id ? <RiArrowDownSLine /> : <RiArrowRightSLine />}
+                    </button>
+                    <button
+                      onClick={() => toggleSubTaskForm(task.id)}
+                      className="text-green-600 hover:text-green-900 flex items-center"
+                      title="サブタスクを追加"
+                    >
+                      <RiAddLine />
+                    </button>
+                    <button
+                      onClick={() => handleEdit(task)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      編集
+                    </button>
+                    <button
+                      onClick={() => handleDelete(task.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      削除
+                    </button>
+                  </>
+                )}
+              </div>
             </td>
           </tr>
+
+          {/* サブタスク表示エリア */}
+          {expandedTaskId === task.id && (
+            <tr>
+              <td colSpan={8} className="px-6 py-4">
+                <SubTaskList taskId={task.id} />
+              </td>
+            </tr>
+          )}
+
+          {/* サブタスク追加フォーム */}
+          {showSubTaskForm === task.id && (
+            <tr>
+              <td colSpan={8} className="px-6 py-4">
+                <SubTaskForm
+                  taskId={task.id}
+                  onCancel={() => setShowSubTaskForm(null)}
+                />
+              </td>
+            </tr>
+          )}
+        </>
         ))}
         </tbody>
       </table>

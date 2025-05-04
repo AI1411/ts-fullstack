@@ -7,6 +7,7 @@ import todoRoutes from './features/todos/routes';
 import teamRoutes from './features/teams/routes';
 import taskRoutes from './features/tasks/routes';
 import notificationRoutes from './features/notifications/routes';
+import subTaskRoutes from './features/sub-tasks/routes';
 
 export type Env = {
   DATABASE_URL: string;
@@ -26,7 +27,8 @@ const route = app
   .route('/', todoRoutes)
   .route('/', teamRoutes)
   .route('/', taskRoutes)
-  .route('/', notificationRoutes);
+  .route('/', notificationRoutes)
+  .route('/', subTaskRoutes);
 
 export type AppType = typeof route;
 
