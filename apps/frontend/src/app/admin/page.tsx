@@ -5,7 +5,7 @@ import {useQuery} from "@tanstack/react-query";
 import StatisticsCard from "@/features/admin/dashboard/components/StatisticsCard";
 import RecentActivity from "@/features/admin/dashboard/components/RecentActivity";
 import Chart from "@/features/admin/dashboard/components/Chart";
-import {RiCheckLine, RiNotificationLine, RiTaskLine, RiTeamLine, RiTimeLine, RiUserLine} from "react-icons/ri";
+import {RiCheckLine, RiNotificationLine, RiTaskLine, RiTeamLine, RiTimeLine, RiUserLine, RiMessage2Line} from "react-icons/ri";
 import {todoService} from "@/features/admin/todos/services";
 import {userService} from "@/features/admin/users/services";
 
@@ -133,6 +133,17 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-3">
                   <RiNotificationLine className="h-6 w-6"/>
                   <span className="font-medium">通知管理</span>
+                </div>
+                <span className="text-sm">新機能</span>
+              </Link>
+
+              <Link
+                href="/admin/chats"
+                className="flex items-center justify-between rounded-md bg-purple-50 p-4 text-purple-600 transition-colors hover:bg-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:hover:bg-purple-500/20"
+              >
+                <div className="flex items-center gap-3">
+                  <RiMessage2Line className="h-6 w-6"/>
+                  <span className="font-medium">チャット管理</span>
                 </div>
                 <span className="text-sm">新機能</span>
               </Link>
