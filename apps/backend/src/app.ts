@@ -8,6 +8,7 @@ import teamRoutes from './features/teams/routes';
 import taskRoutes from './features/tasks/routes';
 import notificationRoutes from './features/notifications/routes';
 import subTaskRoutes from './features/sub-tasks/routes';
+import chatRoutes from './features/chats/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -47,7 +48,8 @@ const route = app
   .route('/', teamRoutes)
   .route('/', taskRoutes)
   .route('/', notificationRoutes)
-  .route('/', subTaskRoutes);
+  .route('/', subTaskRoutes)
+  .route('/', chatRoutes);
 
 export type AppType = typeof route;
 
