@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Lint frontend
+      run: bun run lint --cwd apps/frontend
+
+    - name: Run backend tests
+      run: bun run test --cwd apps/backend
+
+    - name: Run backend tests with coverage
+      run: bun run test:coverage --cwd apps/backend
+
+    - name: Upload test coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-coverage
+        path: apps/backend/coverage/
+        if-no-files-found: warn
+
+    - name: Cache Next.js build
+      uses: actions/cache@v4
+      with:
+        path: |
+          apps/frontend/.next/cache
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('apps/frontend/**/*.js', 'apps/frontend/**/*.jsx', 'apps/frontend/**/*.ts', 'apps/frontend/**/*.tsx') }}
+        restore-keys: |
+          ${{ runner.os }}-nextjs-
+
+    - name: Build frontend
+      run: bun run build --cwd apps/frontend
+
+    - name: Build backend
+      run: bun run deploy --dry-run --cwd apps/backend
