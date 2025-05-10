@@ -14,7 +14,7 @@ export const createTodo = async (c: Context) => {
       user_id,
       status: status || 'PENDING',
     }).returning();
-    return c.json({ todo: todo[0] });
+    return c.json({ todo: todo[0] }, 201);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
@@ -25,7 +25,7 @@ export const getTodos = async (c: Context) => {
   const db = getDB(c);
   try {
     const todos = await db.select().from(todosTable);
-    return c.json({ todos });
+    return c.json({ todos }, 200);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
@@ -40,7 +40,7 @@ export const getTodoById = async (c: Context) => {
     if (!todo.length) {
       return c.json({ error: 'Todo not found' }, 404);
     }
-    return c.json({ todo: todo[0] });
+    return c.json({ todo: todo[0] }, 200);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
@@ -65,7 +65,7 @@ export const updateTodo = async (c: Context) => {
     if (!updatedTodo.length) {
       return c.json({ error: 'Todo not found' }, 404);
     }
-    return c.json({ todo: updatedTodo[0] });
+    return c.json({ todo: updatedTodo[0] }, 200);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
@@ -82,7 +82,7 @@ export const deleteTodo = async (c: Context) => {
     if (!deletedTodo.length) {
       return c.json({ error: 'Todo not found' }, 404);
     }
-    return c.json({ message: 'Todo deleted successfully' });
+    return c.json({ message: 'Todo deleted successfully' }, 204);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }

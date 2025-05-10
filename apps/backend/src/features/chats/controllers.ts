@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { chatsTable, chatMessagesTable, usersTable } from '../../db/schema';
 import { getDB } from '../../common/utils/db';
-import { and, desc, eq, ne, or } from 'drizzle-orm';
+import { and, desc, eq, ne, or, inArray } from 'drizzle-orm';
 
 // チャット作成
 export const createChat = async (c: Context) => {
@@ -224,7 +224,7 @@ export const getUnreadMessageCount = async (c: Context) => {
           eq(chatMessagesTable.is_read, false),
           ne(chatMessagesTable.sender_id, userId),
           // 自分が参加しているチャットのメッセージのみを取得
-          chatMessagesTable.chat_id.in(chatIds)
+          inArray(chatMessagesTable.chat_id, chatIds)
         )
       );
 
