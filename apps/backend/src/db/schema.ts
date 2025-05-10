@@ -139,3 +139,22 @@ export const chatMessagesTable = pgTable("chat_messages", {
     updatedAtIdx: index("idx_chat_messages_updated_at").on(table.updated_at)
   };
 });
+
+export const productsTable = pgTable("products", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 255}).notNull(),
+  description: text("description"),
+  price: integer("price").notNull(),
+  stock: integer("stock").default(0),
+  image_url: varchar("image_url", {length: 255}),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_products_name").on(table.name),
+    priceIdx: index("idx_products_price").on(table.price),
+    stockIdx: index("idx_products_stock").on(table.stock),
+    createdAtIdx: index("idx_products_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_products_updated_at").on(table.updated_at)
+  };
+});
