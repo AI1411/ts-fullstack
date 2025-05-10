@@ -6,7 +6,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "drizzle:generate": "drizzle-kit generate:pg --config=./drizzle.config.ts",
     "drizzle:push": "drizzle-kit push:pg --config=./drizzle.config.ts",
-    "drizzle:introspect": "drizzle-kit introspect:pg --config=./drizzle.config.ts"
+    "drizzle:introspect": "drizzle-kit introspect:pg --config=./drizzle.config.ts",
+    "seed": "tsx seed.ts"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.1",
@@ -19,6 +20,7 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.7.0",
     "@types/node": "^22.15.2",
     "drizzle-kit": "^0.31.0",
     "tsx": "^4.19.3",
