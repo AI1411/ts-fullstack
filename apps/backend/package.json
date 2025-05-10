@@ -10,7 +10,7 @@
     "seed": "tsx seed.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage.enabled true"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.1",
