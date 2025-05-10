@@ -1,5 +1,6 @@
 import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
+
 export const teamsTable = pgTable("teams", {
   id: serial("id").primaryKey(),
   name: varchar("name", {length: 64}).notNull(),
@@ -156,5 +157,38 @@ export const productsTable = pgTable("products", {
     stockIdx: index("idx_products_stock").on(table.stock),
     createdAtIdx: index("idx_products_created_at").on(table.created_at),
     updatedAtIdx: index("idx_products_updated_at").on(table.updated_at)
+  };
+});
+
+export const ordersTable = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => usersTable.id, {onDelete: "cascade"}).notNull(),
+  total_amount: integer("total_amount").notNull(),
+  status: varchar("status", {length: 64}).default("PENDING").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    userIdIdx: index("idx_orders_user_id").on(table.user_id),
+    statusIdx: index("idx_orders_status").on(table.status),
+    createdAtIdx: index("idx_orders_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_orders_updated_at").on(table.updated_at)
+  };
+});
+
+export const orderItemsTable = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  order_id: integer("order_id").references(() => ordersTable.id, {onDelete: "cascade"}).notNull(),
+  product_id: integer("product_id").references(() => productsTable.id, {onDelete: "restrict"}).notNull(),
+  quantity: integer("quantity").notNull(),
+  price: integer("price").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    orderIdIdx: index("idx_order_items_order_id").on(table.order_id),
+    productIdIdx: index("idx_order_items_product_id").on(table.product_id),
+    createdAtIdx: index("idx_order_items_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_order_items_updated_at").on(table.updated_at)
   };
 });
