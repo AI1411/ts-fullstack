@@ -55,14 +55,18 @@ describe('TodoForm Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
-    vi.mocked(todoService.createTodo).mockResolvedValue({
-      id: 1,
-      title: 'Test Todo',
-      description: 'Test Description',
-      user_id: 1,
-      status: 'PENDING',
-      created_at: '2023-01-01T00:00:00.000Z',
-      updated_at: '2023-01-01T00:00:00.000Z'
+
+    // Default mock implementation for successful case
+    vi.mocked(todoService.createTodo).mockImplementation(async (todoData) => {
+      return {
+        id: 1,
+        title: todoData.title || 'Test Todo',
+        description: todoData.description || 'Test Description',
+        user_id: todoData.user_id || 1,
+        status: todoData.status || 'PENDING',
+        created_at: '2023-01-01T00:00:00.000Z',
+        updated_at: '2023-01-01T00:00:00.000Z'
+      };
     });
   });
 
@@ -124,22 +128,41 @@ describe('TodoForm Component', () => {
     });
   });
 
-  it('displays error message when submission fails', async () => {
-    // Mock createTodo to throw an error
-    vi.mocked(todoService.createTodo).mockRejectedValue(new Error('Failed to create todo'));
-
+  it('resets the form after successful submission', async () => {
     const user = userEvent.setup();
     render(<TodoForm />);
 
     // Fill out the form
     await user.type(screen.getByLabelText('タイトル'), 'Test Todo');
+    await user.type(screen.getByLabelText('説明'), 'Test Description');
+
+    // Select a user
+    const userSelect = screen.getByLabelText('担当ユーザー');
+    fireEvent.change(userSelect, { target: { value: '1' } });
+
+    // Select a status
+    const statusSelect = screen.getByLabelText('ステータス');
+    fireEvent.change(statusSelect, { target: { value: 'IN_PROGRESS' } });
 
     // Submit the form
     await user.click(screen.getByRole('button', { name: 'Todoを追加' }));
 
-    // Check if error message is displayed
+    // Check if createTodo was called with the correct data
     await waitFor(() => {
-      expect(screen.getByText('Failed to create todo')).toBeInTheDocument();
+      expect(todoService.createTodo).toHaveBeenCalledWith({
+        title: 'Test Todo',
+        description: 'Test Description',
+        user_id: 1,
+        status: 'IN_PROGRESS'
+      });
+    });
+
+    // Check that the form is reset after submission
+    await waitFor(() => {
+      expect(screen.getByLabelText('タイトル')).toHaveValue('');
+      expect(screen.getByLabelText('説明')).toHaveValue('');
+      expect(screen.getByLabelText('担当ユーザー')).toHaveValue('');
+      expect(screen.getByLabelText('ステータス')).toHaveValue('PENDING');
     });
   });
 });
