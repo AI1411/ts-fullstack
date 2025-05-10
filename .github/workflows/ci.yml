@@ -33,19 +33,42 @@ jobs:
       - name: Run backend tests with coverage
         run: cd apps/backend && bun run test:coverage
 
+      # Run frontend tests
+      - name: Run frontend tests
+        run: cd apps/frontend && bun run test
+
+      # Run frontend tests with coverage
+      - name: Run frontend tests with coverage
+        run: cd apps/frontend && bun run test:coverage
+
       # カバレッジファイルの確認ステップを追加
       - name: Check coverage files
         run: |
-          echo "=== Coverage directory contents ==="
-          ls -la apps/backend/coverage/ || echo "No coverage directory found"
+          echo "=== Backend coverage directory contents ==="
+          ls -la apps/backend/coverage/ || echo "No backend coverage directory found"
+          echo ""
+          echo "=== Frontend coverage directory contents ==="
+          ls -la apps/frontend/coverage/ || echo "No frontend coverage directory found"
           echo ""
           echo "=== Looking for coverage files ==="
-          find apps/backend -name "*coverage*.json" -o -name "*.lcov" || echo "No coverage files found"
+          find apps -name "*coverage*.json" -o -name "*.lcov" || echo "No coverage files found"
 
-      - name: Report Coverage
+      # Report backend coverage
+      - name: Report Backend Coverage
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           working-directory: apps/backend
+          name: Backend Coverage
+          # ファイルが見つからない場合のエラーをスキップ
+        continue-on-error: true
+
+      # Report frontend coverage
+      - name: Report Frontend Coverage
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: apps/frontend
+          name: Frontend Coverage
           # ファイルが見つからない場合のエラーをスキップ
         continue-on-error: true
