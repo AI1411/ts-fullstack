@@ -91,10 +91,36 @@ describe('Chat Controllers', () => {
       };
       const mockContext = createMockContext(mockBody);
 
+      // Mock the select query to return empty array (no existing chat)
+      mockDbClient.select.mockReturnThis();
+      mockDbClient.from.mockReturnThis();
+      mockDbClient.where.mockResolvedValueOnce([]);
+
       const result = await createChat(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
       expect(mockContext.json).toHaveBeenCalledWith({ chat: mockChat });
+    });
+
+    it('should return existing chat if found', async () => {
+      const mockBody = {
+        creator_id: 1,
+        recipient_id: 2
+      };
+      const mockContext = createMockContext(mockBody);
+      const existingChat = { ...mockChat, id: 5 };
+
+      // Mock the select query to return an existing chat
+      mockDbClient.select.mockReturnThis();
+      mockDbClient.from.mockReturnThis();
+      mockDbClient.where.mockResolvedValueOnce([existingChat]);
+
+      const result = await createChat(mockContext);
+
+      expect(mockContext.req.valid).toHaveBeenCalledWith('json');
+      expect(mockContext.json).toHaveBeenCalledWith({ chat: existingChat });
+      // Ensure insert was not called since we found an existing chat
+      expect(mockDbClient.insert).not.toHaveBeenCalled();
     });
 
     it('should handle errors', async () => {
@@ -105,7 +131,9 @@ describe('Chat Controllers', () => {
       const mockContext = createMockContext(mockBody);
 
       // Override the mock to throw an error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('Database error'));
+      mockDbClient.select.mockReturnThis();
+      mockDbClient.from.mockReturnThis();
+      mockDbClient.where.mockRejectedValueOnce(new Error('Database error'));
 
       const result = await createChat(mockContext);
 
