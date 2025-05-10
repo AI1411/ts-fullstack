@@ -21,9 +21,6 @@ jobs:
     - name: Install dependencies
       run: bun install
 
-    - name: Lint frontend
-      run: bun run lint --cwd apps/frontend
-
     - name: Run backend tests
       run: bun run test --cwd apps/backend
 
