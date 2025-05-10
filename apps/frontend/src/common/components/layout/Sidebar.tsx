@@ -10,7 +10,7 @@ import {
   RiTeamLine,
   RiUserLine,
   RiMessage2Line,
-  RiProductHuntFill, RiProductHuntLine
+  RiProductHuntLine
 } from "react-icons/ri";
 
 interface SidebarProps {
@@ -67,7 +67,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               <li>
                 <Link
                   href="/admin"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin') && !isActive('/admin/todos') && !isActive('/admin/users') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${pathname === '/admin' ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiDashboardLine className="text-xl"/>
                   ダッシュボード
