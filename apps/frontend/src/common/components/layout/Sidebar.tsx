@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import {RiDashboardLine, RiHome2Line, RiNotificationLine, RiTaskLine, RiTeamLine, RiUserLine, RiMessage2Line} from "react-icons/ri";
+import {
+  RiDashboardLine,
+  RiHome2Line,
+  RiNotificationLine,
+  RiTaskLine,
+  RiTeamLine,
+  RiUserLine,
+  RiMessage2Line,
+  RiProductHuntFill, RiProductHuntLine
+} from "react-icons/ri";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -62,6 +71,17 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                 >
                   <RiDashboardLine className="text-xl"/>
                   ダッシュボード
+                </Link>
+              </li>
+
+              {/* 商品管理 */}
+              <li>
+                <Link
+                  href="/admin/products"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/products') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiProductHuntLine className="text-xl"/>
+                  商品管理
                 </Link>
               </li>
 
