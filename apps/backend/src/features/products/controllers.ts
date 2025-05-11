@@ -35,7 +35,7 @@ export const getProductById = async (c: Context) => {
 
 // 商品作成
 export const createProduct = async (c: Context) => {
-  const { name, description, price, stock, image_url } = c.req.valid('json');
+  const { name, description, price, stock, image_url, category_id } = c.req.valid('json');
   const db = getDB(c);
 
   try {
@@ -45,6 +45,7 @@ export const createProduct = async (c: Context) => {
       price,
       stock: stock || 0,
       image_url,
+      category_id,
     }).returning();
 
     return c.json({ product: product[0] }, 201);
@@ -74,6 +75,7 @@ export const updateProduct = async (c: Context) => {
     if (data.price !== undefined) updateData.price = data.price;
     if (data.stock !== undefined) updateData.stock = data.stock;
     if (data.image_url !== undefined) updateData.image_url = data.image_url;
+    if (data.category_id !== undefined) updateData.category_id = data.category_id;
     updateData.updated_at = new Date();
 
     // 商品を更新

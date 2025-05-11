@@ -33,6 +33,10 @@ const productSchema = z.object({
   image_url: z.string().url().optional().openapi({
     description: '商品画像URL',
     example: 'https://example.com/images/smartphone.jpg'
+  }),
+  category_id: z.number().optional().openapi({
+    description: 'カテゴリID',
+    example: 1
   })
 }).openapi('Product');
 
@@ -40,6 +44,10 @@ const productSchema = z.object({
 const productResponseSchema = z.object({
   id: z.number().openapi({
     description: '商品ID',
+    example: 1
+  }),
+  category_id: z.number().nullable().openapi({
+    description: 'カテゴリID',
     example: 1
   }),
   name: z.string().openapi({
@@ -93,6 +101,10 @@ const productUpdateSchema = z.object({
   image_url: z.string().url().optional().openapi({
     description: '商品画像URL',
     example: 'https://example.com/images/smartphone.jpg'
+  }),
+  category_id: z.number().optional().openapi({
+    description: 'カテゴリID',
+    example: 1
   })
 }).openapi('ProductUpdate');
 

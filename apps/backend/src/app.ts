@@ -11,6 +11,7 @@ import subTaskRoutes from './features/sub-tasks/routes';
 import chatRoutes from './features/chats/routes';
 import productRoutes from './features/products/routes';
 import orderRoutes from './features/orders/routes';
+import categoryRoutes from './features/categories/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -53,7 +54,8 @@ const route = app
   .route('/', subTaskRoutes)
   .route('/', chatRoutes)
   .route('/', productRoutes)
-  .route('/', orderRoutes);
+  .route('/', orderRoutes)
+  .route('/', categoryRoutes);
 
 export type AppType = typeof route;
 

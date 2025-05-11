@@ -14,7 +14,8 @@ import {
   chatMessagesTable,
   productsTable,
   ordersTable,
-  orderItemsTable
+  orderItemsTable,
+  categoriesTable
 } from './src/db/schema';
 
 // Load environment variables
@@ -37,6 +38,7 @@ async function seed() {
     await db.delete(orderItemsTable);
     await db.delete(ordersTable);
     await db.delete(productsTable);
+    await db.delete(categoriesTable);
     await db.delete(chatMessagesTable);
     await db.delete(chatsTable);
     await db.delete(subTasksTable);
@@ -158,6 +160,19 @@ async function seed() {
       }
     }
 
+    // Seed categories
+    console.log('Seeding categories...');
+    const categoryIds = [];
+    const categoryNames = ['電子機器', '家具', '衣類', '食品', '書籍', 'スポーツ用品', 'おもちゃ', '化粧品'];
+
+    for (let i = 0; i < categoryNames.length; i++) {
+      const [category] = await db.insert(categoriesTable).values({
+        name: categoryNames[i],
+        description: faker.lorem.sentence(),
+      }).returning({ id: categoriesTable.id });
+      categoryIds.push(category.id);
+    }
+
     // Seed products
     console.log('Seeding products...');
     const productIds = [];
@@ -168,6 +183,7 @@ async function seed() {
         price: parseInt(faker.commerce.price({ min: 500, max: 50000, dec: 0 })),
         stock: randomInt(0, 100),
         image_url: faker.image.url(),
+        category_id: categoryIds[randomInt(0, categoryIds.length - 1)],
       }).returning({ id: productsTable.id });
       productIds.push(product.id);
     }

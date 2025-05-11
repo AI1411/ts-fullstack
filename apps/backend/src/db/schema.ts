@@ -1,6 +1,20 @@
 import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
 
+export const categoriesTable = pgTable("categories", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 64}).notNull(),
+  description: text("description"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_categories_name").on(table.name),
+    createdAtIdx: index("idx_categories_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_categories_updated_at").on(table.updated_at)
+  };
+});
+
 export const teamsTable = pgTable("teams", {
   id: serial("id").primaryKey(),
   name: varchar("name", {length: 64}).notNull(),
@@ -143,6 +157,7 @@ export const chatMessagesTable = pgTable("chat_messages", {
 
 export const productsTable = pgTable("products", {
   id: serial("id").primaryKey(),
+  category_id: integer("category_id").references(() => categoriesTable.id, {onDelete: "set null"}),
   name: varchar("name", {length: 255}).notNull(),
   description: text("description"),
   price: integer("price").notNull(),
@@ -153,6 +168,7 @@ export const productsTable = pgTable("products", {
 }, (table) => {
   return {
     nameIdx: index("idx_products_name").on(table.name),
+    categoryIdIdx: index("idx_products_category_id").on(table.category_id),
     priceIdx: index("idx_products_price").on(table.price),
     stockIdx: index("idx_products_stock").on(table.stock),
     createdAtIdx: index("idx_products_created_at").on(table.created_at),
