@@ -2,64 +2,26 @@
 
 import React from 'react';
 import Link from 'next/link';
-
-// サンプルカテゴリーデータ
-const categories = [
-  {
-    id: 1,
-    name: 'ファッション',
-    description: 'トレンドのアパレルやアクセサリー',
-    imageUrl: 'https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80',
-    href: '/categories/fashion',
-  },
-  {
-    id: 2,
-    name: 'エレクトロニクス',
-    description: '最新のガジェットとテクノロジー',
-    imageUrl: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1501&q=80',
-    href: '/categories/electronics',
-  },
-  {
-    id: 3,
-    name: 'ホーム＆リビング',
-    description: '家具やインテリア、キッチン用品',
-    imageUrl: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-    href: '/categories/home',
-  },
-  {
-    id: 4,
-    name: 'スポーツ＆アウトドア',
-    description: 'スポーツ用品やアウトドアギア',
-    imageUrl: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1626&q=80',
-    href: '/categories/sports',
-  },
-  {
-    id: 5,
-    name: 'ビューティー＆ヘルス',
-    description: '化粧品や健康関連商品',
-    imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80',
-    href: '/categories/beauty',
-  },
-  {
-    id: 6,
-    name: 'キッズ＆ベビー',
-    description: '子供用品やベビー用品',
-    imageUrl: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-    href: '/categories/kids',
-  },
-];
+import { categories } from '@/features/user/categories/data/categories';
 
 const Categories: React.FC = () => {
   return (
     <section className="bg-gray-100 py-12 dark:bg-gray-800 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 text-center">
+        <div className="mb-8 flex flex-col items-center text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
             カテゴリーから探す
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
             お探しの商品カテゴリーを選択してください
           </p>
+          <Link
+            href="/categories"
+            className="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            すべてのカテゴリーを見る
+            <span aria-hidden="true" className="ml-1">→</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
