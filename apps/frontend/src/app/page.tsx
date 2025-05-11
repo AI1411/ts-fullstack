@@ -2,6 +2,7 @@
 
 import UserLayout from "@/features/user/layout/UserLayout";
 import Hero from "@/features/user/home/components/Hero";
+import SalePromotion from "@/features/user/home/components/SalePromotion";
 import FeaturedProducts from "@/features/user/home/components/FeaturedProducts";
 import Categories from "@/features/user/home/components/Categories";
 import Link from "next/link";
@@ -11,6 +12,9 @@ export default function Home() {
     <UserLayout>
       {/* ヒーローセクション */}
       <Hero />
+
+      {/* セールプロモーション */}
+      <SalePromotion />
 
       {/* おすすめ商品 */}
       <FeaturedProducts />

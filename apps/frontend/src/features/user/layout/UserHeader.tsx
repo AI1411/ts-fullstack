@@ -14,7 +14,7 @@ const UserHeader: React.FC = () => {
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
-    
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('darkMode', 'true');
@@ -29,7 +29,7 @@ const UserHeader: React.FC = () => {
     { name: 'ホーム', href: '/' },
     { name: '商品一覧', href: '/products' },
     { name: 'カテゴリー', href: '/categories' },
-    { name: 'セール', href: '/sale' },
+    { name: 'セール', href: '/sales' },
     { name: 'お問い合わせ', href: '/contact' },
   ];
 
