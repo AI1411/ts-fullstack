@@ -28,7 +28,7 @@ const ChatList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center p-8">
+      <div className="flex justify-center items-center p-8" data-testid="loading">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" role="status"></div>
       </div>
     );
@@ -36,19 +36,20 @@ const ChatList = () => {
 
   if (error) {
     return (
-      <div className="p-6 text-center text-red-500">
+      <div className="p-6 text-center text-red-500" data-testid="error">
         エラーが発生しました。再度お試しください。
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white rounded-lg shadow overflow-hidden" data-testid="chat-list">
       {/* 検索バー */}
       <div className="p-4 border-b border-gray-200">
         <input
           type="text"
           placeholder="ユーザー名で検索..."
+          data-testid="search-input"
           className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

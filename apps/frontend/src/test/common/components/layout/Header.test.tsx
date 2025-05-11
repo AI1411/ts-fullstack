@@ -1,30 +1,19 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Header from '@/common/components/layout/Header';
 
-// Mock Next.js hooks
-vi.mock('next/navigation', () => ({
-  usePathname: vi.fn(() => '/admin')
-}));
-
-// Mock localStorage
-vi.mock('localStorage', () => ({
-  getItem: vi.fn(),
-  setItem: vi.fn()
-}), { virtual: true });
-
-// Mock document methods
-document.documentElement.classList = {
-  add: vi.fn(),
-  remove: vi.fn()
-} as any;
-
+// Simple test to verify the component renders
 describe('Header Component', () => {
-  it('renders without crashing', () => {
+  it('should render the component', () => {
     const mockSetSidebarOpen = vi.fn();
     render(<Header sidebarOpen={false} setSidebarOpen={mockSetSidebarOpen} />);
 
-    // Just check if the component renders without errors
-    expect(screen.getByRole('banner')).toBeInTheDocument();
+    // Check if the component is defined
+    expect(Header).toBeDefined();
+    expect(typeof Header).toBe('function');
+
+    // Check if the component renders without crashing
+    const header = screen.getByRole('banner');
+    expect(header).toBeInTheDocument();
   });
 });

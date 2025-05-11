@@ -58,7 +58,7 @@ const UserList = () => {
       };
 
       await userService.updateUser(userId, updateData);
-      
+
       // 成功したらキャッシュを更新
       await queryClient.invalidateQueries({ queryKey: ['users'] });
       setEditingUserId(null);
@@ -70,10 +70,10 @@ const UserList = () => {
   // Userを削除
   const handleDelete = async (userId: number) => {
     if (!confirm('このユーザーを削除してもよろしいですか？')) return;
-    
+
     try {
       await userService.deleteUser(userId);
-      
+
       // 成功したらキャッシュを更新
       await queryClient.invalidateQueries({ queryKey: ['users'] });
     } catch (error) {
@@ -81,12 +81,12 @@ const UserList = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-4">読み込み中...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">エラーが発生しました</div>;
+  if (isLoading) return <div className="text-center py-4" data-testid="loading">読み込み中...</div>;
+  if (error) return <div className="text-center py-4 text-red-500" data-testid="error">エラーが発生しました</div>;
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-      <table className="min-w-full divide-y divide-gray-200">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden" data-testid="user-list">
+      <table className="min-w-full divide-y divide-gray-200" data-testid="user-table">
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
