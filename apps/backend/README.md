@@ -5,18 +5,18 @@ This directory contains the backend API for the application.
 ## Cloudflare Workers Setup
 
 ```txt
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 ```txt
-npm run deploy
+bun run deploy
 ```
 
 [For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
 
 ```txt
-npm run cf-typegen
+bun run cf-typegen
 ```
 
 Pass the `CloudflareBindings` as generics when instantiation `Hono`:
@@ -37,12 +37,12 @@ To populate the database with dummy data, follow these steps:
 
 2. Install dependencies:
    ```bash
-   npm install
+   bun install
    ```
 
 3. Run the seed script:
    ```bash
-   npm run seed
+   bun run seed
    ```
 
 This will:

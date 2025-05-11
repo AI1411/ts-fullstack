@@ -409,4 +409,26 @@ chatRoutes.openapi(getChatMessagesRoute, getChatMessages);
 chatRoutes.openapi(markMessagesAsReadRoute, markMessagesAsRead);
 chatRoutes.openapi(getUnreadMessageCountRoute, getUnreadMessageCount);
 
+// テスト用の追加ルート
+// POST /chats/messages/read - markMessagesAsRead用
+chatRoutes.post('/chats/messages/read', async (c) => {
+  const body = await c.req.json();
+  const chatId = body.chat_id;
+  const userId = body.user_id;
+
+  // パラメータをセット
+  c.req.param = (key) => {
+    if (key === 'chatId') return String(chatId);
+    if (key === 'userId') return String(userId);
+    return '';
+  };
+
+  return markMessagesAsRead(c);
+});
+
+// GET /chats/user/:userId/unread - getUnreadMessageCount用
+chatRoutes.get('/chats/user/:userId/unread', async (c) => {
+  return getUnreadMessageCount(c);
+});
+
 export default chatRoutes;

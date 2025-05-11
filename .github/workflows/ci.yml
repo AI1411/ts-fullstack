@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  checks: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run backend tests
+        run: cd apps/backend && bun run test
+
+      - name: Run backend tests with coverage
+        run: cd apps/backend && bun run test:coverage
+
+      # Run frontend tests
+      - name: Run frontend tests
+        run: cd apps/frontend && bun run test
+
+      # Run frontend tests with coverage
+      - name: Run frontend tests with coverage
+        run: cd apps/frontend && bun run test:coverage
+
+      # カバレッジファイルの確認ステップを追加
+      - name: Check coverage files
+        run: |
+          echo "=== Backend coverage directory contents ==="
+          ls -la apps/backend/coverage/ || echo "No backend coverage directory found"
+          echo ""
+          echo "=== Frontend coverage directory contents ==="
+          ls -la apps/frontend/coverage/ || echo "No frontend coverage directory found"
+          echo ""
+          echo "=== Looking for coverage files ==="
+          find apps -name "*coverage*.json" -o -name "*.lcov" || echo "No coverage files found"
+
+      # Report backend coverage
+      - name: Report Backend Coverage
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: apps/backend
+          name: Backend Coverage
+          # ファイルが見つからない場合のエラーをスキップ
+        continue-on-error: true
+
+      # Report frontend coverage
+      - name: Report Frontend Coverage
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: apps/frontend
+          name: Frontend Coverage
+          # ファイルが見つからない場合のエラーをスキップ
+        continue-on-error: true
