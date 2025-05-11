@@ -50,7 +50,7 @@ const AdminTodoList = () => {
   const handleUpdate = async (todoId: number) => {
     try {
       await todoService.updateTodo(todoId, editFormData);
-      
+
       // 成功したらキャッシュを更新
       await queryClient.invalidateQueries({ queryKey: ['todos'] });
       setEditingTodoId(null);
@@ -62,10 +62,10 @@ const AdminTodoList = () => {
   // Todoを削除
   const handleDelete = async (todoId: number) => {
     if (!confirm('このTodoを削除してもよろしいですか？')) return;
-    
+
     try {
       await todoService.deleteTodo(todoId);
-      
+
       // 成功したらキャッシュを更新
       await queryClient.invalidateQueries({ queryKey: ['todos'] });
     } catch (error) {
@@ -86,12 +86,12 @@ const AdminTodoList = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-4">読み込み中...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">エラーが発生しました</div>;
+  if (isLoading) return <div className="text-center py-4" data-testid="loading">読み込み中...</div>;
+  if (error) return <div className="text-center py-4 text-red-500" data-testid="error">エラーが発生しました</div>;
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-      <table className="min-w-full divide-y divide-gray-200">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden" data-testid="admin-todo-list">
+      <table className="min-w-full divide-y divide-gray-200" data-testid="admin-todo-table">
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
