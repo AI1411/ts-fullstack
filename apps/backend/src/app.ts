@@ -12,6 +12,7 @@ import chatRoutes from './features/chats/routes';
 import productRoutes from './features/products/routes';
 import orderRoutes from './features/orders/routes';
 import categoryRoutes from './features/categories/routes';
+import inquiryRoutes from './features/inquiries/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -55,7 +56,8 @@ const route = app
   .route('/', chatRoutes)
   .route('/', productRoutes)
   .route('/', orderRoutes)
-  .route('/', categoryRoutes);
+  .route('/', categoryRoutes)
+  .route('/', inquiryRoutes);
 
 export type AppType = typeof route;
 

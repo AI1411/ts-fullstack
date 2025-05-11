@@ -1,5 +1,24 @@
 import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
+export const inquiriesTable = pgTable("inquiries", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 100}).notNull(),
+  email: varchar("email", {length: 255}).notNull(),
+  subject: varchar("subject", {length: 255}).notNull(),
+  message: text("message").notNull(),
+  status: varchar("status", {length: 64}).default("PENDING").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_inquiries_name").on(table.name),
+    emailIdx: index("idx_inquiries_email").on(table.email),
+    statusIdx: index("idx_inquiries_status").on(table.status),
+    createdAtIdx: index("idx_inquiries_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_inquiries_updated_at").on(table.updated_at)
+  };
+});
+
 
 export const categoriesTable = pgTable("categories", {
   id: serial("id").primaryKey(),
