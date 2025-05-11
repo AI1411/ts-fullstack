@@ -32,7 +32,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
     >
       {/* サイドバーヘッダー */}
       <div className="flex items-center justify-between gap-2 px-6 py-5 lg:py-6">
-        <Link href="/admin" className="text-2xl font-bold text-gray-900 dark:text-white">
+        <Link href="/management" className="text-2xl font-bold text-gray-900 dark:text-white">
           管理画面
         </Link>
         <button
@@ -67,8 +67,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* ダッシュボード */}
               <li>
                 <Link
-                  href="/admin"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${pathname === '/admin' ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${pathname === '/management' ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiDashboardLine className="text-xl"/>
                   ダッシュボード
@@ -78,8 +78,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* 商品管理 */}
               <li>
                 <Link
-                  href="/admin/products"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/products') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/products"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/products') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiProductHuntLine className="text-xl"/>
                   商品管理
@@ -89,8 +89,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* 注文管理 */}
               <li>
                 <Link
-                  href="/admin/orders"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/orders') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/orders"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/orders') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiFileList3Line className="text-xl"/>
                   注文管理
@@ -100,8 +100,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* Todo管理 */}
               <li>
                 <Link
-                  href="/admin/todos"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/todos') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/todos"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/todos') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiTaskLine className="text-xl"/>
                   Todo管理
@@ -111,8 +111,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* ユーザー管理 */}
               <li>
                 <Link
-                  href="/admin/users"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/users') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/users"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/users') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiUserLine className="text-xl"/>
                   ユーザー管理
@@ -122,8 +122,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* タスク管理 */}
               <li>
                 <Link
-                  href="/admin/tasks"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/tasks') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/tasks"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/tasks') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiTaskLine className="text-xl"/>
                   タスク管理
@@ -133,8 +133,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* チーム管理 */}
               <li>
                 <Link
-                  href="/admin/teams"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/teams') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/teams"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/teams') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiTeamLine className="text-xl"/>
                   チーム管理
@@ -144,8 +144,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* 通知管理 */}
               <li>
                 <Link
-                  href="/admin/notifications"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/notifications') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/notifications"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/notifications') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiNotificationLine className="text-xl"/>
                   通知管理
@@ -155,8 +155,8 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* チャット管理 */}
               <li>
                 <Link
-                  href="/admin/chats"
-                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/admin/chats') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                  href="/management/chats"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/chats') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
                   <RiMessage2Line className="text-xl"/>
                   チャット管理

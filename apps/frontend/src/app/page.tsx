@@ -1,23 +1,34 @@
 'use client'
 
-import TodoList from "@/features/admin/todos/components/TodoList";
-import TodoInput from "@/features/admin/todos/components/TodoInput";
+import UserLayout from "@/features/user/layout/UserLayout";
+import Hero from "@/features/user/home/components/Hero";
+import FeaturedProducts from "@/features/user/home/components/FeaturedProducts";
+import Categories from "@/features/user/home/components/Categories";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="mt-10">
-      <div className="flex justify-between items-center max-w-[600px] mx-auto mb-6">
-        <h1 className="text-3xl font-bold">Todo</h1>
-        <Link
-          href="/admin"
-          className="bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          管理画面へ
-        </Link>
+    <UserLayout>
+      {/* ヒーローセクション */}
+      <Hero />
+
+      {/* おすすめ商品 */}
+      <FeaturedProducts />
+
+      {/* カテゴリー */}
+      <Categories />
+
+      {/* 管理画面へのリンク */}
+      <div className="bg-gray-50 py-8 dark:bg-gray-900">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <Link
+            href="/management"
+            className="inline-block rounded-md bg-gray-800 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-700"
+          >
+            管理画面へ
+          </Link>
+        </div>
       </div>
-      <TodoInput/>
-      <TodoList/>
-    </div>
+    </UserLayout>
   );
 }
