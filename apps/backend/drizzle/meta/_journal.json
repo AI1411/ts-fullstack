@@ -29,6 +29,13 @@
       "when": 1746335921843,
       "tag": "0003_lush_secret_warriors",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746400000000,
+      "tag": "0004_invoices_table",
+      "breakpoints": true
     }
   ]
 }

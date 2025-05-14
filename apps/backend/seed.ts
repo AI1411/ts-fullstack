@@ -17,7 +17,9 @@ import {
   orderItemsTable,
   categoriesTable,
   companiesTable,
-  countriesTable
+  countriesTable,
+  inquiriesTable,
+  invoicesTable
 } from './src/db/schema';
 
 // Load environment variables
@@ -38,6 +40,7 @@ async function seed() {
     // Clear existing data (optional - comment out if you want to keep existing data)
     console.log('Clearing existing data...');
     await db.delete(orderItemsTable);
+    await db.delete(invoicesTable);
     await db.delete(ordersTable);
     await db.delete(productsTable);
     await db.delete(categoriesTable);
@@ -47,6 +50,7 @@ async function seed() {
     await db.delete(notificationsTable);
     await db.delete(tasksTable);
     await db.delete(todosTable);
+    await db.delete(inquiriesTable);
     await db.delete(usersTable);
     await db.delete(teamsTable);
     await db.delete(countriesTable);
@@ -226,6 +230,25 @@ async function seed() {
       console.log('⚠️ Skipping countries seeding. Make sure to run migrations to create the countries table.');
     }
 
+    // Seed inquiries
+    console.log('Seeding inquiries...');
+    try {
+      const inquiryStatuses = ['PENDING', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+      for (let i = 0; i < 15; i++) {
+        await db.insert(inquiriesTable).values({
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          subject: faker.lorem.sentence(5),
+          message: faker.lorem.paragraphs(2),
+          status: faker.helpers.arrayElement(inquiryStatuses),
+        });
+      }
+      console.log('✅ Inquiries seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding inquiries:', error);
+      console.log('⚠️ Skipping inquiries seeding. Make sure to run migrations to create the inquiries table.');
+    }
+
     // Seed products
     console.log('Seeding products...');
     const productIds = [];
@@ -285,6 +308,45 @@ async function seed() {
       await db.update(ordersTable)
         .set({ total_amount: totalAmount })
         .where(eq(ordersTable.id, orderId));
+    }
+
+    // Seed invoices
+    console.log('Seeding invoices...');
+    try {
+      const invoiceStatuses = ['PENDING', 'PAID', 'OVERDUE', 'CANCELLED'];
+      const paymentMethods = ['CREDIT_CARD', 'BANK_TRANSFER', 'PAYPAL', 'CASH'];
+
+      for (const orderId of orderIds) {
+        // Get order details
+        const order = await db.select({ 
+          userId: ordersTable.user_id, 
+          totalAmount: ordersTable.total_amount 
+        })
+          .from(ordersTable)
+          .where(eq(ordersTable.id, orderId))
+          .limit(1);
+
+        if (order.length > 0) {
+          const invoiceNumber = `INV-${faker.string.alphanumeric(8).toUpperCase()}`;
+          const issueDate = faker.date.recent();
+          const dueDate = faker.date.future({ refDate: issueDate });
+
+          await db.insert(invoicesTable).values({
+            order_id: orderId,
+            invoice_number: invoiceNumber,
+            issue_date: issueDate,
+            due_date: dueDate,
+            total_amount: order[0].totalAmount,
+            status: faker.helpers.arrayElement(invoiceStatuses),
+            payment_method: faker.helpers.arrayElement(paymentMethods),
+            notes: faker.datatype.boolean() ? faker.lorem.paragraph() : null,
+          });
+        }
+      }
+      console.log('✅ Invoices seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding invoices:', error);
+      console.log('⚠️ Skipping invoices seeding. Make sure to run migrations to create the invoices table.');
     }
 
     console.log('✅ Database seeding completed successfully!');
