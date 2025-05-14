@@ -11,7 +11,10 @@ import {
   RiUserLine,
   RiMessage2Line,
   RiProductHuntLine,
-  RiFileList3Line
+  RiFileList3Line,
+  RiGlobalLine,
+  RiBuildingLine,
+  RiFileTextLine
 } from "react-icons/ri";
 
 interface SidebarProps {
@@ -160,6 +163,39 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                 >
                   <RiMessage2Line className="text-xl"/>
                   チャット管理
+                </Link>
+              </li>
+
+              {/* 国管理 */}
+              <li>
+                <Link
+                  href="/admin/countries"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/countries') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiGlobalLine className="text-xl"/>
+                  国管理
+                </Link>
+              </li>
+
+              {/* 会社管理 */}
+              <li>
+                <Link
+                  href="/admin/companies"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/companies') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiBuildingLine className="text-xl"/>
+                  会社管理
+                </Link>
+              </li>
+
+              {/* 領収書管理 */}
+              <li>
+                <Link
+                  href="/admin/invoices"
+                  className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/invoices') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
+                >
+                  <RiFileTextLine className="text-xl"/>
+                  領収書管理
                 </Link>
               </li>
             </ul>
