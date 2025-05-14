@@ -1,5 +1,40 @@
 import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
+export const countriesTable = pgTable("countries", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 255}).notNull(),
+  code: varchar("code", {length: 10}),
+  flag_url: varchar("flag_url", {length: 255}),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_countries_name").on(table.name),
+    codeIdx: index("idx_countries_code").on(table.code),
+    createdAtIdx: index("idx_countries_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_countries_updated_at").on(table.updated_at)
+  };
+});
+
+export const companiesTable = pgTable("companies", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 255}).notNull(),
+  description: text("description"),
+  address: varchar("address", {length: 255}),
+  phone: varchar("phone", {length: 50}),
+  email: varchar("email", {length: 255}),
+  website: varchar("website", {length: 255}),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_companies_name").on(table.name),
+    emailIdx: index("idx_companies_email").on(table.email),
+    createdAtIdx: index("idx_companies_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_companies_updated_at").on(table.updated_at)
+  };
+});
+
 export const inquiriesTable = pgTable("inquiries", {
   id: serial("id").primaryKey(),
   name: varchar("name", {length: 100}).notNull(),

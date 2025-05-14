@@ -15,7 +15,9 @@ import {
   productsTable,
   ordersTable,
   orderItemsTable,
-  categoriesTable
+  categoriesTable,
+  companiesTable,
+  countriesTable
 } from './src/db/schema';
 
 // Load environment variables
@@ -47,6 +49,11 @@ async function seed() {
     await db.delete(todosTable);
     await db.delete(usersTable);
     await db.delete(teamsTable);
+    await db.delete(countriesTable);
+
+    // Skip deleting from companies table as it might not exist yet
+    // The table will be created when migrations are applied
+    // await db.delete(companiesTable);
 
     // Seed teams
     console.log('Seeding teams...');
@@ -171,6 +178,52 @@ async function seed() {
         description: faker.lorem.sentence(),
       }).returning({ id: categoriesTable.id });
       categoryIds.push(category.id);
+    }
+
+    // Seed companies
+    console.log('Seeding companies...');
+    const companyIds = [];
+    try {
+      for (let i = 0; i < 10; i++) {
+        const [company] = await db.insert(companiesTable).values({
+          name: faker.company.name(),
+          description: faker.company.catchPhrase(),
+          address: faker.location.streetAddress() + ', ' + faker.location.city() + ', ' + faker.location.country(),
+          phone: faker.phone.number(),
+          email: faker.internet.email(),
+          website: faker.internet.url(),
+        }).returning({ id: companiesTable.id });
+        companyIds.push(company.id);
+      }
+      console.log('✅ Companies seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding companies:', error);
+      console.log('⚠️ Skipping companies seeding. Make sure to run migrations to create the companies table.');
+    }
+
+    // Seed countries
+    console.log('Seeding countries...');
+    const countryData = [
+      { name: '日本', code: 'JP', flag_url: 'https://example.com/flags/jp.png' },
+      { name: 'アメリカ合衆国', code: 'US', flag_url: 'https://example.com/flags/us.png' },
+      { name: 'イギリス', code: 'GB', flag_url: 'https://example.com/flags/gb.png' },
+      { name: 'フランス', code: 'FR', flag_url: 'https://example.com/flags/fr.png' },
+      { name: 'ドイツ', code: 'DE', flag_url: 'https://example.com/flags/de.png' },
+      { name: '中国', code: 'CN', flag_url: 'https://example.com/flags/cn.png' },
+      { name: '韓国', code: 'KR', flag_url: 'https://example.com/flags/kr.png' },
+      { name: 'オーストラリア', code: 'AU', flag_url: 'https://example.com/flags/au.png' },
+      { name: 'カナダ', code: 'CA', flag_url: 'https://example.com/flags/ca.png' },
+      { name: 'インド', code: 'IN', flag_url: 'https://example.com/flags/in.png' }
+    ];
+
+    try {
+      for (const country of countryData) {
+        await db.insert(countriesTable).values(country);
+      }
+      console.log('✅ Countries seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding countries:', error);
+      console.log('⚠️ Skipping countries seeding. Make sure to run migrations to create the countries table.');
     }
 
     // Seed products
