@@ -13,6 +13,10 @@ import productRoutes from './features/products/routes';
 import orderRoutes from './features/orders/routes';
 import categoryRoutes from './features/categories/routes';
 import inquiryRoutes from './features/inquiries/routes';
+import companyRoutes from './features/companies/routes';
+import countryRoutes from './features/countries/routes';
+import invoiceRoutes from './features/invoices/routes';
+import contactRoutes from './features/contacts/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -57,7 +61,11 @@ const route = app
   .route('/', productRoutes)
   .route('/', orderRoutes)
   .route('/', categoryRoutes)
-  .route('/', inquiryRoutes);
+  .route('/', inquiryRoutes)
+  .route('/', companyRoutes)
+  .route('/', countryRoutes)
+  .route('/', invoiceRoutes)
+  .route('/', contactRoutes);
 
 export type AppType = typeof route;
 

@@ -1,32 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { 
-  getProducts, 
-  getProductById, 
-  createProduct, 
-  updateProduct, 
-  deleteProduct 
-} from '../../../features/products/controllers';
-import { productsTable } from '../../../db/schema';
+  getCompanies, 
+  getCompanyById, 
+  createCompany, 
+  updateCompany, 
+  deleteCompany 
+} from '../../../features/companies/controllers';
+import { companiesTable } from '../../../db/schema';
 import * as dbModule from '../../../common/utils/db';
 
-// Mock product data
-const mockProduct = {
+// Mock company data
+const mockCompany = {
   id: 1,
-  name: 'テスト商品',
-  description: 'テスト用の商品です',
-  price: 1000,
-  stock: 10,
-  image_url: 'https://example.com/image.jpg',
-  category_id: 1,
+  name: 'テスト会社',
+  description: 'テスト用の会社です',
+  address: '東京都渋谷区',
+  phone: '03-1234-5678',
+  email: 'test@example.com',
+  website: 'https://example.com',
   created_at: new Date(),
   updated_at: new Date()
 };
 
 // Mock the database module
-// Commenting out vi.mock due to issues with mocking
-// vi.mock('../../../common/utils/db', () => ({
-//   getDB: vi.fn()
-// }));
+vi.mock('../../../common/utils/db', () => ({
+  getDB: vi.fn()
+}));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
@@ -50,25 +49,25 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockProduct])
+  returning: vi.fn().mockResolvedValue([mockCompany])
 };
 
-describe.skip('Product Controllers', () => {
+describe('Company Controllers', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(dbModule.getDB).mockReturnValue(mockDbClient);
   });
 
-  describe('getProducts', () => {
-    it('should return all products', async () => {
+  describe('getCompanies', () => {
+    it('should return all companies', async () => {
       const mockContext = createMockContext();
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
-      mockDbClient.from.mockResolvedValueOnce([mockProduct]);
+      mockDbClient.from.mockResolvedValueOnce([mockCompany]);
 
-      const result = await getProducts(mockContext);
+      const result = await getCompanies(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ products: [mockProduct] });
+      expect(mockContext.json).toHaveBeenCalledWith({ companies: [mockCompany] });
     });
 
     it('should handle errors', async () => {
@@ -76,34 +75,34 @@ describe.skip('Product Controllers', () => {
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockRejectedValueOnce(new Error('Database error'));
 
-      const result = await getProducts(mockContext);
+      const result = await getCompanies(mockContext);
 
       expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
     });
   });
 
-  describe('getProductById', () => {
-    it('should return a product by id', async () => {
+  describe('getCompanyById', () => {
+    it('should return a company by id', async () => {
       const mockContext = createMockContext({}, { id: '1' });
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
-      mockDbClient.where.mockResolvedValueOnce([mockProduct]);
+      mockDbClient.where.mockResolvedValueOnce([mockCompany]);
 
-      const result = await getProductById(mockContext);
+      const result = await getCompanyById(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct });
+      expect(mockContext.json).toHaveBeenCalledWith({ company: mockCompany });
     });
 
-    it('should return 404 if product not found', async () => {
+    it('should return 404 if company not found', async () => {
       const mockContext = createMockContext({}, { id: '999' });
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockResolvedValueOnce([]);
 
-      const result = await getProductById(mockContext);
+      const result = await getCompanyById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith({ error: '会社が見つかりません' }, 404);
     });
 
     it('should handle errors', async () => {
@@ -112,159 +111,146 @@ describe.skip('Product Controllers', () => {
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockRejectedValueOnce(new Error('Database error'));
 
-      const result = await getProductById(mockContext);
+      const result = await getCompanyById(mockContext);
 
       expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
     });
   });
 
-  describe('createProduct', () => {
-    it('should create a new product and return it', async () => {
+  describe('createCompany', () => {
+    it('should create a new company and return it', async () => {
       const mockBody = {
-        name: 'テスト商品',
-        description: 'テスト用の商品です',
-        price: 1000,
-        stock: 10,
-        image_url: 'https://example.com/image.jpg',
-        category_id: 1
+        name: 'テスト会社',
+        description: 'テスト用の会社です',
+        address: '東京都渋谷区',
+        phone: '03-1234-5678',
+        email: 'test@example.com',
+        website: 'https://example.com'
       };
       const mockContext = createMockContext(mockBody);
 
-      const result = await createProduct(mockContext);
+      const result = await createCompany(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct }, 201);
-    });
-
-    it('should create a product with default stock value', async () => {
-      const mockBody = {
-        name: 'テスト商品',
-        description: 'テスト用の商品です',
-        price: 1000,
-        image_url: 'https://example.com/image.jpg',
-        category_id: 1
-      };
-      const mockContext = createMockContext(mockBody);
-
-      const result = await createProduct(mockContext);
-
-      expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith({ company: mockCompany }, 201);
     });
 
     it('should handle errors', async () => {
       const mockBody = {
-        name: 'テスト商品',
-        description: 'テスト用の商品です',
-        price: 1000,
-        stock: 10,
-        image_url: 'https://example.com/image.jpg',
-        category_id: 1
+        name: 'テスト会社',
+        description: 'テスト用の会社です',
+        address: '東京都渋谷区',
+        phone: '03-1234-5678',
+        email: 'test@example.com',
+        website: 'https://example.com'
       };
       const mockContext = createMockContext(mockBody);
 
       // Override the mock to throw an error
       mockDbClient.returning.mockRejectedValueOnce(new Error('Database error'));
 
-      const result = await createProduct(mockContext);
+      const result = await createCompany(mockContext);
 
       expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
     });
   });
 
-  describe('updateProduct', () => {
-    it('should update a product and return it', async () => {
+  describe('updateCompany', () => {
+    it('should update a company and return it', async () => {
       const mockBody = {
-        name: '更新された商品名',
-        price: 2000,
-        stock: 20
+        name: '更新された会社名',
+        description: '更新された説明',
+        address: '更新された住所',
+        phone: '更新された電話番号',
+        email: 'updated@example.com',
+        website: 'https://updated-example.com'
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-
-      // Mock the first query to check if product exists
+      
+      // Mock the first query to check if company exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
-      mockDbClient.where.mockResolvedValueOnce([mockProduct]);
+      mockDbClient.where.mockResolvedValueOnce([mockCompany]);
 
-      const result = await updateProduct(mockContext);
+      const result = await updateCompany(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct });
+      expect(mockContext.json).toHaveBeenCalledWith({ company: mockCompany });
     });
 
-    it('should return 404 if product not found', async () => {
+    it('should return 404 if company not found', async () => {
       const mockBody = {
-        name: '更新された商品名',
-        price: 2000
+        name: '更新された会社名',
+        description: '更新された説明'
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
-
-      // Mock the first query to check if product exists
+      
+      // Mock the first query to check if company exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockResolvedValueOnce([]);
 
-      const result = await updateProduct(mockContext);
+      const result = await updateCompany(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith({ error: '会社が見つかりません' }, 404);
     });
 
     it('should handle errors', async () => {
       const mockBody = {
-        name: '更新された商品名',
-        price: 2000
+        name: '更新された会社名',
+        description: '更新された説明'
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-
+      
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockRejectedValueOnce(new Error('Database error'));
 
-      const result = await updateProduct(mockContext);
+      const result = await updateCompany(mockContext);
 
       expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
     });
   });
 
-  describe('deleteProduct', () => {
-    it('should delete a product and return success message', async () => {
+  describe('deleteCompany', () => {
+    it('should delete a company and return success message', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-
-      // Mock the first query to check if product exists
+      
+      // Mock the first query to check if company exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
-      mockDbClient.where.mockResolvedValueOnce([mockProduct]);
+      mockDbClient.where.mockResolvedValueOnce([mockCompany]);
 
-      const result = await deleteProduct(mockContext);
+      const result = await deleteCompany(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: '商品が削除されました' });
+      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: '会社が削除されました' });
     });
 
-    it('should return 404 if product not found', async () => {
+    it('should return 404 if company not found', async () => {
       const mockContext = createMockContext({}, { id: '999' });
-
-      // Mock the first query to check if product exists
+      
+      // Mock the first query to check if company exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockResolvedValueOnce([]);
 
-      const result = await deleteProduct(mockContext);
+      const result = await deleteCompany(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith({ error: '会社が見つかりません' }, 404);
     });
 
     it('should handle errors', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-
+      
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockRejectedValueOnce(new Error('Database error'));
 
-      const result = await deleteProduct(mockContext);
+      const result = await deleteCompany(mockContext);
 
       expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
     });

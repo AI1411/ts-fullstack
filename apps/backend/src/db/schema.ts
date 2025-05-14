@@ -1,5 +1,60 @@
 import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
+export const contactsTable = pgTable("contacts", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 100}).notNull(),
+  email: varchar("email", {length: 255}).notNull(),
+  phone: varchar("phone", {length: 50}),
+  subject: varchar("subject", {length: 255}).notNull(),
+  message: text("message").notNull(),
+  status: varchar("status", {length: 64}).default("PENDING").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_contacts_name").on(table.name),
+    emailIdx: index("idx_contacts_email").on(table.email),
+    statusIdx: index("idx_contacts_status").on(table.status),
+    createdAtIdx: index("idx_contacts_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_contacts_updated_at").on(table.updated_at)
+  };
+});
+
+export const countriesTable = pgTable("countries", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 255}).notNull(),
+  code: varchar("code", {length: 10}),
+  flag_url: varchar("flag_url", {length: 255}),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_countries_name").on(table.name),
+    codeIdx: index("idx_countries_code").on(table.code),
+    createdAtIdx: index("idx_countries_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_countries_updated_at").on(table.updated_at)
+  };
+});
+
+export const companiesTable = pgTable("companies", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 255}).notNull(),
+  description: text("description"),
+  address: varchar("address", {length: 255}),
+  phone: varchar("phone", {length: 50}),
+  email: varchar("email", {length: 255}),
+  website: varchar("website", {length: 255}),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_companies_name").on(table.name),
+    emailIdx: index("idx_companies_email").on(table.email),
+    createdAtIdx: index("idx_companies_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_companies_updated_at").on(table.updated_at)
+  };
+});
+
 export const inquiriesTable = pgTable("inquiries", {
   id: serial("id").primaryKey(),
   name: varchar("name", {length: 100}).notNull(),
@@ -225,5 +280,29 @@ export const orderItemsTable = pgTable("order_items", {
     productIdIdx: index("idx_order_items_product_id").on(table.product_id),
     createdAtIdx: index("idx_order_items_created_at").on(table.created_at),
     updatedAtIdx: index("idx_order_items_updated_at").on(table.updated_at)
+  };
+});
+
+export const invoicesTable = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  order_id: integer("order_id").references(() => ordersTable.id, { onDelete: "set null" }),
+  invoice_number: varchar("invoice_number", { length: 50 }).notNull(),
+  issue_date: timestamp("issue_date").defaultNow().notNull(),
+  due_date: timestamp("due_date"),
+  total_amount: integer("total_amount").notNull(),
+  status: varchar("status", { length: 50 }).default("PENDING").notNull(),
+  payment_method: varchar("payment_method", { length: 50 }),
+  notes: text("notes"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    orderIdIdx: index("idx_invoices_order_id").on(table.order_id),
+    invoiceNumberIdx: index("idx_invoices_invoice_number").on(table.invoice_number),
+    issueDateIdx: index("idx_invoices_issue_date").on(table.issue_date),
+    dueDateIdx: index("idx_invoices_due_date").on(table.due_date),
+    statusIdx: index("idx_invoices_status").on(table.status),
+    createdAtIdx: index("idx_invoices_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_invoices_updated_at").on(table.updated_at)
   };
 });
