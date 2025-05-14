@@ -19,7 +19,8 @@ import {
   companiesTable,
   countriesTable,
   inquiriesTable,
-  invoicesTable
+  invoicesTable,
+  contactsTable
 } from './src/db/schema';
 
 // Load environment variables
@@ -51,6 +52,7 @@ async function seed() {
     await db.delete(tasksTable);
     await db.delete(todosTable);
     await db.delete(inquiriesTable);
+    await db.delete(contactsTable);
     await db.delete(usersTable);
     await db.delete(teamsTable);
     await db.delete(countriesTable);
@@ -247,6 +249,26 @@ async function seed() {
     } catch (error) {
       console.error('❌ Error seeding inquiries:', error);
       console.log('⚠️ Skipping inquiries seeding. Make sure to run migrations to create the inquiries table.');
+    }
+
+    // Seed contacts
+    console.log('Seeding contacts...');
+    try {
+      const contactStatuses = ['PENDING', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+      for (let i = 0; i < 20; i++) {
+        await db.insert(contactsTable).values({
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          phone: faker.phone.number(),
+          subject: faker.lorem.sentence(5),
+          message: faker.lorem.paragraphs(2),
+          status: faker.helpers.arrayElement(contactStatuses),
+        });
+      }
+      console.log('✅ Contacts seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding contacts:', error);
+      console.log('⚠️ Skipping contacts seeding. Make sure to run migrations to create the contacts table.');
     }
 
     // Seed products
