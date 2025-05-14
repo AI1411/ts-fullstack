@@ -155,7 +155,7 @@ const successResponseSchema = z.object({
 // 領収書一覧取得
 const getInvoicesRoute = createRoute({
   method: 'get',
-  path: '/',
+  path: '/invoices',
   tags: ['invoices'],
   summary: '領収書一覧を取得',
   description: 'すべての領収書を取得します',
@@ -184,7 +184,7 @@ const getInvoicesRoute = createRoute({
 // 領収書取得
 const getInvoiceByIdRoute = createRoute({
   method: 'get',
-  path: '/:id',
+  path: '/invoices/:id',
   tags: ['invoices'],
   summary: '領収書を取得',
   description: '指定されたIDの領収書を取得します',
@@ -229,7 +229,7 @@ const getInvoiceByIdRoute = createRoute({
 // 領収書作成
 const createInvoiceRoute = createRoute({
   method: 'post',
-  path: '/',
+  path: '/invoices',
   tags: ['invoices'],
   summary: '領収書を作成',
   description: '新しい領収書を作成します',
@@ -275,7 +275,7 @@ const createInvoiceRoute = createRoute({
 // 領収書更新
 const updateInvoiceRoute = createRoute({
   method: 'put',
-  path: '/:id',
+  path: '/invoices/:id',
   tags: ['invoices'],
   summary: '領収書を更新',
   description: '指定されたIDの領収書を更新します',
@@ -327,7 +327,7 @@ const updateInvoiceRoute = createRoute({
 // 領収書削除
 const deleteInvoiceRoute = createRoute({
   method: 'delete',
-  path: '/:id',
+  path: '/invoices/:id',
   tags: ['invoices'],
   summary: '領収書を削除',
   description: '指定されたIDの領収書を削除します',

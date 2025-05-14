@@ -9,8 +9,9 @@ vi.mock('postgres', () => ({
 }));
 
 vi.mock('drizzle-orm/postgres-js', () => ({
-  drizzle: vi.fn(({ client }) => ({
+  drizzle: vi.fn((client, options) => ({
     client,
+    schema: options.schema,
     mockedDrizzleInstance: true
   }))
 }));
@@ -38,12 +39,13 @@ describe('Database Utilities', () => {
         { prepare: false }
       );
 
-      // Verify drizzle was called with the postgres client
-      expect(drizzle).toHaveBeenCalledWith({ client: 'mocked-postgres-client' });
+      // Verify drizzle was called with the postgres client and schema
+      expect(drizzle).toHaveBeenCalledWith('mocked-postgres-client', { schema: expect.anything() });
 
       // Verify the returned object is the mocked drizzle instance
       expect(db).toEqual({
         client: 'mocked-postgres-client',
+        schema: expect.anything(),
         mockedDrizzleInstance: true
       });
     });
