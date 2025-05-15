@@ -43,7 +43,7 @@ const ChatDetail = ({ chatId }: ChatDetailProps) => {
 
   // メッセージを既読にする
   useEffect(() => {
-    if (chatId && !messagesLoading) {
+    if (chatId && !messagesLoading && chat) {
       chatService.markMessagesAsRead(chatId, CURRENT_USER_ID)
         .then(() => {
           // 未読メッセージカウントを更新
@@ -65,7 +65,7 @@ const ChatDetail = ({ chatId }: ChatDetailProps) => {
   if (chatLoading || messagesLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" role="status"></div>
       </div>
     );
   }

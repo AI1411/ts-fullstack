@@ -19,17 +19,17 @@ const MessageForm = ({ chatId }: MessageFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!message.trim()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       await chatService.createChatMessage(chatId, {
         sender_id: CURRENT_USER_ID,
         content: message.trim()
       });
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
       setMessage("");
       await queryClient.invalidateQueries({ queryKey: ['chatMessages', chatId] });
@@ -42,7 +42,7 @@ const MessageForm = ({ chatId }: MessageFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center">
+    <form onSubmit={handleSubmit} className="flex items-center" role="form">
       <input
         type="text"
         placeholder="メッセージを入力..."
@@ -57,7 +57,7 @@ const MessageForm = ({ chatId }: MessageFormProps) => {
         disabled={!message.trim() || isSubmitting}
       >
         {isSubmitting ? (
-          <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+          <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" role="status"></div>
         ) : (
           <RiSendPlaneFill className="h-5 w-5" />
         )}

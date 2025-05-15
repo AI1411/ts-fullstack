@@ -83,6 +83,11 @@ export const getUserChats = async (userId: number): Promise<ChatWithUser[]> => {
     }
   } catch (error) {
     console.error(`Error fetching chats for user ${userId}:`, error);
+    // If the error is from JSON parsing, rethrow it
+    if (error instanceof Error && error.message === 'Invalid JSON response from server') {
+      throw error;
+    }
+    // Otherwise, throw a new error
     throw new Error(`Failed to fetch chats for user ${userId}`);
   }
 };
