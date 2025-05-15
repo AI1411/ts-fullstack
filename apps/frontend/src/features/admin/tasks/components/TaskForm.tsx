@@ -6,19 +6,6 @@ import {taskService} from "../services";
 import {userService} from "@/features/admin/users/services";
 import {teamService} from "@/features/admin/teams/services";
 
-// ユーザー型定義
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-// チーム型定義
-type Team = {
-  id: number;
-  name: string;
-  description: string | null;
-};
 
 const TaskForm = () => {
   const queryClient = useQueryClient();
@@ -83,7 +70,7 @@ const TaskForm = () => {
       });
       await queryClient.invalidateQueries({queryKey: ['tasks']});
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'タスクの追加に失敗しました');
+      setError('タスクの追加に失敗しました');
       console.error(err);
     } finally {
       setIsSubmitting(false);
