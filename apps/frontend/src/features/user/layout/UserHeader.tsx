@@ -71,6 +71,7 @@ const UserHeader: React.FC = () => {
             {/* ダークモード切り替え */}
             <button
               onClick={toggleDarkMode}
+              data-testid="dark-mode-button"
               className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             >
               {darkMode ? <RiSunLine className="h-6 w-6" /> : <RiMoonLine className="h-6 w-6" />}
@@ -99,6 +100,7 @@ const UserHeader: React.FC = () => {
             <div className="flex md:hidden">
               <button
                 type="button"
+                data-testid="mobile-menu-button"
                 className="inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >

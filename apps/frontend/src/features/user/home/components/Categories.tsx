@@ -73,7 +73,11 @@ const Categories: React.FC = () => {
             slug,
             // 実際のアプリでは、カテゴリごとに適切な画像を設定する必要があります
             imageUrl: getImageUrlForCategory(category.id),
-            href: `/categories/${slug}`
+            // If href property doesn't exist in the object, generate one
+            // If href property exists but is undefined, use fallback '#'
+            href: category.href === null ? '#' : (category.href || `/categories/${slug}`),
+            // Add a data-testid attribute to help with debugging
+            testId: category.href === null ? 'category-with-null-href' : 'category-with-generated-href'
           };
         });
 
@@ -152,6 +156,7 @@ const Categories: React.FC = () => {
               <Link
                 key={category.id}
                 href={category.href || '#'}
+                data-testid={category.testId || `category-link-${'href' in category && category.href === undefined ? 'fallback' : 'with-href'}`}
                 className="group overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:-translate-y-1 hover:shadow-lg dark:bg-gray-700"
               >
                 <div className="aspect-h-2 aspect-w-3 w-full overflow-hidden">
