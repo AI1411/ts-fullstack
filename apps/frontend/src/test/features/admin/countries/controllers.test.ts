@@ -56,10 +56,14 @@ describe('Country Controllers', () => {
     });
 
     it('should handle errors from the repository', async () => {
-      const error = new Error('Failed to fetch countries');
-      vi.mocked(countryRepository.getCountries).mockRejectedValue(error);
+      // Mock a failed response
+      vi.mocked(countryRepository.getCountries).mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error'
+      } as Response);
 
-      await expect(getCountries()).rejects.toThrow(error);
+      await expect(getCountries()).rejects.toThrowError('Failed to fetch countries');
       expect(countryRepository.getCountries).toHaveBeenCalledTimes(1);
     });
   });

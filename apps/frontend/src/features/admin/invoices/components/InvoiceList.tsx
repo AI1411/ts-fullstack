@@ -1,7 +1,7 @@
 'use client'
 
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
+import React, {useState} from "react";
 import {invoiceService} from "../services";
 import {RiArrowDownSLine, RiArrowRightSLine} from "react-icons/ri";
 import Link from "next/link";
@@ -123,8 +123,8 @@ const InvoiceList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {invoices.map(invoice => (
-            <>
-              <tr key={invoice.id} className={expandedInvoiceId === invoice.id ? 'bg-gray-50' : ''}>
+            <React.Fragment key={invoice.id}>
+              <tr className={expandedInvoiceId === invoice.id ? 'bg-gray-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{invoice.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -165,6 +165,7 @@ const InvoiceList = () => {
                       value={editFormData.status}
                       onChange={handleChange}
                       className="border rounded px-2 py-1 w-full"
+                      aria-label="ステータス"
                     >
                       <option value="PENDING">未払い</option>
                       <option value="PAID">支払済み</option>
@@ -226,7 +227,7 @@ const InvoiceList = () => {
                 </td>
               </tr>
               {expandedInvoiceId === invoice.id && (
-                <tr>
+                <tr key={`${invoice.id}-details`}>
                   <td colSpan={5} className="px-6 py-4">
                     <div className="p-2">
                       <h3 className="font-bold mb-2">領収書詳細</h3>
@@ -260,7 +261,7 @@ const InvoiceList = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

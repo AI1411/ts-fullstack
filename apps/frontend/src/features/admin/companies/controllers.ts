@@ -27,6 +27,9 @@ export interface CreateCompanyInput {
 export const getCompanies = async (): Promise<Company[]> => {
   try {
     const response = await companyRepository.getCompanies();
+    if (!response.ok) {
+      throw new Error('Error fetching companies');
+    }
     const {companies} = await response.json();
     return companies;
   } catch (error) {
