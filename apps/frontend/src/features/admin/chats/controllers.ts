@@ -58,13 +58,32 @@ export const getUserChats = async (userId: number): Promise<ChatWithUser[]> => {
   try {
     const response = await chatRepository.getUserChats(userId);
     if (!response.ok) {
-      throw new Error('Failed to fetch user chats');
+      throw new Error(`Failed to fetch user chats: ${response.status} ${response.statusText}`);
     }
-    const { chats } = await response.json();
-    return chats;
+    try {
+      // Check if response is text/html instead of application/json
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const text = await response.text();
+      // Check if the response starts with HTML doctype or tags
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const data = JSON.parse(text);
+      return data.chats || [];
+    } catch (jsonError) {
+      console.error('Error parsing JSON response:', jsonError);
+      throw new Error('Invalid JSON response from server');
+    }
   } catch (error) {
     console.error(`Error fetching chats for user ${userId}:`, error);
-    throw error;
+    throw new Error(`Failed to fetch chats for user ${userId}`);
   }
 };
 
@@ -122,7 +141,7 @@ export const createChatMessage = async (chatId: number, messageData: CreateChatM
       ...messageData,
       chat_id: chatId
     };
-    
+
     const response = await chatRepository.createChatMessage(chatId, data);
     if (!response.ok) {
       const errorText = await response.text();

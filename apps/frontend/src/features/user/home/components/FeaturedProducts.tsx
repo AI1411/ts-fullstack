@@ -53,7 +53,7 @@ const FeaturedProducts: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-testid="products-grid" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {sampleProducts.map((product) => (
             <ProductCard
               key={product.id}

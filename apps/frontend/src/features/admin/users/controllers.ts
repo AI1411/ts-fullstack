@@ -21,11 +21,35 @@ export interface CreateUserInput {
 export const getUsers = async (): Promise<User[]> => {
   try {
     const response = await userRepository.getUsers();
-    const {users} = await response.json();
-    return users;
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`);
+    }
+
+    try {
+      // Check if response is text/html instead of application/json
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const text = await response.text();
+      // Check if the response starts with HTML doctype or tags
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const data = JSON.parse(text);
+      return data.users || [];
+    } catch (jsonError) {
+      console.error('Error parsing JSON response:', jsonError);
+      throw new Error('Invalid JSON response from server');
+    }
   } catch (error) {
     console.error('Error fetching users:', error);
-    throw error;
+    throw new Error('Failed to fetch users');
   }
 };
 

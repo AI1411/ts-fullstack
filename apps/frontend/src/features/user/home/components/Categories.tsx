@@ -23,14 +23,45 @@ const Categories: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8080/categories');
+        let response;
+        try {
+          response = await fetch('http://localhost:8080/categories');
+        } catch (fetchError) {
+          console.error('Error fetching categories:', fetchError);
+          setError('カテゴリデータの取得に失敗しました');
+          setLoading(false);
+          return;
+        }
+
         if (!response.ok) {
           throw new Error('カテゴリデータの取得に失敗しました');
         }
-        const data = await response.json();
+
+        let data;
+        try {
+          // Check if response is text/html instead of application/json
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('text/html')) {
+            console.error('Received HTML response instead of JSON');
+            throw new Error('Invalid JSON response from server');
+          }
+
+          const text = await response.text();
+          // Check if the response starts with HTML doctype or tags
+          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+            console.error('Received HTML response instead of JSON');
+            throw new Error('Invalid JSON response from server');
+          }
+
+          data = JSON.parse(text);
+        } catch (jsonError) {
+          console.error('Error parsing JSON response:', jsonError);
+          throw new Error('Invalid JSON response from server');
+        }
 
         // APIから取得したデータを変換して、フロントエンド用のフィールドを追加
-        const formattedCategories = data.categories.map((category: Category) => {
+        const categories = data.categories || [];
+        const formattedCategories = categories.map((category: Category) => {
           // slugをnameから生成（簡易的な実装）
           const slug = category.name
             .toLowerCase()
@@ -48,7 +79,7 @@ const Categories: React.FC = () => {
 
         setCategories(formattedCategories);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'カテゴリデータの取得に失敗しました');
+        setError('カテゴリデータの取得に失敗しました');
         console.error('Error fetching categories:', err);
       } finally {
         setLoading(false);
@@ -97,7 +128,7 @@ const Categories: React.FC = () => {
         {/* ローディング状態 */}
         {loading && (
           <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div role="status" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         )}
 

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 py-16 sm:py-24">
+    <div data-testid="hero-container" className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 py-16 sm:py-24">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/90 to-purple-600/90"></div>
       </div>
@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
               </Link>
             </div>
           </div>
-          
+
           {/* 画像 */}
           <div className="hidden md:flex md:items-center">
             <div className="relative h-full w-full">

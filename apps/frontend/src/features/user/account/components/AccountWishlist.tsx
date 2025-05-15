@@ -30,10 +30,10 @@ const mockWishlistItems = [
 
 const AccountWishlist: React.FC = () => {
   return (
-    <div className="p-6">
+    <div data-testid="wishlist-container" className="p-6">
       <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">お気に入り商品</h2>
-      
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+      <div data-testid="wishlist-grid" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {mockWishlistItems.map((item) => (
           <div key={item.id} className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div className="relative h-48 w-full overflow-hidden">
@@ -53,7 +53,7 @@ const AccountWishlist: React.FC = () => {
             <div className="p-4">
               <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">{item.name}</h3>
               <p className="mb-4 text-xl font-bold text-gray-900 dark:text-white">¥{item.price.toLocaleString()}</p>
-              
+
               <div className="flex space-x-2">
                 <button 
                   className={`flex flex-1 items-center justify-center rounded-md px-3 py-2 text-sm font-medium ${
@@ -74,7 +74,7 @@ const AccountWishlist: React.FC = () => {
           </div>
         ))}
       </div>
-      
+
       {mockWishlistItems.length === 0 && (
         <div className="mt-4 rounded-lg bg-gray-50 p-6 text-center dark:bg-gray-800">
           <p className="text-gray-500 dark:text-gray-400">お気に入りに追加された商品はありません。</p>
