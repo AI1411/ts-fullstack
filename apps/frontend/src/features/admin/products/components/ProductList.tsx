@@ -5,6 +5,7 @@ import {useState} from "react";
 import {productService} from "../services";
 import {RiArrowDownSLine, RiArrowRightSLine} from "react-icons/ri";
 import Link from "next/link";
+import React from "react";
 
 // Product型定義
 type Product = {
@@ -122,8 +123,8 @@ const ProductList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {products.map(product => (
-            <>
-              <tr key={product.id} className={expandedProductId === product.id ? 'bg-gray-50' : ''}>
+            <React.Fragment key={product.id}>
+              <tr className={expandedProductId === product.id ? 'bg-gray-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -252,7 +253,7 @@ const ProductList = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>
