@@ -1,7 +1,7 @@
 'use client'
 
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
+import React, {useState} from "react";
 import {taskService} from "../services";
 import {userService} from "@/features/admin/users/services";
 import {teamService} from "@/features/admin/teams/services";
@@ -195,8 +195,8 @@ const TaskList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
         {tasks?.map(task => (
-          <>
-            <tr key={task.id} className={expandedTaskId === task.id ? 'bg-gray-50' : ''}>
+          <React.Fragment key={task.id}>
+            <tr className={expandedTaskId === task.id ? 'bg-gray-50' : ''}>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{task.id}</td>
             <td className="px-6 py-4 whitespace-nowrap">
               {editingTaskId === task.id ? (
@@ -370,7 +370,7 @@ const TaskList = () => {
               </td>
             </tr>
           )}
-        </>
+        </React.Fragment>
         ))}
         </tbody>
       </table>

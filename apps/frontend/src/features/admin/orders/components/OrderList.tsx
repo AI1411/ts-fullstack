@@ -1,5 +1,6 @@
 'use client'
 
+import React from "react";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import {orderService} from "../services";
@@ -99,8 +100,8 @@ const OrderList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {orders.map(order => (
-            <>
-              <tr key={order.id} className={expandedOrderId === order.id ? 'bg-gray-50' : ''}>
+            <React.Fragment key={order.id}>
+              <tr className={expandedOrderId === order.id ? 'bg-gray-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -197,7 +198,7 @@ const OrderList = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

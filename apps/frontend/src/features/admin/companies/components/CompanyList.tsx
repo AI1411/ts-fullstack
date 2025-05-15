@@ -1,5 +1,6 @@
 'use client'
 
+import React from "react";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import {companyService} from "../services";
@@ -122,8 +123,8 @@ const CompanyList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {companies.map(company => (
-            <>
-              <tr key={company.id} className={expandedCompanyId === company.id ? 'bg-gray-50' : ''}>
+            <React.Fragment key={company.id}>
+              <tr className={expandedCompanyId === company.id ? 'bg-gray-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{company.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -245,7 +246,7 @@ const CompanyList = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

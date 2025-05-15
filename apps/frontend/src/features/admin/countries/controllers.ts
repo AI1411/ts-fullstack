@@ -21,11 +21,17 @@ export interface CreateCountryInput {
 export const getCountries = async (): Promise<Country[]> => {
   try {
     const response = await countryRepository.getCountries();
+    if (!response.ok) {
+      throw new Error('Failed to fetch countries');
+    }
     const {countries} = await response.json();
     return countries;
   } catch (error) {
     console.error('Error fetching countries:', error);
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error('Failed to fetch countries');
   }
 };
 

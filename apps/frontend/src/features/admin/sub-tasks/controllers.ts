@@ -25,6 +25,9 @@ export interface CreateSubTaskInput {
 export const getSubTasks = async (): Promise<SubTask[]> => {
   try {
     const response = await subTaskRepository.getSubTasks();
+    if (!response.ok) {
+      throw new Error(`Error fetching sub-tasks: ${response.statusText}`);
+    }
     const { subTasks } = await response.json();
     return subTasks;
   } catch (error) {
@@ -37,6 +40,9 @@ export const getSubTasks = async (): Promise<SubTask[]> => {
 export const getSubTasksByTaskId = async (taskId: number): Promise<SubTask[]> => {
   try {
     const response = await subTaskRepository.getSubTasksByTaskId(taskId);
+    if (!response.ok) {
+      throw new Error(`Error fetching sub-tasks for task ${taskId}: ${response.statusText}`);
+    }
     const { subTasks } = await response.json();
     return subTasks;
   } catch (error) {

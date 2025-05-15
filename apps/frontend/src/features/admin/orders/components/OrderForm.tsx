@@ -129,7 +129,7 @@ const OrderForm = () => {
       </div>
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         {error && (
-          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm" data-testid="error-message">
             {error}
           </div>
         )}

@@ -23,11 +23,35 @@ export interface CreateTodoInput {
 export const getTodos = async (): Promise<Todo[]> => {
   try {
     const response = await todoRepository.getTodos();
-    const {todos} = await response.json();
-    return todos;
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch todos: ${response.status} ${response.statusText}`);
+    }
+
+    try {
+      // Check if response is text/html instead of application/json
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const text = await response.text();
+      // Check if the response starts with HTML doctype or tags
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+        console.error('Received HTML response instead of JSON');
+        throw new Error('Invalid JSON response from server');
+      }
+
+      const data = JSON.parse(text);
+      return data.todos || [];
+    } catch (jsonError) {
+      console.error('Error parsing JSON response:', jsonError);
+      throw new Error('Invalid JSON response from server');
+    }
   } catch (error) {
     console.error('Error fetching todos:', error);
-    throw error;
+    throw new Error('Failed to fetch todos');
   }
 };
 

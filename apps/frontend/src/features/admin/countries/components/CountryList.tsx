@@ -1,7 +1,7 @@
 'use client'
 
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
+import React, {useState} from "react";
 import {countryService} from "../services";
 import {RiArrowDownSLine, RiArrowRightSLine} from "react-icons/ri";
 import Link from "next/link";
@@ -113,8 +113,8 @@ const CountryList = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {countries.map(country => (
-            <>
-              <tr key={country.id} className={expandedCountryId === country.id ? 'bg-gray-50' : ''}>
+            <React.Fragment key={country.id}>
+              <tr className={expandedCountryId === country.id ? 'bg-gray-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{country.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -196,7 +196,7 @@ const CountryList = () => {
                 </td>
               </tr>
               {expandedCountryId === country.id && (
-                <tr>
+                <tr key={`${country.id}-details`}>
                   <td colSpan={5} className="px-6 py-4">
                     <div className="p-2">
                       <h3 className="font-bold mb-2">国の詳細</h3>
@@ -226,7 +226,7 @@ const CountryList = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

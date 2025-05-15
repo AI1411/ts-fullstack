@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   id: number;
@@ -18,6 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
   imageUrl,
 }) => {
+  const { addItem } = useCart();
   return (
     <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
       {/* 商品画像 */}
@@ -28,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      
+
       {/* 商品情報 */}
       <div className="p-4">
         <h3 className="mb-1 text-lg font-medium text-gray-900 dark:text-white">
@@ -44,6 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             ¥{price.toLocaleString()}
           </span>
           <button
+            onClick={() => addItem({ id, name, price, image: imageUrl })}
             className="rounded-md bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
           >
             カートに追加
