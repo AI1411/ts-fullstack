@@ -35,6 +35,9 @@ export interface CreateOrderInput {
 export const getOrders = async (): Promise<Order[]> => {
   try {
     const response = await orderRepository.getOrders();
+    if (!response.ok) {
+      throw new Error('Error fetching orders');
+    }
     const {orders} = await response.json();
     return orders;
   } catch (error) {
