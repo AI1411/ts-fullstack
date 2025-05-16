@@ -17,6 +17,8 @@ import companyRoutes from './features/companies/routes';
 import countryRoutes from './features/countries/routes';
 import invoiceRoutes from './features/invoices/routes';
 import contactRoutes from './features/contacts/routes';
+import baseballPlayerRoutes from './features/baseball-players/routes';
+import baseballGameStatRoutes from './features/baseball-game-stats/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -65,7 +67,9 @@ const route = app
   .route('/', companyRoutes)
   .route('/', countryRoutes)
   .route('/', invoiceRoutes)
-  .route('/', contactRoutes);
+  .route('/', contactRoutes)
+  .route('/', baseballPlayerRoutes)
+  .route('/', baseballGameStatRoutes);
 
 export type AppType = typeof route;
 

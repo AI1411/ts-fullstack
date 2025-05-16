@@ -20,7 +20,9 @@ import {
   countriesTable,
   inquiriesTable,
   invoicesTable,
-  contactsTable
+  contactsTable,
+  baseballPlayersTable,
+  baseballGameStatsTable
 } from './src/db/schema';
 
 // Load environment variables
@@ -56,6 +58,8 @@ async function seed() {
     await db.delete(usersTable);
     await db.delete(teamsTable);
     await db.delete(countriesTable);
+    await db.delete(baseballGameStatsTable);
+    await db.delete(baseballPlayersTable);
 
     // Skip deleting from companies table as it might not exist yet
     // The table will be created when migrations are applied
@@ -369,6 +373,93 @@ async function seed() {
     } catch (error) {
       console.error('❌ Error seeding invoices:', error);
       console.log('⚠️ Skipping invoices seeding. Make sure to run migrations to create the invoices table.');
+    }
+
+    // Seed baseball players
+    console.log('Seeding baseball players...');
+    const baseballPlayerIds = [];
+    try {
+      const positions = ['Pitcher', 'Catcher', 'First Base', 'Second Base', 'Third Base', 'Shortstop', 'Left Field', 'Center Field', 'Right Field', 'Designated Hitter'];
+      const teams = ['Giants', 'Tigers', 'Carp', 'Dragons', 'BayStars', 'Swallows', 'Fighters', 'Hawks', 'Eagles', 'Marines', 'Buffaloes', 'Lions'];
+
+      for (let i = 0; i < 30; i++) {
+        const isPitcher = faker.helpers.arrayElement(positions) === 'Pitcher' || Math.random() < 0.3;
+
+        const [player] = await db.insert(baseballPlayersTable).values({
+          name: faker.person.fullName(),
+          team: faker.helpers.arrayElement(teams),
+          position: faker.helpers.arrayElement(positions),
+          batting_average: isPitcher ? faker.number.float({ min: 0.1, max: 0.25, precision: 0.001 }) : faker.number.float({ min: 0.2, max: 0.35, precision: 0.001 }),
+          home_runs: isPitcher ? faker.number.int({ min: 0, max: 5 }) : faker.number.int({ min: 0, max: 45 }),
+          runs_batted_in: isPitcher ? faker.number.int({ min: 0, max: 15 }) : faker.number.int({ min: 20, max: 120 }),
+          stolen_bases: isPitcher ? faker.number.int({ min: 0, max: 3 }) : faker.number.int({ min: 0, max: 50 }),
+          era: isPitcher ? faker.number.float({ min: 2.0, max: 6.0, precision: 0.01 }) : null,
+          wins: isPitcher ? faker.number.int({ min: 0, max: 20 }) : null,
+          losses: isPitcher ? faker.number.int({ min: 0, max: 15 }) : null,
+          saves: isPitcher ? faker.number.int({ min: 0, max: 30 }) : null,
+        }).returning({ id: baseballPlayersTable.id });
+
+        baseballPlayerIds.push(player.id);
+      }
+      console.log('✅ Baseball players seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding baseball players:', error);
+      console.log('⚠️ Skipping baseball players seeding. Make sure to run migrations to create the baseball_players table.');
+    }
+
+    // Seed baseball game stats
+    console.log('Seeding baseball game stats...');
+    try {
+      const opponents = ['Giants', 'Tigers', 'Carp', 'Dragons', 'BayStars', 'Swallows', 'Fighters', 'Hawks', 'Eagles', 'Marines', 'Buffaloes', 'Lions'];
+
+      // Generate game dates for the last 30 days
+      const gameDates = [];
+      for (let i = 1; i <= 30; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        gameDates.push(date);
+      }
+
+      // For each player, create 1-5 game stats
+      for (const playerId of baseballPlayerIds) {
+        // Get player info to determine if they're a pitcher
+        const player = await db.select().from(baseballPlayersTable).where(eq(baseballPlayersTable.id, playerId)).limit(1);
+
+        if (player.length > 0) {
+          const isPitcher = player[0].position === 'Pitcher' || player[0].era !== null;
+          const numGames = randomInt(1, 5);
+
+          for (let i = 0; i < numGames; i++) {
+            const gameDate = faker.helpers.arrayElement(gameDates);
+            const opponent = faker.helpers.arrayElement(opponents.filter(team => team !== player[0].team));
+
+            // Create game stat with appropriate values based on player type
+            const atBats = isPitcher ? randomInt(0, 4) : randomInt(3, 5);
+            const hits = randomInt(0, Math.min(atBats, 4));
+
+            await db.insert(baseballGameStatsTable).values({
+              player_id: playerId,
+              game_date: gameDate,
+              opponent: opponent,
+              at_bats: atBats,
+              hits: hits,
+              runs: randomInt(0, 3),
+              home_runs: isPitcher ? randomInt(0, 1) : randomInt(0, 2),
+              runs_batted_in: isPitcher ? randomInt(0, 2) : randomInt(0, 5),
+              stolen_bases: isPitcher ? 0 : randomInt(0, 2),
+              innings_pitched: isPitcher ? randomInt(1, 9) : null,
+              hits_allowed: isPitcher ? randomInt(0, 10) : null,
+              earned_runs: isPitcher ? randomInt(0, 7) : null,
+              strikeouts: isPitcher ? randomInt(0, 12) : null,
+              walks: isPitcher ? randomInt(0, 5) : null,
+            });
+          }
+        }
+      }
+      console.log('✅ Baseball game stats seeded successfully!');
+    } catch (error) {
+      console.error('❌ Error seeding baseball game stats:', error);
+      console.log('⚠️ Skipping baseball game stats seeding. Make sure to run migrations to create the baseball_game_stats table.');
     }
 
     console.log('✅ Database seeding completed successfully!');

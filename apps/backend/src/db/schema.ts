@@ -1,4 +1,57 @@
-import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
+import {boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar, numeric} from "drizzle-orm/pg-core";
+
+export const baseballPlayersTable = pgTable("baseball_players", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", {length: 100}).notNull(),
+  team: varchar("team", {length: 100}),
+  position: varchar("position", {length: 50}),
+  batting_average: numeric("batting_average", { precision: 4, scale: 3 }),
+  home_runs: integer("home_runs"),
+  runs_batted_in: integer("runs_batted_in"),
+  stolen_bases: integer("stolen_bases"),
+  era: numeric("era", { precision: 5, scale: 2 }),
+  wins: integer("wins"),
+  losses: integer("losses"),
+  saves: integer("saves"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    nameIdx: index("idx_baseball_players_name").on(table.name),
+    teamIdx: index("idx_baseball_players_team").on(table.team),
+    positionIdx: index("idx_baseball_players_position").on(table.position),
+    createdAtIdx: index("idx_baseball_players_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_baseball_players_updated_at").on(table.updated_at)
+  };
+});
+
+export const baseballGameStatsTable = pgTable("baseball_game_stats", {
+  id: serial("id").primaryKey(),
+  player_id: integer("player_id").references(() => baseballPlayersTable.id, {onDelete: "cascade"}).notNull(),
+  game_date: timestamp("game_date").notNull(),
+  opponent: varchar("opponent", {length: 100}),
+  at_bats: integer("at_bats"),
+  hits: integer("hits"),
+  runs: integer("runs"),
+  home_runs: integer("home_runs"),
+  runs_batted_in: integer("runs_batted_in"),
+  stolen_bases: integer("stolen_bases"),
+  innings_pitched: numeric("innings_pitched", { precision: 4, scale: 1 }),
+  hits_allowed: integer("hits_allowed"),
+  earned_runs: integer("earned_runs"),
+  strikeouts: integer("strikeouts"),
+  walks: integer("walks"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull()
+}, (table) => {
+  return {
+    playerIdIdx: index("idx_baseball_game_stats_player_id").on(table.player_id),
+    gameDateIdx: index("idx_baseball_game_stats_game_date").on(table.game_date),
+    opponentIdx: index("idx_baseball_game_stats_opponent").on(table.opponent),
+    createdAtIdx: index("idx_baseball_game_stats_created_at").on(table.created_at),
+    updatedAtIdx: index("idx_baseball_game_stats_updated_at").on(table.updated_at)
+  };
+});
 
 export const contactsTable = pgTable("contacts", {
   id: serial("id").primaryKey(),
