@@ -82,7 +82,7 @@ export const deleteTodo = async (c: Context) => {
     if (!deletedTodo.length) {
       return c.json({ error: 'Todo not found' }, 404);
     }
-    return c.json({ message: 'Todo deleted successfully' }, 204);
+    return c.json({ message: 'Todo deleted successfully' }, 200);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
