@@ -17,6 +17,11 @@ import companyRoutes from './features/companies/routes';
 import countryRoutes from './features/countries/routes';
 import invoiceRoutes from './features/invoices/routes';
 import contactRoutes from './features/contacts/routes';
+import baseballPlayerRoutes from './features/baseball-players/routes';
+import baseballGameStatRoutes from './features/baseball-game-stats/routes';
+import baseballTeamRoutes from './features/baseball-teams/routes';
+import baseballInjuryRoutes from './features/baseball-injuries/routes';
+import baseballPlayerMediaRoutes from './features/baseball-player-media/routes';
 import { cors } from 'hono/cors';
 
 export type Env = {
@@ -65,7 +70,12 @@ const route = app
   .route('/', companyRoutes)
   .route('/', countryRoutes)
   .route('/', invoiceRoutes)
-  .route('/', contactRoutes);
+  .route('/', contactRoutes)
+  .route('/', baseballPlayerRoutes)
+  .route('/', baseballGameStatRoutes)
+  .route('/', baseballTeamRoutes)
+  .route('/', baseballInjuryRoutes)
+  .route('/', baseballPlayerMediaRoutes);
 
 export type AppType = typeof route;
 
