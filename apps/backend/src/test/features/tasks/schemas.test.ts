@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { taskSchema } from '../../../features/tasks/schemas';
 
 describe('Task Schemas', () => {
@@ -7,10 +7,10 @@ describe('Task Schemas', () => {
       const validTask = {
         title: 'Test Task',
       };
-      
+
       const result = taskSchema.safeParse(validTask);
       expect(result.success).toBe(true);
-      
+
       // Check default values
       if (result.success) {
         expect(result.data.status).toBe('PENDING');
@@ -27,7 +27,7 @@ describe('Task Schemas', () => {
         status: 'IN_PROGRESS',
         due_date: '2023-12-31',
       };
-      
+
       const result = taskSchema.safeParse(validTask);
       expect(result.success).toBe(true);
     });
@@ -40,7 +40,7 @@ describe('Task Schemas', () => {
         description: null,
         due_date: null,
       };
-      
+
       const result = taskSchema.safeParse(validTask);
       expect(result.success).toBe(true);
     });
@@ -49,7 +49,7 @@ describe('Task Schemas', () => {
       const invalidTask = {
         title: 'A', // Too short
       };
-      
+
       const result = taskSchema.safeParse(invalidTask);
       expect(result.success).toBe(false);
     });
@@ -58,7 +58,7 @@ describe('Task Schemas', () => {
       const invalidTask = {
         description: 'Missing title',
       };
-      
+
       const result = taskSchema.safeParse(invalidTask);
       expect(result.success).toBe(false);
     });
@@ -68,7 +68,7 @@ describe('Task Schemas', () => {
         title: 'Test Task',
         user_id: 'not-a-number',
       };
-      
+
       const result = taskSchema.safeParse(invalidTask);
       expect(result.success).toBe(false);
     });
@@ -77,7 +77,7 @@ describe('Task Schemas', () => {
       const invalidTask = {
         title: '',
       };
-      
+
       const result = taskSchema.safeParse(invalidTask);
       expect(result.success).toBe(false);
     });

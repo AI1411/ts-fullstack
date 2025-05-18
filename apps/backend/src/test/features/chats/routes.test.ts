@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import chatRoutes from '../../../features/chats/routes';
 import * as controllers from '../../../features/chats/controllers';
+import chatRoutes from '../../../features/chats/routes';
 
 // Mock the controllers
 vi.mock('../../../features/chats/controllers', () => ({
@@ -11,7 +11,7 @@ vi.mock('../../../features/chats/controllers', () => ({
   createChatMessage: vi.fn().mockImplementation(() => ({ status: 201 })),
   getChatMessages: vi.fn().mockImplementation(() => ({ status: 200 })),
   markMessagesAsRead: vi.fn().mockImplementation(() => ({ status: 200 })),
-  getUnreadMessageCount: vi.fn().mockImplementation(() => ({ status: 200 }))
+  getUnreadMessageCount: vi.fn().mockImplementation(() => ({ status: 200 })),
 }));
 
 describe('Chat Routes', () => {
@@ -25,7 +25,7 @@ describe('Chat Routes', () => {
       vi.mocked(controllers.getUserChats).mockResolvedValueOnce(mockResponse);
 
       const res = await chatRoutes.request('/users/1/chats', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -42,7 +42,7 @@ describe('Chat Routes', () => {
       vi.mocked(controllers.getChatById).mockResolvedValueOnce(mockResponse);
 
       const res = await chatRoutes.request('/chats/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -61,12 +61,12 @@ describe('Chat Routes', () => {
       const res = await chatRoutes.request('/chats', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           creator_id: 1,
-          recipient_id: 2
-        })
+          recipient_id: 2,
+        }),
       });
 
       // Set the status code manually for testing
@@ -80,10 +80,12 @@ describe('Chat Routes', () => {
   describe('GET /chats/:chatId/messages', () => {
     it('should call getChatMessages controller', async () => {
       const mockResponse = { messages: [] };
-      vi.mocked(controllers.getChatMessages).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.getChatMessages).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await chatRoutes.request('/chats/1/messages', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -96,18 +98,22 @@ describe('Chat Routes', () => {
 
   describe('POST /chats/:chatId/messages', () => {
     it('should call createChatMessage controller', async () => {
-      const mockResponse = { message: { id: 1, chat_id: 1, sender_id: 1, content: 'Hello!' } };
-      vi.mocked(controllers.createChatMessage).mockResolvedValueOnce(mockResponse);
+      const mockResponse = {
+        message: { id: 1, chat_id: 1, sender_id: 1, content: 'Hello!' },
+      };
+      vi.mocked(controllers.createChatMessage).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await chatRoutes.request('/chats/1/messages', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           sender_id: 1,
-          content: 'Hello!'
-        })
+          content: 'Hello!',
+        }),
       });
 
       // Set the status code manually for testing
@@ -121,17 +127,19 @@ describe('Chat Routes', () => {
   describe('POST /chats/messages/read', () => {
     it('should call markMessagesAsRead controller', async () => {
       const mockResponse = { message: 'Messages marked as read' };
-      vi.mocked(controllers.markMessagesAsRead).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.markMessagesAsRead).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await chatRoutes.request('/chats/messages/read', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           chat_id: 1,
-          user_id: 2
-        })
+          user_id: 2,
+        }),
       });
 
       // Set the status code manually for testing
@@ -146,20 +154,22 @@ describe('Chat Routes', () => {
 
       // Capture the context object passed to markMessagesAsRead
       let capturedContext;
-      vi.mocked(controllers.markMessagesAsRead).mockImplementationOnce((context) => {
-        capturedContext = context;
-        return mockResponse;
-      });
+      vi.mocked(controllers.markMessagesAsRead).mockImplementationOnce(
+        (context) => {
+          capturedContext = context;
+          return mockResponse;
+        }
+      );
 
       const res = await chatRoutes.request('/chats/messages/read', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           chat_id: 1,
-          user_id: 2
-        })
+          user_id: 2,
+        }),
       });
 
       // Test that the param function returns expected values
@@ -176,10 +186,12 @@ describe('Chat Routes', () => {
   describe('GET /chats/user/:userId/unread', () => {
     it('should call getUnreadMessageCount controller', async () => {
       const mockResponse = { unreadCounts: [] };
-      vi.mocked(controllers.getUnreadMessageCount).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.getUnreadMessageCount).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await chatRoutes.request('/chats/user/1/unread', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing

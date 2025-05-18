@@ -1,22 +1,22 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  subTasksTable,
-  chatsTable,
-  chatMessagesTable,
-  productsTable,
-  ordersTable,
-  orderItemsTable,
-  invoicesTable,
-  tasksTable,
-  usersTable,
   categoriesTable,
-  teamsTable,
+  chatMessagesTable,
+  chatsTable,
+  companiesTable,
   contactsTable,
   countriesTable,
-  companiesTable,
   inquiriesTable,
+  invoicesTable,
   notificationsTable,
-  todosTable
+  orderItemsTable,
+  ordersTable,
+  productsTable,
+  subTasksTable,
+  tasksTable,
+  teamsTable,
+  todosTable,
+  usersTable,
 } from '../../db/schema';
 
 describe('Database Schema', () => {

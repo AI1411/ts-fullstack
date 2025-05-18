@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { countryRepository } from '@/features/admin/countries/repositories';
 import { client } from '@/common/utils/client';
-import { CreateCountryInput } from '@/features/admin/countries/controllers';
+import type { CreateCountryInput } from '@/features/admin/countries/controllers';
+import { countryRepository } from '@/features/admin/countries/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Define a type for mock responses
 type MockResponse = {
@@ -20,10 +20,10 @@ vi.mock('@/common/utils/client', () => ({
       ':id': {
         $get: vi.fn(),
         $put: vi.fn(),
-        $delete: vi.fn()
-      }
-    }
-  }
+        $delete: vi.fn(),
+      },
+    },
+  },
 }));
 
 describe('Country Repository', () => {
@@ -55,7 +55,7 @@ describe('Country Repository', () => {
     const countryData: CreateCountryInput = {
       name: 'Japan',
       code: 'JP',
-      flag_url: 'https://example.com/japan.png'
+      flag_url: 'https://example.com/japan.png',
     };
 
     it('should call the client with correct parameters', async () => {
@@ -66,7 +66,7 @@ describe('Country Repository', () => {
 
       expect(client.countries.$post).toHaveBeenCalledTimes(1);
       expect(client.countries.$post).toHaveBeenCalledWith({
-        json: countryData
+        json: countryData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -75,10 +75,12 @@ describe('Country Repository', () => {
       const error = new Error('Network error');
       vi.mocked(client.countries.$post).mockRejectedValue(error);
 
-      await expect(countryRepository.createCountry(countryData)).rejects.toThrow(error);
+      await expect(
+        countryRepository.createCountry(countryData)
+      ).rejects.toThrow(error);
       expect(client.countries.$post).toHaveBeenCalledTimes(1);
       expect(client.countries.$post).toHaveBeenCalledWith({
-        json: countryData
+        json: countryData,
       });
     });
   });
@@ -92,7 +94,7 @@ describe('Country Repository', () => {
 
       expect(client.countries[':id'].$get).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$get).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });
@@ -104,7 +106,7 @@ describe('Country Repository', () => {
       await expect(countryRepository.getCountryById(1)).rejects.toThrow(error);
       expect(client.countries[':id'].$get).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$get).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
     });
   });
@@ -112,7 +114,7 @@ describe('Country Repository', () => {
   describe('updateCountry', () => {
     const countryData: Partial<CreateCountryInput> = {
       name: 'Japan Updated',
-      code: 'JP'
+      code: 'JP',
     };
 
     it('should call the client with correct parameters', async () => {
@@ -124,7 +126,7 @@ describe('Country Repository', () => {
       expect(client.countries[':id'].$put).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$put).toHaveBeenCalledWith({
         param: { id: '1' },
-        json: countryData
+        json: countryData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -133,11 +135,13 @@ describe('Country Repository', () => {
       const error = new Error('Network error');
       vi.mocked(client.countries[':id'].$put).mockRejectedValue(error);
 
-      await expect(countryRepository.updateCountry(1, countryData)).rejects.toThrow(error);
+      await expect(
+        countryRepository.updateCountry(1, countryData)
+      ).rejects.toThrow(error);
       expect(client.countries[':id'].$put).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$put).toHaveBeenCalledWith({
         param: { id: '1' },
-        json: countryData
+        json: countryData,
       });
     });
   });
@@ -145,13 +149,15 @@ describe('Country Repository', () => {
   describe('deleteCountry', () => {
     it('should call the client with correct parameters', async () => {
       const mockResponse: MockResponse = { status: 204 };
-      vi.mocked(client.countries[':id'].$delete).mockResolvedValue(mockResponse);
+      vi.mocked(client.countries[':id'].$delete).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await countryRepository.deleteCountry(1);
 
       expect(client.countries[':id'].$delete).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$delete).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });
@@ -163,7 +169,7 @@ describe('Country Repository', () => {
       await expect(countryRepository.deleteCountry(1)).rejects.toThrow(error);
       expect(client.countries[':id'].$delete).toHaveBeenCalledTimes(1);
       expect(client.countries[':id'].$delete).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
     });
   });

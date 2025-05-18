@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { 
-  orderItemSchema, 
-  orderSchema, 
-  orderStatusUpdateSchema, 
-  orderDetailSchema 
+import { describe, expect, it } from 'vitest';
+import {
+  orderDetailSchema,
+  orderItemSchema,
+  orderSchema,
+  orderStatusUpdateSchema,
 } from '../../../features/orders/schemas';
 
 describe('Order Schemas', () => {
@@ -13,7 +13,7 @@ describe('Order Schemas', () => {
         product_id: 1,
         quantity: 2,
       };
-      
+
       const result = orderItemSchema.safeParse(validOrderItem);
       expect(result.success).toBe(true);
     });
@@ -23,7 +23,7 @@ describe('Order Schemas', () => {
         product_id: 0,
         quantity: 2,
       };
-      
+
       const result = orderItemSchema.safeParse(invalidOrderItem);
       expect(result.success).toBe(false);
     });
@@ -33,7 +33,7 @@ describe('Order Schemas', () => {
         product_id: 1,
         quantity: 0,
       };
-      
+
       const result = orderItemSchema.safeParse(invalidOrderItem);
       expect(result.success).toBe(false);
     });
@@ -42,7 +42,7 @@ describe('Order Schemas', () => {
       const invalidOrderItem = {
         product_id: 1,
       };
-      
+
       const result = orderItemSchema.safeParse(invalidOrderItem);
       expect(result.success).toBe(false);
     });
@@ -59,7 +59,7 @@ describe('Order Schemas', () => {
           },
         ],
       };
-      
+
       const result = orderSchema.safeParse(validOrder);
       expect(result.success).toBe(true);
     });
@@ -74,7 +74,7 @@ describe('Order Schemas', () => {
           },
         ],
       };
-      
+
       const result = orderSchema.safeParse(invalidOrder);
       expect(result.success).toBe(false);
     });
@@ -84,7 +84,7 @@ describe('Order Schemas', () => {
         user_id: 1,
         items: [],
       };
-      
+
       const result = orderSchema.safeParse(invalidOrder);
       expect(result.success).toBe(false);
     });
@@ -99,7 +99,7 @@ describe('Order Schemas', () => {
           },
         ],
       };
-      
+
       const result = orderSchema.safeParse(invalidOrder);
       expect(result.success).toBe(false);
     });
@@ -107,9 +107,15 @@ describe('Order Schemas', () => {
 
   describe('orderStatusUpdateSchema', () => {
     it('should validate valid status values', () => {
-      const validStatuses = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
-      
-      validStatuses.forEach(status => {
+      const validStatuses = [
+        'PENDING',
+        'PROCESSING',
+        'SHIPPED',
+        'DELIVERED',
+        'CANCELLED',
+      ];
+
+      validStatuses.forEach((status) => {
         const result = orderStatusUpdateSchema.safeParse({ status });
         expect(result.success).toBe(true);
       });
@@ -117,9 +123,9 @@ describe('Order Schemas', () => {
 
     it('should reject invalid status values', () => {
       const invalidStatus = {
-        status: "INVALID_STATUS",
+        status: 'INVALID_STATUS',
       };
-      
+
       const result = orderStatusUpdateSchema.safeParse(invalidStatus);
       expect(result.success).toBe(false);
     });
@@ -131,20 +137,20 @@ describe('Order Schemas', () => {
         id: 1,
         user_id: 1,
         total_amount: 100,
-        status: "PENDING",
-        created_at: "2023-01-01T00:00:00Z",
-        updated_at: "2023-01-01T00:00:00Z",
+        status: 'PENDING',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z',
         items: [
           {
             id: 1,
             product_id: 1,
-            product_name: "Test Product",
+            product_name: 'Test Product',
             quantity: 2,
             price: 50,
           },
         ],
       };
-      
+
       const result = orderDetailSchema.safeParse(validOrderDetail);
       expect(result.success).toBe(true);
     });
@@ -154,12 +160,12 @@ describe('Order Schemas', () => {
         id: 1,
         user_id: 1,
         // Missing total_amount
-        status: "PENDING",
-        created_at: "2023-01-01T00:00:00Z",
-        updated_at: "2023-01-01T00:00:00Z",
+        status: 'PENDING',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z',
         items: [],
       };
-      
+
       const result = orderDetailSchema.safeParse(invalidOrderDetail);
       expect(result.success).toBe(false);
     });
@@ -169,9 +175,9 @@ describe('Order Schemas', () => {
         id: 1,
         user_id: 1,
         total_amount: 100,
-        status: "PENDING",
-        created_at: "2023-01-01T00:00:00Z",
-        updated_at: "2023-01-01T00:00:00Z",
+        status: 'PENDING',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z',
         items: [
           {
             id: 1,
@@ -182,7 +188,7 @@ describe('Order Schemas', () => {
           },
         ],
       };
-      
+
       const result = orderDetailSchema.safeParse(invalidOrderDetail);
       expect(result.success).toBe(false);
     });

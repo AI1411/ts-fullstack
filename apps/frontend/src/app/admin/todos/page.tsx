@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import AdminTodoList from "@/features/admin/todos/components/AdminTodoList";
-import TodoForm from "@/features/admin/todos/components/TodoForm";
+import AdminTodoList from '@/features/admin/todos/components/AdminTodoList';
+import TodoForm from '@/features/admin/todos/components/TodoForm';
 
 export default function TodosPage() {
   return (
@@ -12,12 +12,12 @@ export default function TodosPage() {
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">Todo一覧</h2>
             </div>
-            <AdminTodoList/>
+            <AdminTodoList />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <TodoForm/>
+          <TodoForm />
         </div>
       </div>
     </div>

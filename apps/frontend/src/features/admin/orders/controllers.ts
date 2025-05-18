@@ -1,5 +1,5 @@
 // Order controllers
-import {orderRepository} from './repositories';
+import { orderRepository } from './repositories';
 
 // Types
 export interface Order {
@@ -38,7 +38,7 @@ export const getOrders = async (): Promise<Order[]> => {
     if (!response.ok) {
       throw new Error('Error fetching orders');
     }
-    const {orders} = await response.json();
+    const { orders } = await response.json();
     return orders;
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -47,14 +47,16 @@ export const getOrders = async (): Promise<Order[]> => {
 };
 
 // Create a new order
-export const createOrder = async (orderData: CreateOrderInput): Promise<Order> => {
+export const createOrder = async (
+  orderData: CreateOrderInput
+): Promise<Order> => {
   try {
     const response = await orderRepository.createOrder(orderData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {order} = await response.json();
+    const { order } = await response.json();
     return order;
   } catch (error) {
     console.error('Error creating order:', error);
@@ -69,7 +71,7 @@ export const getOrderById = async (id: number): Promise<Order> => {
     if (!response.ok) {
       throw new Error('Order not found');
     }
-    const {order} = await response.json();
+    const { order } = await response.json();
     return order;
   } catch (error) {
     console.error(`Error fetching order ${id}:`, error);
@@ -78,14 +80,17 @@ export const getOrderById = async (id: number): Promise<Order> => {
 };
 
 // Update an order
-export const updateOrder = async (id: number, orderData: Partial<CreateOrderInput>): Promise<Order> => {
+export const updateOrder = async (
+  id: number,
+  orderData: Partial<CreateOrderInput>
+): Promise<Order> => {
   try {
     const response = await orderRepository.updateOrder(id, orderData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {order} = await response.json();
+    const { order } = await response.json();
     return order;
   } catch (error) {
     console.error(`Error updating order ${id}:`, error);
@@ -108,14 +113,17 @@ export const deleteOrder = async (id: number): Promise<void> => {
 };
 
 // Update order status
-export const updateOrderStatus = async (id: number, status: Order['status']): Promise<Order> => {
+export const updateOrderStatus = async (
+  id: number,
+  status: Order['status']
+): Promise<Order> => {
   try {
     const response = await orderRepository.updateOrderStatus(id, status);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {order} = await response.json();
+    const { order } = await response.json();
     return order;
   } catch (error) {
     console.error(`Error updating order status ${id}:`, error);

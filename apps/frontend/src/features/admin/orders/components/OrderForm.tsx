@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import {useState} from "react";
-import {useQueryClient} from "@tanstack/react-query";
-import {orderService} from "../services";
-import {productService} from "../../products/services";
-import {useQuery} from "@tanstack/react-query";
+import { useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { productService } from '../../products/services';
+import { orderService } from '../services';
 
 interface OrderItemInput {
   product_id: number;
@@ -14,46 +14,52 @@ interface OrderItemInput {
 const OrderForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    customer_name: "",
-    customer_email: "",
+    customer_name: '',
+    customer_email: '',
   });
   const [orderItems, setOrderItems] = useState<OrderItemInput[]>([
-    {product_id: 0, quantity: 1}
+    { product_id: 0, quantity: 1 },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   // 商品一覧を取得
-  const {data: products} = useQuery({
+  const { data: products } = useQuery({
     queryKey: ['products'],
-    queryFn: productService.getProducts
+    queryFn: productService.getProducts,
   });
 
   // フォーム入力の更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const {name, value} = e.target;
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   // 注文商品の更新
-  const handleItemChange = (index: number, field: keyof OrderItemInput, value: number) => {
+  const handleItemChange = (
+    index: number,
+    field: keyof OrderItemInput,
+    value: number
+  ) => {
     const newItems = [...orderItems];
     newItems[index] = {
       ...newItems[index],
-      [field]: value
+      [field]: value,
     };
     setOrderItems(newItems);
   };
 
   // 注文商品の追加
   const handleAddItem = () => {
-    setOrderItems([...orderItems, {product_id: 0, quantity: 1}]);
+    setOrderItems([...orderItems, { product_id: 0, quantity: 1 }]);
   };
 
   // 注文商品の削除
@@ -72,13 +78,13 @@ const OrderForm = () => {
 
     // バリデーション
     if (!formData.customer_name.trim()) {
-      setError("顧客名を入力してください");
+      setError('顧客名を入力してください');
       setIsSubmitting(false);
       return;
     }
 
     if (!formData.customer_email.trim()) {
-      setError("メールアドレスを入力してください");
+      setError('メールアドレスを入力してください');
       setIsSubmitting(false);
       return;
     }
@@ -86,15 +92,17 @@ const OrderForm = () => {
     // メールアドレスの簡易バリデーション
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.customer_email)) {
-      setError("有効なメールアドレスを入力してください");
+      setError('有効なメールアドレスを入力してください');
       setIsSubmitting(false);
       return;
     }
 
     // 商品のバリデーション
-    const validItems = orderItems.filter(item => item.product_id > 0 && item.quantity > 0);
+    const validItems = orderItems.filter(
+      (item) => item.product_id > 0 && item.quantity > 0
+    );
     if (validItems.length === 0) {
-      setError("少なくとも1つの有効な商品を選択してください");
+      setError('少なくとも1つの有効な商品を選択してください');
       setIsSubmitting(false);
       return;
     }
@@ -103,20 +111,20 @@ const OrderForm = () => {
       await orderService.createOrder({
         customer_name: formData.customer_name,
         customer_email: formData.customer_email,
-        items: validItems
+        items: validItems,
       });
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        customer_name: "",
-        customer_email: "",
+        customer_name: '',
+        customer_email: '',
       });
-      setOrderItems([{product_id: 0, quantity: 1}]);
-      setSuccess("注文が正常に作成されました");
-      await queryClient.invalidateQueries({queryKey: ['orders']});
+      setOrderItems([{ product_id: 0, quantity: 1 }]);
+      setSuccess('注文が正常に作成されました');
+      await queryClient.invalidateQueries({ queryKey: ['orders'] });
     } catch (error) {
-      console.error("Failed to create order:", error);
-      setError("注文の作成に失敗しました");
+      console.error('Failed to create order:', error);
+      setError('注文の作成に失敗しました');
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +137,10 @@ const OrderForm = () => {
       </div>
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         {error && (
-          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm" data-testid="error-message">
+          <div
+            className="bg-red-50 text-red-500 p-3 rounded-md text-sm"
+            data-testid="error-message"
+          >
             {error}
           </div>
         )}
@@ -140,7 +151,10 @@ const OrderForm = () => {
         )}
 
         <div>
-          <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="customer_name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             顧客名 <span className="text-red-500">*</span>
           </label>
           <input
@@ -155,7 +169,10 @@ const OrderForm = () => {
         </div>
 
         <div>
-          <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="customer_email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             メールアドレス <span className="text-red-500">*</span>
           </label>
           <input
@@ -189,11 +206,17 @@ const OrderForm = () => {
                 <div className="flex-grow">
                   <select
                     value={item.product_id}
-                    onChange={(e) => handleItemChange(index, 'product_id', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleItemChange(
+                        index,
+                        'product_id',
+                        Number.parseInt(e.target.value)
+                      )
+                    }
                     className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value={0}>商品を選択</option>
-                    {products?.map(product => (
+                    {products?.map((product) => (
                       <option key={product.id} value={product.id}>
                         {product.name} (¥{product.price.toLocaleString()})
                       </option>
@@ -205,7 +228,13 @@ const OrderForm = () => {
                     type="number"
                     min="1"
                     value={item.quantity}
-                    onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleItemChange(
+                        index,
+                        'quantity',
+                        Number.parseInt(e.target.value)
+                      )
+                    }
                     className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -227,7 +256,7 @@ const OrderForm = () => {
             disabled={isSubmitting}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            {isSubmitting ? "送信中..." : "注文を作成"}
+            {isSubmitting ? '送信中...' : '注文を作成'}
           </button>
         </div>
       </form>

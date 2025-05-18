@@ -1,28 +1,26 @@
-'use client'
+'use client';
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { userService } from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { userService } from '../services';
 
 const UserForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
+    name: '',
+    email: '',
+    password: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // フォームの入力値を更新
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -34,16 +32,18 @@ const UserForm = () => {
 
     try {
       await userService.createUser(formData);
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        name: "",
-        email: "",
-        password: ""
+        name: '',
+        email: '',
+        password: '',
       });
       await queryClient.invalidateQueries({ queryKey: ['users'] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'ユーザーの追加に失敗しました');
+      setError(
+        err instanceof Error ? err.message : 'ユーザーの追加に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -52,17 +52,22 @@ const UserForm = () => {
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">ユーザーを追加</h2>
-      
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        ユーザーを追加
+      </h2>
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             名前
           </label>
           <input
@@ -75,9 +80,12 @@ const UserForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             メールアドレス
           </label>
           <input
@@ -90,14 +98,17 @@ const UserForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             パスワード
           </label>
           <div className="flex items-center">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
@@ -110,11 +121,11 @@ const UserForm = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="ml-2 text-gray-500 hover:text-gray-700"
             >
-              {showPassword ? "隠す" : "表示"}
+              {showPassword ? '隠す' : '表示'}
             </button>
           </div>
         </div>
-        
+
         <button
           type="submit"
           disabled={isSubmitting}

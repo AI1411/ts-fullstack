@@ -1,22 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NotificationForm from '@/features/admin/notifications/components/NotificationForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { notificationService } from '@/features/admin/notifications/services';
 import { userService } from '@/features/admin/users/services';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the notification service
 vi.mock('@/features/admin/notifications/services', () => ({
   notificationService: {
-    createNotification: vi.fn()
-  }
+    createNotification: vi.fn(),
+  },
 }));
 
 // Mock the user service
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUsers: vi.fn()
-  }
+    getUsers: vi.fn(),
+  },
 }));
 
 describe('NotificationForm Component', () => {
@@ -48,19 +48,23 @@ describe('NotificationForm Component', () => {
     expect(typeof NotificationForm).toBe('function');
 
     // Check if form elements are rendered
-    expect(screen.getByText('通知を追加', { selector: 'h2' })).toBeInTheDocument();
+    expect(
+      screen.getByText('通知を追加', { selector: 'h2' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText(/タイトル/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/メッセージ/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/ユーザー/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/既読としてマーク/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /通知を追加/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /通知を追加/i })
+    ).toBeInTheDocument();
   });
 
   it('should display user options when users are available', async () => {
     // Mock user data
     const mockUsers = [
       { id: 1, name: 'User 1', email: 'user1@example.com' },
-      { id: 2, name: 'User 2', email: 'user2@example.com' }
+      { id: 2, name: 'User 2', email: 'user2@example.com' },
     ];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
@@ -73,7 +77,9 @@ describe('NotificationForm Component', () => {
 
     // Wait for users to load
     await waitFor(() => {
-      expect(screen.getByText('User 1 (user1@example.com)')).toBeInTheDocument();
+      expect(
+        screen.getByText('User 1 (user1@example.com)')
+      ).toBeInTheDocument();
     });
 
     expect(screen.getByText('User 2 (user2@example.com)')).toBeInTheDocument();
@@ -112,7 +118,7 @@ describe('NotificationForm Component', () => {
       message: 'Test Message',
       user_id: null,
       is_read: true,
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -141,7 +147,7 @@ describe('NotificationForm Component', () => {
         title: 'Test Title',
         message: 'Test Message',
         user_id: null,
-        is_read: true
+        is_read: true,
       });
     });
 
@@ -155,9 +161,7 @@ describe('NotificationForm Component', () => {
 
   it('should handle form submission with user_id', async () => {
     // Mock user data
-    const mockUsers = [
-      { id: 1, name: 'User 1', email: 'user1@example.com' }
-    ];
+    const mockUsers = [{ id: 1, name: 'User 1', email: 'user1@example.com' }];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
     vi.mocked(notificationService.createNotification).mockResolvedValue({
@@ -166,7 +170,7 @@ describe('NotificationForm Component', () => {
       message: 'Test Message',
       user_id: 1,
       is_read: false,
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -177,7 +181,9 @@ describe('NotificationForm Component', () => {
 
     // Wait for users to load
     await waitFor(() => {
-      expect(screen.getByText('User 1 (user1@example.com)')).toBeInTheDocument();
+      expect(
+        screen.getByText('User 1 (user1@example.com)')
+      ).toBeInTheDocument();
     });
 
     // Get form inputs
@@ -200,14 +206,16 @@ describe('NotificationForm Component', () => {
         title: 'Test Title',
         message: 'Test Message',
         user_id: 1,
-        is_read: false
+        is_read: false,
       });
     });
   });
 
   it('should handle form submission error', async () => {
     vi.mocked(userService.getUsers).mockResolvedValue([]);
-    vi.mocked(notificationService.createNotification).mockRejectedValue(new Error('API error'));
+    vi.mocked(notificationService.createNotification).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -241,14 +249,21 @@ describe('NotificationForm Component', () => {
     vi.mocked(userService.getUsers).mockResolvedValue([]);
     // Mock a delayed response to ensure we see the submitting state
     vi.mocked(notificationService.createNotification).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({
-        id: 1,
-        title: 'Test Title',
-        message: 'Test Message',
-        user_id: null,
-        is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }), 100))
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                id: 1,
+                title: 'Test Title',
+                message: 'Test Message',
+                user_id: null,
+                is_read: false,
+                created_at: '2023-01-01T00:00:00Z',
+              }),
+            100
+          )
+        )
     );
 
     render(
@@ -275,14 +290,18 @@ describe('NotificationForm Component', () => {
     // Wait for submission to complete
     await waitFor(() => {
       expect(screen.queryByText('送信中...')).not.toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /通知を追加/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /通知を追加/i })
+      ).toBeInTheDocument();
     });
   });
 
   it('should handle non-Error objects in catch block', async () => {
     vi.mocked(userService.getUsers).mockResolvedValue([]);
     // Mock a rejection with a non-Error object
-    vi.mocked(notificationService.createNotification).mockRejectedValue('String error');
+    vi.mocked(notificationService.createNotification).mockRejectedValue(
+      'String error'
+    );
 
     render(
       <QueryClientProvider client={queryClient}>

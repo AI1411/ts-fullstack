@@ -1,8 +1,15 @@
-'use client'
+'use client';
 
-import React from 'react';
 import Link from 'next/link';
-import { RiMailLine, RiPhoneLine, RiMapPin2Line, RiFacebookCircleFill, RiTwitterFill, RiInstagramFill } from 'react-icons/ri';
+import type React from 'react';
+import {
+  RiFacebookCircleFill,
+  RiInstagramFill,
+  RiMailLine,
+  RiMapPin2Line,
+  RiPhoneLine,
+  RiTwitterFill,
+} from 'react-icons/ri';
 
 const UserFooter: React.FC = () => {
   return (
@@ -34,47 +41,73 @@ const UserFooter: React.FC = () => {
             <h3 className="text-lg font-semibold text-white">クイックリンク</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link href="/" className="text-sm hover:text-white">ホーム</Link>
+                <Link href="/" className="text-sm hover:text-white">
+                  ホーム
+                </Link>
               </li>
               <li>
-                <Link href="/products" className="text-sm hover:text-white">商品一覧</Link>
+                <Link href="/products" className="text-sm hover:text-white">
+                  商品一覧
+                </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-sm hover:text-white">カテゴリー</Link>
+                <Link href="/categories" className="text-sm hover:text-white">
+                  カテゴリー
+                </Link>
               </li>
               <li>
-                <Link href="/sale" className="text-sm hover:text-white">セール</Link>
+                <Link href="/sale" className="text-sm hover:text-white">
+                  セール
+                </Link>
               </li>
               <li>
-                <Link href="/about" className="text-sm hover:text-white">会社概要</Link>
+                <Link href="/about" className="text-sm hover:text-white">
+                  会社概要
+                </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm hover:text-white">お問い合わせ</Link>
+                <Link href="/contact" className="text-sm hover:text-white">
+                  お問い合わせ
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* カスタマーサービス */}
           <div>
-            <h3 className="text-lg font-semibold text-white">カスタマーサービス</h3>
+            <h3 className="text-lg font-semibold text-white">
+              カスタマーサービス
+            </h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link href="/account" className="text-sm hover:text-white">アカウント</Link>
+                <Link href="/account" className="text-sm hover:text-white">
+                  アカウント
+                </Link>
               </li>
               <li>
-                <Link href="/orders" className="text-sm hover:text-white">注文履歴</Link>
+                <Link href="/orders" className="text-sm hover:text-white">
+                  注文履歴
+                </Link>
               </li>
               <li>
-                <Link href="/shipping" className="text-sm hover:text-white">配送情報</Link>
+                <Link href="/shipping" className="text-sm hover:text-white">
+                  配送情報
+                </Link>
               </li>
               <li>
-                <Link href="/returns" className="text-sm hover:text-white">返品ポリシー</Link>
+                <Link href="/returns" className="text-sm hover:text-white">
+                  返品ポリシー
+                </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm hover:text-white">よくある質問</Link>
+                <Link href="/faq" className="text-sm hover:text-white">
+                  よくある質問
+                </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-sm hover:text-white">利用規約</Link>
+                <Link href="/terms" className="text-sm hover:text-white">
+                  利用規約
+                </Link>
               </li>
             </ul>
           </div>
@@ -108,13 +141,22 @@ const UserFooter: React.FC = () => {
               &copy; {new Date().getFullYear()} ECサイト. All rights reserved.
             </div>
             <div className="mt-4 flex justify-center space-x-6 md:mt-0">
-              <Link href="/privacy" className="text-xs text-gray-400 hover:text-white">
+              <Link
+                href="/privacy"
+                className="text-xs text-gray-400 hover:text-white"
+              >
                 プライバシーポリシー
               </Link>
-              <Link href="/terms" className="text-xs text-gray-400 hover:text-white">
+              <Link
+                href="/terms"
+                className="text-xs text-gray-400 hover:text-white"
+              >
                 利用規約
               </Link>
-              <Link href="/sitemap" className="text-xs text-gray-400 hover:text-white">
+              <Link
+                href="/sitemap"
+                className="text-xs text-gray-400 hover:text-white"
+              >
                 サイトマップ
               </Link>
             </div>

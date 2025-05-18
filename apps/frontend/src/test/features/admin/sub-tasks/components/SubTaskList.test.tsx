@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SubTaskList from '@/features/admin/sub-tasks/components/SubTaskList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { SubTask } from '@/features/admin/sub-tasks/controllers';
 import { subTaskService } from '@/features/admin/sub-tasks/services';
-import { SubTask } from '@/features/admin/sub-tasks/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the sub-task service
 vi.mock('@/features/admin/sub-tasks/services', () => ({
   subTaskService: {
     getSubTasksByTaskId: vi.fn(),
     updateSubTask: vi.fn(),
-    deleteSubTask: vi.fn()
-  }
+    deleteSubTask: vi.fn(),
+  },
 }));
 
 describe('SubTaskList Component', () => {
@@ -47,7 +47,7 @@ describe('SubTaskList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(subTaskService.getSubTasksByTaskId).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -61,7 +61,9 @@ describe('SubTaskList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockRejectedValue(new Error('API error'));
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -104,7 +106,7 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: '2023-01-01',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -114,11 +116,13 @@ describe('SubTaskList Component', () => {
         status: 'COMPLETED',
         due_date: '2023-01-02',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -148,11 +152,13 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: '2023-01-01',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
     vi.mocked(subTaskService.updateSubTask).mockResolvedValue(mockSubTasks[0]);
 
     render(
@@ -189,7 +195,7 @@ describe('SubTaskList Component', () => {
         description: 'Description 1',
         status: 'PENDING',
         due_date: '2023-01-01',
-        task_id: taskId
+        task_id: taskId,
       });
     });
   });
@@ -205,11 +211,13 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: '2023-01-01',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -235,7 +243,9 @@ describe('SubTaskList Component', () => {
 
     // Verify we're back to view mode
     await waitFor(() => {
-      expect(screen.queryByDisplayValue('Test Sub-Task 1')).not.toBeInTheDocument();
+      expect(
+        screen.queryByDisplayValue('Test Sub-Task 1')
+      ).not.toBeInTheDocument();
       expect(screen.getByText('Test Sub-Task 1')).toBeInTheDocument();
     });
   });
@@ -251,11 +261,13 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: '2023-01-01',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
     vi.mocked(subTaskService.deleteSubTask).mockResolvedValue();
 
     // Mock window.confirm
@@ -297,11 +309,13 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: '2023-01-01',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
     vi.mocked(subTaskService.deleteSubTask).mockResolvedValue();
 
     // Mock window.confirm to return false
@@ -341,7 +355,7 @@ describe('SubTaskList Component', () => {
         status: 'PENDING',
         due_date: null,
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -351,7 +365,7 @@ describe('SubTaskList Component', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 3,
@@ -361,11 +375,13 @@ describe('SubTaskList Component', () => {
         status: 'COMPLETED',
         due_date: null,
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+    vi.mocked(subTaskService.getSubTasksByTaskId).mockResolvedValue(
+      mockSubTasks
+    );
 
     render(
       <QueryClientProvider client={queryClient}>

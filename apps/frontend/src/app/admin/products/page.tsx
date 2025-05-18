@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import ProductList from "@/features/admin/products/components/ProductList";
-import ProductForm from "@/features/admin/products/components/ProductForm";
+import ProductForm from '@/features/admin/products/components/ProductForm';
+import ProductList from '@/features/admin/products/components/ProductList';
 
 export default function ProductsPage() {
   return (

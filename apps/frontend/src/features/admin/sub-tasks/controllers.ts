@@ -37,11 +37,15 @@ export const getSubTasks = async (): Promise<SubTask[]> => {
 };
 
 // Get sub-tasks by task ID
-export const getSubTasksByTaskId = async (taskId: number): Promise<SubTask[]> => {
+export const getSubTasksByTaskId = async (
+  taskId: number
+): Promise<SubTask[]> => {
   try {
     const response = await subTaskRepository.getSubTasksByTaskId(taskId);
     if (!response.ok) {
-      throw new Error(`Error fetching sub-tasks for task ${taskId}: ${response.statusText}`);
+      throw new Error(
+        `Error fetching sub-tasks for task ${taskId}: ${response.statusText}`
+      );
     }
     const { subTasks } = await response.json();
     return subTasks;
@@ -52,7 +56,9 @@ export const getSubTasksByTaskId = async (taskId: number): Promise<SubTask[]> =>
 };
 
 // Create a new sub-task
-export const createSubTask = async (subTaskData: CreateSubTaskInput): Promise<SubTask> => {
+export const createSubTask = async (
+  subTaskData: CreateSubTaskInput
+): Promise<SubTask> => {
   try {
     const response = await subTaskRepository.createSubTask(subTaskData);
     if (!response.ok) {
@@ -83,7 +89,10 @@ export const getSubTaskById = async (id: number): Promise<SubTask> => {
 };
 
 // Update a sub-task
-export const updateSubTask = async (id: number, subTaskData: Partial<CreateSubTaskInput>): Promise<SubTask> => {
+export const updateSubTask = async (
+  id: number,
+  subTaskData: Partial<CreateSubTaskInput>
+): Promise<SubTask> => {
   try {
     const response = await subTaskRepository.updateSubTask(id, subTaskData);
     if (!response.ok) {

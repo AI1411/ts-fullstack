@@ -2,145 +2,170 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
-  getOrders,
-  getOrderById,
-  getUserOrders,
+  cancelOrder,
   createOrder,
+  getOrderById,
+  getOrders,
+  getUserOrders,
   updateOrderStatus,
-  cancelOrder
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const orderRoutes = new OpenAPIHono();
 
 // OpenAPI用の注文アイテムスキーマを定義
-const orderItemSchema = z.object({
-  product_id: z.number().positive().openapi({
-    description: '商品ID',
-    example: 1
-  }),
-  quantity: z.number().positive().openapi({
-    description: '数量',
-    example: 2
+const orderItemSchema = z
+  .object({
+    product_id: z.number().positive().openapi({
+      description: '商品ID',
+      example: 1,
+    }),
+    quantity: z.number().positive().openapi({
+      description: '数量',
+      example: 2,
+    }),
   })
-}).openapi('OrderItem');
+  .openapi('OrderItem');
 
 // 注文作成用のスキーマ
-const createOrderSchema = z.object({
-  user_id: z.number().positive().openapi({
-    description: 'ユーザーID',
-    example: 1
-  }),
-  items: z.array(orderItemSchema).min(1).openapi({
-    description: '注文アイテム',
-    example: [
-      { product_id: 1, quantity: 2 },
-      { product_id: 3, quantity: 1 }
-    ]
+const createOrderSchema = z
+  .object({
+    user_id: z.number().positive().openapi({
+      description: 'ユーザーID',
+      example: 1,
+    }),
+    items: z
+      .array(orderItemSchema)
+      .min(1)
+      .openapi({
+        description: '注文アイテム',
+        example: [
+          { product_id: 1, quantity: 2 },
+          { product_id: 3, quantity: 1 },
+        ],
+      }),
   })
-}).openapi('CreateOrder');
+  .openapi('CreateOrder');
 
 // 注文ステータス更新用のスキーマ
-const updateOrderStatusSchema = z.object({
-  status: z.enum(['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED']).openapi({
-    description: '注文ステータス',
-    example: 'PROCESSING'
+const updateOrderStatusSchema = z
+  .object({
+    status: z
+      .enum(['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'])
+      .openapi({
+        description: '注文ステータス',
+        example: 'PROCESSING',
+      }),
   })
-}).openapi('UpdateOrderStatus');
+  .openapi('UpdateOrderStatus');
 
 // 注文アイテムレスポンス用のスキーマ
-const orderItemResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '注文アイテムID',
-    example: 1
-  }),
-  product_id: z.number().openapi({
-    description: '商品ID',
-    example: 1
-  }),
-  product_name: z.string().openapi({
-    description: '商品名',
-    example: 'スマートフォン'
-  }),
-  quantity: z.number().openapi({
-    description: '数量',
-    example: 2
-  }),
-  price: z.number().openapi({
-    description: '価格',
-    example: 50000
+const orderItemResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '注文アイテムID',
+      example: 1,
+    }),
+    product_id: z.number().openapi({
+      description: '商品ID',
+      example: 1,
+    }),
+    product_name: z.string().openapi({
+      description: '商品名',
+      example: 'スマートフォン',
+    }),
+    quantity: z.number().openapi({
+      description: '数量',
+      example: 2,
+    }),
+    price: z.number().openapi({
+      description: '価格',
+      example: 50000,
+    }),
   })
-}).openapi('OrderItemResponse');
+  .openapi('OrderItemResponse');
 
 // 注文レスポンス用のスキーマ
-const orderResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '注文ID',
-    example: 1
-  }),
-  user_id: z.number().openapi({
-    description: 'ユーザーID',
-    example: 1
-  }),
-  total_amount: z.number().openapi({
-    description: '合計金額',
-    example: 100000
-  }),
-  status: z.string().openapi({
-    description: '注文ステータス',
-    example: 'PENDING'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const orderResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '注文ID',
+      example: 1,
+    }),
+    user_id: z.number().openapi({
+      description: 'ユーザーID',
+      example: 1,
+    }),
+    total_amount: z.number().openapi({
+      description: '合計金額',
+      example: 100000,
+    }),
+    status: z.string().openapi({
+      description: '注文ステータス',
+      example: 'PENDING',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('OrderResponse');
+  .openapi('OrderResponse');
 
 // 注文詳細レスポンス用のスキーマ
-const orderDetailResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '注文ID',
-    example: 1
-  }),
-  user_id: z.number().openapi({
-    description: 'ユーザーID',
-    example: 1
-  }),
-  total_amount: z.number().openapi({
-    description: '合計金額',
-    example: 100000
-  }),
-  status: z.string().openapi({
-    description: '注文ステータス',
-    example: 'PENDING'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  items: z.array(orderItemResponseSchema).openapi({
-    description: '注文アイテム',
-    example: [
-      { id: 1, product_id: 1, product_name: 'スマートフォン', quantity: 2, price: 50000 }
-    ]
+const orderDetailResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '注文ID',
+      example: 1,
+    }),
+    user_id: z.number().openapi({
+      description: 'ユーザーID',
+      example: 1,
+    }),
+    total_amount: z.number().openapi({
+      description: '合計金額',
+      example: 100000,
+    }),
+    status: z.string().openapi({
+      description: '注文ステータス',
+      example: 'PENDING',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    items: z.array(orderItemResponseSchema).openapi({
+      description: '注文アイテム',
+      example: [
+        {
+          id: 1,
+          product_id: 1,
+          product_name: 'スマートフォン',
+          quantity: 2,
+          price: 50000,
+        },
+      ],
+    }),
   })
-}).openapi('OrderDetailResponse');
+  .openapi('OrderDetailResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 注文一覧取得ルート
 const getOrdersRoute = createRoute({
@@ -155,20 +180,20 @@ const getOrdersRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            orders: z.array(orderResponseSchema)
-          })
-        }
-      }
+            orders: z.array(orderResponseSchema),
+          }),
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 注文詳細取得ルート
@@ -182,9 +207,9 @@ const getOrderByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '注文ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -192,28 +217,28 @@ const getOrderByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            order: orderDetailResponseSchema
-          })
-        }
-      }
+            order: orderDetailResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '注文が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ユーザーの注文履歴取得ルート
@@ -227,9 +252,9 @@ const getUserOrdersRoute = createRoute({
     params: z.object({
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -237,20 +262,20 @@ const getUserOrdersRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            orders: z.array(orderResponseSchema)
-          })
-        }
-      }
+            orders: z.array(orderResponseSchema),
+          }),
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 注文作成ルート
@@ -264,10 +289,10 @@ const createOrderRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: createOrderSchema
-        }
-      }
-    }
+          schema: createOrderSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -276,44 +301,46 @@ const createOrderRoute = createRoute({
         'application/json': {
           schema: z.object({
             order: orderResponseSchema,
-            items: z.array(z.object({
-              id: z.number(),
-              order_id: z.number(),
-              product_id: z.number(),
-              quantity: z.number(),
-              price: z.number(),
-              created_at: z.string(),
-              updated_at: z.string()
-            }))
-          })
-        }
-      }
+            items: z.array(
+              z.object({
+                id: z.number(),
+                order_id: z.number(),
+                product_id: z.number(),
+                quantity: z.number(),
+                price: z.number(),
+                created_at: z.string(),
+                updated_at: z.string(),
+              })
+            ),
+          }),
+        },
+      },
     },
     400: {
       description: '無効なリクエスト',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '商品が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 注文ステータス更新ルート
@@ -327,16 +354,16 @@ const updateOrderStatusRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '注文ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: updateOrderStatusSchema
-        }
-      }
-    }
+          schema: updateOrderStatusSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -344,28 +371,28 @@ const updateOrderStatusRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            order: orderResponseSchema
-          })
-        }
-      }
+            order: orderResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '注文が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 注文キャンセルルート
@@ -379,9 +406,9 @@ const cancelOrderRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '注文ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -390,36 +417,36 @@ const cancelOrderRoute = createRoute({
         'application/json': {
           schema: z.object({
             order: orderResponseSchema,
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     400: {
       description: '無効なリクエスト',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '注文が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     500: {
       description: 'サーバーエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートを登録

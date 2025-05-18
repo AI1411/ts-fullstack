@@ -1,6 +1,6 @@
+import { storage } from '@/db';
 // Auth services
-import {login, register} from './controllers';
-import {storage} from '@/db';
+import { login, register } from './controllers';
 
 // Auth service
 export const authService = {
@@ -40,5 +40,5 @@ export const authService = {
   // Check if user is logged in
   isLoggedIn: () => {
     return !!storage.get('user');
-  }
+  },
 };

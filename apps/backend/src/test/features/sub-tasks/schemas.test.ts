@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { subTaskSchema } from '../../../features/sub-tasks/schemas';
 
 describe('Sub-Task Schemas', () => {
@@ -8,10 +8,10 @@ describe('Sub-Task Schemas', () => {
         task_id: 1,
         title: 'Test Sub-Task',
       };
-      
+
       const result = subTaskSchema.safeParse(validSubTask);
       expect(result.success).toBe(true);
-      
+
       // Check default values
       if (result.success) {
         expect(result.data.status).toBe('PENDING');
@@ -27,7 +27,7 @@ describe('Sub-Task Schemas', () => {
         status: 'COMPLETED',
         due_date: '2023-01-01',
       };
-      
+
       const result = subTaskSchema.safeParse(validSubTask);
       expect(result.success).toBe(true);
     });
@@ -39,7 +39,7 @@ describe('Sub-Task Schemas', () => {
         description: null,
         due_date: null,
       };
-      
+
       const result = subTaskSchema.safeParse(validSubTask);
       expect(result.success).toBe(true);
     });
@@ -49,7 +49,7 @@ describe('Sub-Task Schemas', () => {
         task_id: 1,
         title: 'A', // Too short
       };
-      
+
       const result = subTaskSchema.safeParse(invalidSubTask);
       expect(result.success).toBe(false);
     });
@@ -58,7 +58,7 @@ describe('Sub-Task Schemas', () => {
       const invalidSubTask = {
         title: 'Test Sub-Task',
       };
-      
+
       const result = subTaskSchema.safeParse(invalidSubTask);
       expect(result.success).toBe(false);
     });
@@ -67,7 +67,7 @@ describe('Sub-Task Schemas', () => {
       const invalidSubTask = {
         task_id: 1,
       };
-      
+
       const result = subTaskSchema.safeParse(invalidSubTask);
       expect(result.success).toBe(false);
     });
@@ -77,7 +77,7 @@ describe('Sub-Task Schemas', () => {
         task_id: 'not-a-number',
         title: 'Test Sub-Task',
       };
-      
+
       const result = subTaskSchema.safeParse(invalidSubTask);
       expect(result.success).toBe(false);
     });

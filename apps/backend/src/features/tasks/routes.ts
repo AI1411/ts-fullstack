@@ -8,89 +8,99 @@ import {
   getTasks,
   getTasksByTeamId,
   getTasksByUserId,
-  updateTask
+  updateTask,
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const taskRoutes = new OpenAPIHono();
 
 // OpenAPI用のタスクスキーマを定義
-const taskSchema = z.object({
-  user_id: z.number().nullable().optional().openapi({
-    description: '担当ユーザーID',
-    example: 1
-  }),
-  team_id: z.number().nullable().optional().openapi({
-    description: '所属チームID',
-    example: 1
-  }),
-  title: z.string().min(2).openapi({
-    description: 'タスクタイトル',
-    example: 'フロントエンド実装'
-  }),
-  description: z.string().nullable().optional().openapi({
-    description: 'タスクの詳細説明',
-    example: 'ユーザー画面の実装を行う'
-  }),
-  status: z.string().optional().default('PENDING').openapi({
-    description: 'タスクの状態',
-    example: 'PENDING',
-    enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED']
-  }),
-  due_date: z.string().nullable().optional().openapi({
-    description: '期限日',
-    example: '2023-12-31'
+const taskSchema = z
+  .object({
+    user_id: z.number().nullable().optional().openapi({
+      description: '担当ユーザーID',
+      example: 1,
+    }),
+    team_id: z.number().nullable().optional().openapi({
+      description: '所属チームID',
+      example: 1,
+    }),
+    title: z.string().min(2).openapi({
+      description: 'タスクタイトル',
+      example: 'フロントエンド実装',
+    }),
+    description: z.string().nullable().optional().openapi({
+      description: 'タスクの詳細説明',
+      example: 'ユーザー画面の実装を行う',
+    }),
+    status: z
+      .string()
+      .optional()
+      .default('PENDING')
+      .openapi({
+        description: 'タスクの状態',
+        example: 'PENDING',
+        enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
+      }),
+    due_date: z.string().nullable().optional().openapi({
+      description: '期限日',
+      example: '2023-12-31',
+    }),
   })
-}).openapi('Task');
+  .openapi('Task');
 
 // レスポンス用のタスクスキーマ（IDを含む）
-const taskResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'タスクID',
-    example: 1
-  }),
-  user_id: z.number().nullable().openapi({
-    description: '担当ユーザーID',
-    example: 1
-  }),
-  team_id: z.number().nullable().openapi({
-    description: '所属チームID',
-    example: 1
-  }),
-  title: z.string().openapi({
-    description: 'タスクタイトル',
-    example: 'フロントエンド実装'
-  }),
-  description: z.string().nullable().openapi({
-    description: 'タスクの詳細説明',
-    example: 'ユーザー画面の実装を行う'
-  }),
-  status: z.string().openapi({
-    description: 'タスクの状態',
-    example: 'PENDING',
-    enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED']
-  }),
-  due_date: z.string().nullable().openapi({
-    description: '期限日',
-    example: '2023-12-31'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const taskResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'タスクID',
+      example: 1,
+    }),
+    user_id: z.number().nullable().openapi({
+      description: '担当ユーザーID',
+      example: 1,
+    }),
+    team_id: z.number().nullable().openapi({
+      description: '所属チームID',
+      example: 1,
+    }),
+    title: z.string().openapi({
+      description: 'タスクタイトル',
+      example: 'フロントエンド実装',
+    }),
+    description: z.string().nullable().openapi({
+      description: 'タスクの詳細説明',
+      example: 'ユーザー画面の実装を行う',
+    }),
+    status: z.string().openapi({
+      description: 'タスクの状態',
+      example: 'PENDING',
+      enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
+    }),
+    due_date: z.string().nullable().openapi({
+      description: '期限日',
+      example: '2023-12-31',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('TaskResponse');
+  .openapi('TaskResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // タスク一覧取得ルート
 const getTasksRoute = createRoute({
@@ -105,12 +115,12 @@ const getTasksRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            tasks: z.array(taskResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            tasks: z.array(taskResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // ユーザーIDによるタスク取得ルート
@@ -124,9 +134,9 @@ const getTasksByUserIdRoute = createRoute({
     params: z.object({
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -134,20 +144,20 @@ const getTasksByUserIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            tasks: z.array(taskResponseSchema)
-          })
-        }
-      }
+            tasks: z.array(taskResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チームIDによるタスク取得ルート
@@ -161,9 +171,9 @@ const getTasksByTeamIdRoute = createRoute({
     params: z.object({
       teamId: z.string().openapi({
         description: 'チームID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -171,20 +181,20 @@ const getTasksByTeamIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            tasks: z.array(taskResponseSchema)
-          })
-        }
-      }
+            tasks: z.array(taskResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: 'チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 単一のタスク取得ルート
@@ -198,9 +208,9 @@ const getTaskRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'タスクID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -208,20 +218,20 @@ const getTaskRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            task: taskResponseSchema
-          })
-        }
-      }
+            task: taskResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'タスクが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // タスク作成ルート
@@ -235,10 +245,10 @@ const createTaskRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: taskSchema
-        }
-      }
-    }
+          schema: taskSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -246,20 +256,20 @@ const createTaskRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            task: taskResponseSchema
-          })
-        }
-      }
+            task: taskResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // タスク更新ルート
@@ -273,16 +283,16 @@ const updateTaskRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'タスクID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: taskSchema
-        }
-      }
-    }
+          schema: taskSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -290,28 +300,28 @@ const updateTaskRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            task: taskResponseSchema
-          })
-        }
-      }
+            task: taskResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'タスクが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // タスク削除ルート
@@ -325,9 +335,9 @@ const deleteTaskRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'タスクID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -337,21 +347,21 @@ const deleteTaskRoute = createRoute({
           schema: z.object({
             message: z.string().openapi({
               description: '成功メッセージ',
-              example: 'Task deleted successfully'
-            })
-          })
-        }
-      }
+              example: 'Task deleted successfully',
+            }),
+          }),
+        },
+      },
     },
     404: {
       description: 'タスクが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

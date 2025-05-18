@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import React from 'react';
-import { useParams } from 'next/navigation';
-import UserLayout from '@/features/user/layout/UserLayout';
 import { productsByCategory } from '@/features/user/categories/data/categories';
+import UserLayout from '@/features/user/layout/UserLayout';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import React from 'react';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productId = Number(params.id);
-  
+
   // すべての商品から指定されたIDの商品を検索
   const allProducts = Object.values(productsByCategory).flat();
-  const product = allProducts.find(p => p.id === productId);
+  const product = allProducts.find((p) => p.id === productId);
 
   // 商品が見つからない場合
   if (!product) {
@@ -73,9 +73,7 @@ export default function ProductDetailPage() {
                 </p>
               </div>
               <div className="mt-8">
-                <button
-                  className="w-full rounded-md bg-blue-500 px-4 py-3 text-center font-medium text-white hover:bg-blue-600"
-                >
+                <button className="w-full rounded-md bg-blue-500 px-4 py-3 text-center font-medium text-white hover:bg-blue-600">
                   カートに追加
                 </button>
               </div>

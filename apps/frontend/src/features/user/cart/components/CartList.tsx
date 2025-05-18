@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React from 'react';
+import type React from 'react';
 import CartItem from './CartItem';
 
 export interface CartItemType {
@@ -25,7 +25,9 @@ const CartList: React.FC<CartListProps> = ({
   if (items.length === 0) {
     return (
       <div className="rounded-lg bg-white p-6 text-center shadow-md dark:bg-gray-800">
-        <p className="text-lg text-gray-600 dark:text-gray-400">カートに商品がありません</p>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          カートに商品がありません
+        </p>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
           商品を追加してください
         </p>
@@ -35,7 +37,9 @@ const CartList: React.FC<CartListProps> = ({
 
   return (
     <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
-      <h2 className="mb-6 text-xl font-semibold text-gray-800 dark:text-white">ショッピングカート</h2>
+      <h2 className="mb-6 text-xl font-semibold text-gray-800 dark:text-white">
+        ショッピングカート
+      </h2>
       <div className="space-y-2">
         {items.map((item) => (
           <CartItem

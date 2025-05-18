@@ -1,32 +1,34 @@
-'use client'
+'use client';
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { invoiceService } from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { invoiceService } from '../services';
 
 const InvoiceForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    order_id: "",
-    invoice_number: "",
+    order_id: '',
+    invoice_number: '',
     issue_date: new Date().toISOString().split('T')[0],
-    due_date: "",
-    total_amount: "",
-    status: "PENDING",
-    payment_method: "",
-    notes: ""
+    due_date: '',
+    total_amount: '',
+    status: 'PENDING',
+    payment_method: '',
+    notes: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -40,29 +42,31 @@ const InvoiceForm = () => {
       // Convert string values to appropriate types
       const invoiceData = {
         ...formData,
-        order_id: formData.order_id ? parseInt(formData.order_id) : null,
-        total_amount: parseInt(formData.total_amount),
+        order_id: formData.order_id ? Number.parseInt(formData.order_id) : null,
+        total_amount: Number.parseInt(formData.total_amount),
         due_date: formData.due_date || null,
         payment_method: formData.payment_method || null,
-        notes: formData.notes || null
+        notes: formData.notes || null,
       };
 
       await invoiceService.createInvoice(invoiceData);
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        order_id: "",
-        invoice_number: "",
+        order_id: '',
+        invoice_number: '',
         issue_date: new Date().toISOString().split('T')[0],
-        due_date: "",
-        total_amount: "",
-        status: "PENDING",
-        payment_method: "",
-        notes: ""
+        due_date: '',
+        total_amount: '',
+        status: 'PENDING',
+        payment_method: '',
+        notes: '',
       });
       await queryClient.invalidateQueries({ queryKey: ['invoices'] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : '領収書の追加に失敗しました');
+      setError(
+        err instanceof Error ? err.message : '領収書の追加に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -72,16 +76,19 @@ const InvoiceForm = () => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">領収書を追加</h2>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="invoice_number" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="invoice_number"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             領収書番号
           </label>
           <input
@@ -94,9 +101,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="order_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="order_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             注文ID
           </label>
           <input
@@ -108,9 +118,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="total_amount" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="total_amount"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             合計金額
           </label>
           <input
@@ -123,9 +136,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="issue_date" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="issue_date"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             発行日
           </label>
           <input
@@ -137,9 +153,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="due_date"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             支払期限
           </label>
           <input
@@ -151,9 +170,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ステータス
           </label>
           <select
@@ -168,9 +190,12 @@ const InvoiceForm = () => {
             <option value="CANCELLED">キャンセル</option>
           </select>
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="payment_method" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="payment_method"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             支払方法
           </label>
           <input
@@ -182,9 +207,12 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="notes"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             備考
           </label>
           <textarea
@@ -196,7 +224,7 @@ const InvoiceForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <button
           type="submit"
           disabled={isSubmitting}

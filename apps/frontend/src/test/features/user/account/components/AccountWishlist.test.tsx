@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import AccountWishlist from '@/features/user/account/components/AccountWishlist';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the react-icons
 vi.mock('react-icons/ri', () => ({
@@ -43,9 +43,18 @@ describe('AccountWishlist Component', () => {
     expect(images[2]).toHaveAttribute('alt', 'ミニマリストバックパック');
 
     // Check if images have correct src
-    expect(images[0]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
-    expect(images[1]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
-    expect(images[2]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
+    expect(images[0]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
+    expect(images[1]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
+    expect(images[2]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
   });
 
   it('should render "Add to Cart" buttons for each item', () => {
@@ -85,7 +94,9 @@ describe('AccountWishlist Component', () => {
     render(<AccountWishlist />);
 
     // Check if the empty state message is not rendered
-    expect(screen.queryByText('お気に入りに追加された商品はありません。')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('お気に入りに追加された商品はありません。')
+    ).not.toBeInTheDocument();
   });
 
   it('should have the correct grid layout', () => {

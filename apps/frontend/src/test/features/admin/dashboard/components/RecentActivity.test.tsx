@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import RecentActivity from '@/features/admin/dashboard/components/RecentActivity';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('RecentActivity Component', () => {
   it('renders without crashing', () => {
@@ -15,7 +15,9 @@ describe('RecentActivity Component', () => {
 
     // Check if some activity titles are rendered
     expect(screen.getAllByText(/Todoが完了しました/)).not.toHaveLength(0);
-    expect(screen.getAllByText(/新しいユーザーが追加されました/)).not.toHaveLength(0);
+    expect(
+      screen.getAllByText(/新しいユーザーが追加されました/)
+    ).not.toHaveLength(0);
     expect(screen.getAllByText(/Todoが更新されました/)).not.toHaveLength(0);
 
     // Check if activity descriptions are rendered
@@ -37,6 +39,8 @@ describe('RecentActivity Component', () => {
     render(<RecentActivity />);
 
     // Check if the view all button is rendered
-    expect(screen.getByText('すべてのアクティビティを表示')).toBeInTheDocument();
+    expect(
+      screen.getByText('すべてのアクティビティを表示')
+    ).toBeInTheDocument();
   });
 });

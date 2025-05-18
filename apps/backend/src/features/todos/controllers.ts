@@ -1,19 +1,22 @@
-import { Context } from 'hono';
-import { todosTable } from '../../db/schema';
-import { getDB } from '../../common/utils/db';
 import { eq } from 'drizzle-orm';
+import type { Context } from 'hono';
+import { getDB } from '../../common/utils/db';
+import { todosTable } from '../../db/schema';
 
 // Todo作成
 export const createTodo = async (c: Context) => {
   const { title, description, user_id, status } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const todo = await db.insert(todosTable).values({
-      title,
-      description,
-      user_id,
-      status: status || 'PENDING',
-    }).returning();
+    const todo = await db
+      .insert(todosTable)
+      .values({
+        title,
+        description,
+        user_id,
+        status: status || 'PENDING',
+      })
+      .returning();
     return c.json({ todo: todo[0] }, 201);
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
@@ -33,10 +36,13 @@ export const getTodos = async (c: Context) => {
 
 // Todo取得
 export const getTodoById = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const todo = await db.select().from(todosTable).where(eq(todosTable.id, id));
+    const todo = await db
+      .select()
+      .from(todosTable)
+      .where(eq(todosTable.id, id));
     if (!todo.length) {
       return c.json({ error: 'Todo not found' }, 404);
     }
@@ -48,11 +54,12 @@ export const getTodoById = async (c: Context) => {
 
 // Todo更新
 export const updateTodo = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const { title, description, user_id, status } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const updatedTodo = await db.update(todosTable)
+    const updatedTodo = await db
+      .update(todosTable)
       .set({
         title,
         description,
@@ -73,10 +80,11 @@ export const updateTodo = async (c: Context) => {
 
 // Todo削除
 export const deleteTodo = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const deletedTodo = await db.delete(todosTable)
+    const deletedTodo = await db
+      .delete(todosTable)
       .where(eq(todosTable.id, id))
       .returning();
     if (!deletedTodo.length) {

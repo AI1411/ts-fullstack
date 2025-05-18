@@ -1,23 +1,27 @@
-'use client'
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { todoService } from "../services";
-import { Todo } from "../controllers";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import type { Todo } from '../controllers';
+import { todoService } from '../services';
 
 const AdminTodoList = () => {
   const queryClient = useQueryClient();
   const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
   const [editFormData, setEditFormData] = useState({
-    title: "",
-    description: "",
-    status: ""
+    title: '',
+    description: '',
+    status: '',
   });
 
   // Todo一覧を取得
-  const { data: todos, isLoading, error } = useQuery({
+  const {
+    data: todos,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['todos'],
-    queryFn: todoService.getTodos
+    queryFn: todoService.getTodos,
   });
 
   // 編集モードを開始
@@ -25,8 +29,8 @@ const AdminTodoList = () => {
     setEditingTodoId(todo.id);
     setEditFormData({
       title: todo.title,
-      description: todo.description || "",
-      status: todo.status || "PENDING"
+      description: todo.description || '',
+      status: todo.status || 'PENDING',
     });
   };
 
@@ -37,12 +41,14 @@ const AdminTodoList = () => {
 
   // 編集フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -86,26 +92,56 @@ const AdminTodoList = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-4" data-testid="loading">読み込み中...</div>;
-  if (error) return <div className="text-center py-4 text-red-500" data-testid="error">エラーが発生しました</div>;
+  if (isLoading)
+    return (
+      <div className="text-center py-4" data-testid="loading">
+        読み込み中...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-center py-4 text-red-500" data-testid="error">
+        エラーが発生しました
+      </div>
+    );
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden" data-testid="admin-todo-list">
-      <table className="min-w-full divide-y divide-gray-200" data-testid="admin-todo-table">
+    <div
+      className="bg-white shadow-md rounded-lg overflow-hidden"
+      data-testid="admin-todo-list"
+    >
+      <table
+        className="min-w-full divide-y divide-gray-200"
+        data-testid="admin-todo-table"
+      >
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイトル</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">説明</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作成日</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ID
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              タイトル
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              説明
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ステータス
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              作成日
+            </th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              アクション
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {todos?.map(todo => (
+          {todos?.map((todo) => (
             <tr key={todo.id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{todo.id}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {todo.id}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {editingTodoId === todo.id ? (
                   <input
@@ -116,7 +152,9 @@ const AdminTodoList = () => {
                     className="border rounded px-2 py-1 w-full"
                   />
                 ) : (
-                  <div className="text-sm font-medium text-gray-900">{todo.title}</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {todo.title}
+                  </div>
                 )}
               </td>
               <td className="px-6 py-4">
@@ -147,10 +185,16 @@ const AdminTodoList = () => {
                     <option value="COMPLETED">完了</option>
                   </select>
                 ) : (
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(todo.status)}`}>
-                    {todo.status === 'PENDING' ? '未着手' : 
-                     todo.status === 'IN_PROGRESS' ? '進行中' : 
-                     todo.status === 'COMPLETED' ? '完了' : todo.status}
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(todo.status)}`}
+                  >
+                    {todo.status === 'PENDING'
+                      ? '未着手'
+                      : todo.status === 'IN_PROGRESS'
+                        ? '進行中'
+                        : todo.status === 'COMPLETED'
+                          ? '完了'
+                          : todo.status}
                   </span>
                 )}
               </td>

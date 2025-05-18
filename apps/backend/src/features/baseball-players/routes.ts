@@ -2,17 +2,17 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
-  getBaseballPlayers,
-  getBaseballPlayerById,
   createBaseballPlayer,
+  deleteBaseballPlayer,
+  getBaseballPlayerById,
+  getBaseballPlayers,
   updateBaseballPlayer,
-  deleteBaseballPlayer
 } from './controllers';
 import {
-  baseballPlayerSchema,
   baseballPlayerResponseSchema,
+  baseballPlayerSchema,
   baseballPlayerUpdateSchema,
-  errorResponseSchema
+  errorResponseSchema,
 } from './schemas';
 
 // OpenAPIHonoインスタンスを作成
@@ -31,12 +31,12 @@ const getBaseballPlayersRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            players: z.array(baseballPlayerResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            players: z.array(baseballPlayerResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 野球選手取得ルート
@@ -50,9 +50,9 @@ const getBaseballPlayerByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球選手ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -60,20 +60,20 @@ const getBaseballPlayerByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            player: baseballPlayerResponseSchema
-          })
-        }
-      }
+            player: baseballPlayerResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '野球選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球選手作成ルート
@@ -87,10 +87,10 @@ const createBaseballPlayerRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: baseballPlayerSchema
-        }
-      }
-    }
+          schema: baseballPlayerSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -98,20 +98,20 @@ const createBaseballPlayerRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            player: baseballPlayerResponseSchema
-          })
-        }
-      }
+            player: baseballPlayerResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球選手更新ルート
@@ -125,16 +125,16 @@ const updateBaseballPlayerRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球選手ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: baseballPlayerUpdateSchema
-        }
-      }
-    }
+          schema: baseballPlayerUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -142,28 +142,28 @@ const updateBaseballPlayerRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            player: baseballPlayerResponseSchema
-          })
-        }
-      }
+            player: baseballPlayerResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '野球選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球選手削除ルート
@@ -177,9 +177,9 @@ const deleteBaseballPlayerRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球選手ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -188,20 +188,20 @@ const deleteBaseballPlayerRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '野球選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

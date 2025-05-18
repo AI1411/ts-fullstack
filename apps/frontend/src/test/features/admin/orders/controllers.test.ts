@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  getOrders,
+  type CreateOrderInput,
+  type Order,
   createOrder,
-  getOrderById,
-  updateOrder,
   deleteOrder,
+  getOrderById,
+  getOrders,
+  updateOrder,
   updateOrderStatus,
-  Order,
-  CreateOrderInput
 } from '@/features/admin/orders/controllers';
 import { orderRepository } from '@/features/admin/orders/repositories';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the order repository
 vi.mock('@/features/admin/orders/repositories', () => ({
@@ -19,8 +19,8 @@ vi.mock('@/features/admin/orders/repositories', () => ({
     getOrderById: vi.fn(),
     updateOrder: vi.fn(),
     deleteOrder: vi.fn(),
-    updateOrderStatus: vi.fn()
-  }
+    updateOrderStatus: vi.fn(),
+  },
 }));
 
 describe('Order Controllers', () => {
@@ -51,12 +51,12 @@ describe('Order Controllers', () => {
             product_id: 1,
             product_name: 'Product 1',
             quantity: 2,
-            price: 2500
-          }
+            price: 2500,
+          },
         ],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should return orders when API call is successful', async () => {
@@ -65,7 +65,7 @@ describe('Order Controllers', () => {
         ok: true,
         json: () => Promise.resolve({ orders: mockOrders }),
         text: () => Promise.resolve(JSON.stringify({ orders: mockOrders })),
-        headers: new Headers({ 'content-type': 'application/json' })
+        headers: new Headers({ 'content-type': 'application/json' }),
       } as unknown as Response);
 
       const result = await getOrders();
@@ -78,7 +78,7 @@ describe('Order Controllers', () => {
       vi.mocked(orderRepository.getOrders).mockResolvedValue({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: 'Internal Server Error',
       } as Response);
 
       await expect(getOrders()).rejects.toThrow('Error fetching orders');
@@ -91,7 +91,8 @@ describe('Order Controllers', () => {
       vi.mocked(orderRepository.getOrders).mockResolvedValue({
         ok: true,
         headers: new Headers({ 'content-type': 'text/html' }),
-        text: () => Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>')
+        text: () =>
+          Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>'),
       } as unknown as Response);
 
       await expect(getOrders()).rejects.toThrow();
@@ -104,7 +105,7 @@ describe('Order Controllers', () => {
       vi.mocked(orderRepository.getOrders).mockResolvedValue({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        text: () => Promise.resolve('Not valid JSON')
+        text: () => Promise.resolve('Not valid JSON'),
       } as unknown as Response);
 
       await expect(getOrders()).rejects.toThrow();
@@ -120,9 +121,9 @@ describe('Order Controllers', () => {
       items: [
         {
           product_id: 1,
-          quantity: 2
-        }
-      ]
+          quantity: 2,
+        },
+      ],
     };
     const mockOrder: Order = {
       id: 1,
@@ -137,18 +138,18 @@ describe('Order Controllers', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return an order when API call is successful', async () => {
       // Mock successful response
       vi.mocked(orderRepository.createOrder).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: mockOrder })
+        json: () => Promise.resolve({ order: mockOrder }),
       } as unknown as Response);
 
       const result = await createOrder(orderData);
@@ -161,7 +162,7 @@ describe('Order Controllers', () => {
       const errorMessage = 'Failed to create order';
       vi.mocked(orderRepository.createOrder).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(createOrder(orderData)).rejects.toThrow(errorMessage);
@@ -185,18 +186,18 @@ describe('Order Controllers', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return an order when API call is successful', async () => {
       // Mock successful response
       vi.mocked(orderRepository.getOrderById).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: mockOrder })
+        json: () => Promise.resolve({ order: mockOrder }),
       } as unknown as Response);
 
       const result = await getOrderById(orderId);
@@ -207,7 +208,7 @@ describe('Order Controllers', () => {
     it('should throw an error when API call fails', async () => {
       // Mock failed response
       vi.mocked(orderRepository.getOrderById).mockResolvedValue({
-        ok: false
+        ok: false,
       } as unknown as Response);
 
       await expect(getOrderById(orderId)).rejects.toThrow('Order not found');
@@ -219,7 +220,7 @@ describe('Order Controllers', () => {
   describe('updateOrder', () => {
     const orderId = 1;
     const orderData: Partial<CreateOrderInput> = {
-      customer_name: 'Updated Customer'
+      customer_name: 'Updated Customer',
     };
     const mockOrder: Order = {
       id: 1,
@@ -234,23 +235,26 @@ describe('Order Controllers', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     it('should return an updated order when API call is successful', async () => {
       // Mock successful response
       vi.mocked(orderRepository.updateOrder).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: mockOrder })
+        json: () => Promise.resolve({ order: mockOrder }),
       } as unknown as Response);
 
       const result = await updateOrder(orderId, orderData);
       expect(result).toEqual(mockOrder);
-      expect(orderRepository.updateOrder).toHaveBeenCalledWith(orderId, orderData);
+      expect(orderRepository.updateOrder).toHaveBeenCalledWith(
+        orderId,
+        orderData
+      );
     });
 
     it('should throw an error when API call fails', async () => {
@@ -258,11 +262,16 @@ describe('Order Controllers', () => {
       const errorMessage = 'Failed to update order';
       vi.mocked(orderRepository.updateOrder).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
-      await expect(updateOrder(orderId, orderData)).rejects.toThrow(errorMessage);
-      expect(orderRepository.updateOrder).toHaveBeenCalledWith(orderId, orderData);
+      await expect(updateOrder(orderId, orderData)).rejects.toThrow(
+        errorMessage
+      );
+      expect(orderRepository.updateOrder).toHaveBeenCalledWith(
+        orderId,
+        orderData
+      );
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
   });
@@ -273,7 +282,7 @@ describe('Order Controllers', () => {
     it('should complete successfully when API call is successful', async () => {
       // Mock successful response
       vi.mocked(orderRepository.deleteOrder).mockResolvedValue({
-        ok: true
+        ok: true,
       } as unknown as Response);
 
       await expect(deleteOrder(orderId)).resolves.not.toThrow();
@@ -285,7 +294,7 @@ describe('Order Controllers', () => {
       const errorMessage = 'Failed to delete order';
       vi.mocked(orderRepository.deleteOrder).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(deleteOrder(orderId)).rejects.toThrow(errorMessage);
@@ -310,23 +319,26 @@ describe('Order Controllers', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     it('should return an updated order when API call is successful', async () => {
       // Mock successful response
       vi.mocked(orderRepository.updateOrderStatus).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: mockOrder })
+        json: () => Promise.resolve({ order: mockOrder }),
       } as unknown as Response);
 
       const result = await updateOrderStatus(orderId, status);
       expect(result).toEqual(mockOrder);
-      expect(orderRepository.updateOrderStatus).toHaveBeenCalledWith(orderId, status);
+      expect(orderRepository.updateOrderStatus).toHaveBeenCalledWith(
+        orderId,
+        status
+      );
     });
 
     it('should throw an error when API call fails', async () => {
@@ -334,11 +346,16 @@ describe('Order Controllers', () => {
       const errorMessage = 'Failed to update order status';
       vi.mocked(orderRepository.updateOrderStatus).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
-      await expect(updateOrderStatus(orderId, status)).rejects.toThrow(errorMessage);
-      expect(orderRepository.updateOrderStatus).toHaveBeenCalledWith(orderId, status);
+      await expect(updateOrderStatus(orderId, status)).rejects.toThrow(
+        errorMessage
+      );
+      expect(orderRepository.updateOrderStatus).toHaveBeenCalledWith(
+        orderId,
+        status
+      );
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
   });

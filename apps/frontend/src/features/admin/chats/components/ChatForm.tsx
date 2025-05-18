@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { chatService } from "../services";
-import { userService } from "../../users/services";
-import { User } from "../../users/controllers";
-import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import type { User } from '../../users/controllers';
+import { userService } from '../../users/services';
+import { chatService } from '../services';
 
 // 仮のユーザーID（実際の認証システムができたら変更する）
 const CURRENT_USER_ID = 1;
@@ -13,14 +13,14 @@ const CURRENT_USER_ID = 1;
 const ChatForm = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ユーザー一覧を取得
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getUsers
+    queryFn: userService.getUsers,
   });
 
   // 自分以外のユーザーをフィルタリング
@@ -30,9 +30,9 @@ const ChatForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     if (!selectedUserId) {
-      setError("ユーザーを選択してください");
+      setError('ユーザーを選択してください');
       return;
     }
 
@@ -41,19 +41,23 @@ const ChatForm = () => {
     try {
       const chatData = {
         creator_id: CURRENT_USER_ID,
-        recipient_id: parseInt(selectedUserId)
+        recipient_id: Number.parseInt(selectedUserId),
       };
 
       const newChat = await chatService.createChat(chatData);
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
-      setSelectedUserId("");
-      await queryClient.invalidateQueries({ queryKey: ['userChats', CURRENT_USER_ID] });
-      
+      setSelectedUserId('');
+      await queryClient.invalidateQueries({
+        queryKey: ['userChats', CURRENT_USER_ID],
+      });
+
       // 新しいチャットページに遷移
       router.push(`/admin/chats/${newChat.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'チャットの作成に失敗しました');
+      setError(
+        err instanceof Error ? err.message : 'チャットの作成に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -62,11 +66,16 @@ const ChatForm = () => {
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">新しいチャットを開始</h2>
-      
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        新しいチャットを開始
+      </h2>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="recipient_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="recipient_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ユーザーを選択
           </label>
           <select
@@ -98,14 +107,30 @@ const ChatForm = () => {
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               処理中...
             </span>
           ) : (
-            "チャットを開始"
+            'チャットを開始'
           )}
         </button>
       </form>

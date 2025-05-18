@@ -1,7 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createSubTask, getSubTasks, getSubTasksByTaskId, getSubTaskById, updateSubTask, deleteSubTask } from '../../../features/sub-tasks/controllers';
-import { subTasksTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { subTasksTable } from '../../../db/schema';
+import {
+  createSubTask,
+  deleteSubTask,
+  getSubTaskById,
+  getSubTasks,
+  getSubTasksByTaskId,
+  updateSubTask,
+} from '../../../features/sub-tasks/controllers';
 
 // Mock sub-task data
 const mockSubTask = {
@@ -12,24 +19,24 @@ const mockSubTask = {
   status: 'PENDING',
   due_date: null,
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -42,7 +49,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockSubTask])
+  returning: vi.fn().mockResolvedValue([mockSubTask]),
 };
 
 describe('SubTask Controllers', () => {
@@ -58,7 +65,7 @@ describe('SubTask Controllers', () => {
         title: 'Test SubTask',
         description: 'Test Description',
         status: 'PENDING',
-        due_date: null
+        due_date: null,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -74,7 +81,7 @@ describe('SubTask Controllers', () => {
         title: 'Test SubTask',
         description: 'Test Description',
         status: 'PENDING',
-        due_date: null
+        due_date: null,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -83,7 +90,10 @@ describe('SubTask Controllers', () => {
 
       const result = await createSubTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -96,7 +106,9 @@ describe('SubTask Controllers', () => {
 
       const result = await getSubTasks(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ subTasks: [mockSubTask] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        subTasks: [mockSubTask],
+      });
     });
 
     it('should handle errors', async () => {
@@ -106,7 +118,10 @@ describe('SubTask Controllers', () => {
 
       const result = await getSubTasks(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -121,7 +136,9 @@ describe('SubTask Controllers', () => {
       const result = await getSubTasksByTaskId(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('taskId');
-      expect(mockContext.json).toHaveBeenCalledWith({ subTasks: [mockSubTask] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        subTasks: [mockSubTask],
+      });
     });
 
     it('should handle errors', async () => {
@@ -133,7 +150,10 @@ describe('SubTask Controllers', () => {
 
       const result = await getSubTasksByTaskId(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -160,7 +180,10 @@ describe('SubTask Controllers', () => {
 
       const result = await getSubTaskById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'SubTask not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'SubTask not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -172,7 +195,10 @@ describe('SubTask Controllers', () => {
 
       const result = await getSubTaskById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -184,7 +210,7 @@ describe('SubTask Controllers', () => {
         title: 'Updated SubTask',
         description: 'Updated Description',
         status: 'IN_PROGRESS',
-        due_date: null
+        due_date: null,
       };
       const mockContext = createMockContext(mockBody, mockParams);
 
@@ -202,14 +228,17 @@ describe('SubTask Controllers', () => {
         title: 'Updated SubTask',
         description: 'Updated Description',
         status: 'IN_PROGRESS',
-        due_date: null
+        due_date: null,
       };
       const mockContext = createMockContext(mockBody, mockParams);
       mockDbClient.returning.mockResolvedValueOnce([]);
 
       const result = await updateSubTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'SubTask not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'SubTask not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -219,14 +248,17 @@ describe('SubTask Controllers', () => {
         title: 'Updated SubTask',
         description: 'Updated Description',
         status: 'IN_PROGRESS',
-        due_date: null
+        due_date: null,
       };
       const mockContext = createMockContext(mockBody, mockParams);
       mockDbClient.returning.mockRejectedValueOnce(new Error('Database error'));
 
       const result = await updateSubTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -238,7 +270,9 @@ describe('SubTask Controllers', () => {
       const result = await deleteSubTask(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'SubTask deleted successfully' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        message: 'SubTask deleted successfully',
+      });
     });
 
     it('should return 404 if sub-task not found', async () => {
@@ -248,7 +282,10 @@ describe('SubTask Controllers', () => {
 
       const result = await deleteSubTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'SubTask not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'SubTask not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -258,7 +295,10 @@ describe('SubTask Controllers', () => {
 
       const result = await deleteSubTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

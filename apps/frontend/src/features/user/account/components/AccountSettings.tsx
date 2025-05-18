@@ -1,7 +1,13 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
-import { RiLockLine, RiNotification3Line, RiGlobalLine, RiShieldLine } from 'react-icons/ri';
+import type React from 'react';
+import { useState } from 'react';
+import {
+  RiGlobalLine,
+  RiLockLine,
+  RiNotification3Line,
+  RiShieldLine,
+} from 'react-icons/ri';
 
 interface User {
   id: number;
@@ -33,19 +39,26 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
 
   return (
     <div className="p-6">
-      <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">アカウント設定</h2>
+      <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
+        アカウント設定
+      </h2>
 
       <div className="space-y-8">
         {/* パスワード変更 */}
         <div className="rounded-lg border border-gray-200 p-6 dark:border-gray-700">
           <div className="mb-4 flex items-center">
             <RiLockLine className="mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">パスワード変更</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              パスワード変更
+            </h3>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="current-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="current-password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 現在のパスワード
               </label>
               <input
@@ -55,7 +68,10 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
               />
             </div>
             <div>
-              <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="new-password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 新しいパスワード
               </label>
               <input
@@ -65,7 +81,10 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
               />
             </div>
             <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="confirm-password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 新しいパスワード（確認）
               </label>
               <input
@@ -84,15 +103,20 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
         <div className="rounded-lg border border-gray-200 p-6 dark:border-gray-700">
           <div className="mb-4 flex items-center">
             <RiNotification3Line className="mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">通知設定</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              通知設定
+            </h3>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">メール通知</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  メール通知
+                </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {user.email} 宛に注文の更新やプロモーションに関するメールを受け取る
+                  {user.email}{' '}
+                  宛に注文の更新やプロモーションに関するメールを受け取る
                 </p>
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
@@ -108,8 +132,12 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">SMS通知</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">注文の更新に関するSMSを受け取る</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  SMS通知
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  注文の更新に関するSMSを受け取る
+                </p>
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
@@ -124,8 +152,12 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">アプリ内通知</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">アプリ内で通知を受け取る</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  アプリ内通知
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  アプリ内で通知を受け取る
+                </p>
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
@@ -144,12 +176,17 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
         <div className="rounded-lg border border-gray-200 p-6 dark:border-gray-700">
           <div className="mb-4 flex items-center">
             <RiGlobalLine className="mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">言語と通貨</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              言語と通貨
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="language"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 言語
               </label>
               <select
@@ -166,7 +203,10 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
             </div>
 
             <div>
-              <label htmlFor="currency" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="currency"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 通貨
               </label>
               <select
@@ -188,14 +228,20 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
         <div className="rounded-lg border border-gray-200 p-6 dark:border-gray-700">
           <div className="mb-4 flex items-center">
             <RiShieldLine className="mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">セキュリティ</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              セキュリティ
+            </h3>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">二段階認証</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">アカウントのセキュリティを強化するために二段階認証を有効にする</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  二段階認証
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  アカウントのセキュリティを強化するために二段階認証を有効にする
+                </p>
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
                 <input

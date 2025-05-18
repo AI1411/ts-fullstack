@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { companyService } from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { companyService } from '../services';
 
 const CompanyForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    address: "",
-    phone: "",
-    email: "",
-    website: ""
+    name: '',
+    description: '',
+    address: '',
+    phone: '',
+    email: '',
+    website: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,9 +22,9 @@ const CompanyForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -36,15 +36,15 @@ const CompanyForm = () => {
 
     try {
       await companyService.createCompany(formData);
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        name: "",
-        description: "",
-        address: "",
-        phone: "",
-        email: "",
-        website: ""
+        name: '',
+        description: '',
+        address: '',
+        phone: '',
+        email: '',
+        website: '',
       });
       await queryClient.invalidateQueries({ queryKey: ['companies'] });
     } catch (err) {
@@ -58,16 +58,19 @@ const CompanyForm = () => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">会社を追加</h2>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             会社名
           </label>
           <input
@@ -80,9 +83,12 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             説明
           </label>
           <textarea
@@ -94,9 +100,12 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             住所
           </label>
           <input
@@ -108,9 +117,12 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             電話番号
           </label>
           <input
@@ -122,9 +134,12 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             メールアドレス
           </label>
           <input
@@ -136,9 +151,12 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="website"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ウェブサイト
           </label>
           <input
@@ -150,7 +168,7 @@ const CompanyForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <button
           type="submit"
           disabled={isSubmitting}

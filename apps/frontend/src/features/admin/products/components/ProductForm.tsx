@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { productService } from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { productService } from '../services';
 
 const ProductForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    stock: "",
-    image_url: ""
+    name: '',
+    description: '',
+    price: '',
+    stock: '',
+    image_url: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,9 +21,9 @@ const ProductForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -37,19 +37,19 @@ const ProductForm = () => {
       // priceとstockを数値に変換
       const productData = {
         ...formData,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock)
+        price: Number.parseFloat(formData.price),
+        stock: Number.parseInt(formData.stock),
       };
 
       await productService.createProduct(productData);
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        name: "",
-        description: "",
-        price: "",
-        stock: "",
-        image_url: ""
+        name: '',
+        description: '',
+        price: '',
+        stock: '',
+        image_url: '',
       });
       await queryClient.invalidateQueries({ queryKey: ['products'] });
     } catch (err) {
@@ -72,7 +72,10 @@ const ProductForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             商品名
           </label>
           <input
@@ -87,7 +90,10 @@ const ProductForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             説明
           </label>
           <textarea
@@ -101,7 +107,10 @@ const ProductForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             価格
           </label>
           <input
@@ -118,7 +127,10 @@ const ProductForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="stock" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="stock"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             在庫数
           </label>
           <input
@@ -134,7 +146,10 @@ const ProductForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="image_url"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             画像URL
           </label>
           <input

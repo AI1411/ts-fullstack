@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import UserFooter from '@/features/user/layout/UserFooter';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="link">
       {children}
     </a>
@@ -31,7 +34,9 @@ describe('UserFooter Component', () => {
     expect(screen.getByText('ECサイト')).toBeInTheDocument();
 
     // Check if company description is rendered
-    expect(screen.getByText(/高品質な商品を取り揃えたオンラインストア/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/高品質な商品を取り揃えたオンラインストア/)
+    ).toBeInTheDocument();
   });
 
   it('should render quick links with correct hrefs', () => {
@@ -42,13 +47,15 @@ describe('UserFooter Component', () => {
 
     // Check if links are rendered with correct hrefs
     const links = screen.getAllByTestId('link');
-    const homeLink = links.find(link => link.textContent === 'ホーム');
+    const homeLink = links.find((link) => link.textContent === 'ホーム');
     expect(homeLink).toHaveAttribute('href', '/');
 
-    const productsLink = links.find(link => link.textContent === '商品一覧');
+    const productsLink = links.find((link) => link.textContent === '商品一覧');
     expect(productsLink).toHaveAttribute('href', '/products');
 
-    const categoriesLink = links.find(link => link.textContent === 'カテゴリー');
+    const categoriesLink = links.find(
+      (link) => link.textContent === 'カテゴリー'
+    );
     expect(categoriesLink).toHaveAttribute('href', '/categories');
   });
 
@@ -60,13 +67,13 @@ describe('UserFooter Component', () => {
 
     // Check if links are rendered with correct hrefs
     const links = screen.getAllByTestId('link');
-    const accountLink = links.find(link => link.textContent === 'アカウント');
+    const accountLink = links.find((link) => link.textContent === 'アカウント');
     expect(accountLink).toHaveAttribute('href', '/account');
 
-    const ordersLink = links.find(link => link.textContent === '注文履歴');
+    const ordersLink = links.find((link) => link.textContent === '注文履歴');
     expect(ordersLink).toHaveAttribute('href', '/orders');
 
-    const faqLink = links.find(link => link.textContent === 'よくある質問');
+    const faqLink = links.find((link) => link.textContent === 'よくある質問');
     expect(faqLink).toHaveAttribute('href', '/faq');
   });
 
@@ -77,7 +84,7 @@ describe('UserFooter Component', () => {
     // Use a more specific selector to target the heading
     const contactHeadings = screen.getAllByText('お問い合わせ');
     const contactHeading = contactHeadings.find(
-      element => element.tagName.toLowerCase() === 'h3'
+      (element) => element.tagName.toLowerCase() === 'h3'
     );
     expect(contactHeading).toBeInTheDocument();
 
@@ -96,7 +103,9 @@ describe('UserFooter Component', () => {
 
     // Check if copyright is rendered with current year
     const currentYear = new Date().getFullYear().toString();
-    expect(screen.getByText(new RegExp(`${currentYear} ECサイト`))).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(`${currentYear} ECサイト`))
+    ).toBeInTheDocument();
   });
 
   it('should render footer links with correct hrefs', () => {
@@ -104,13 +113,17 @@ describe('UserFooter Component', () => {
 
     // Check if footer links are rendered with correct hrefs
     const links = screen.getAllByTestId('link');
-    const privacyLink = links.find(link => link.textContent === 'プライバシーポリシー');
+    const privacyLink = links.find(
+      (link) => link.textContent === 'プライバシーポリシー'
+    );
     expect(privacyLink).toHaveAttribute('href', '/privacy');
 
-    const termsLink = links.find(link => link.textContent === '利用規約');
+    const termsLink = links.find((link) => link.textContent === '利用規約');
     expect(termsLink).toHaveAttribute('href', '/terms');
 
-    const sitemapLink = links.find(link => link.textContent === 'サイトマップ');
+    const sitemapLink = links.find(
+      (link) => link.textContent === 'サイトマップ'
+    );
     expect(sitemapLink).toHaveAttribute('href', '/sitemap');
   });
 });

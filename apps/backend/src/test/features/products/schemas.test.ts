@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { productSchema, productUpdateSchema } from '../../../features/products/schemas';
+import { describe, expect, it } from 'vitest';
+import {
+  productSchema,
+  productUpdateSchema,
+} from '../../../features/products/schemas';
 
 describe('Product Schemas', () => {
   describe('productSchema', () => {
@@ -51,7 +54,9 @@ describe('Product Schemas', () => {
       expect(result.success).toBe(false);
 
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('価格は0以上である必要があります');
+        expect(result.error.issues[0].message).toBe(
+          '価格は0以上である必要があります'
+        );
       }
     });
 
@@ -66,7 +71,9 @@ describe('Product Schemas', () => {
       expect(result.success).toBe(false);
 
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('在庫数は0以上である必要があります');
+        expect(result.error.issues[0].message).toBe(
+          '在庫数は0以上である必要があります'
+        );
       }
     });
 
@@ -81,7 +88,9 @@ describe('Product Schemas', () => {
       expect(result.success).toBe(false);
 
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('有効なURLを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          '有効なURLを入力してください'
+        );
       }
     });
 
@@ -150,7 +159,9 @@ describe('Product Schemas', () => {
       expect(result.success).toBe(false);
 
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('価格は0以上である必要があります');
+        expect(result.error.issues[0].message).toBe(
+          '価格は0以上である必要があります'
+        );
       }
     });
   });

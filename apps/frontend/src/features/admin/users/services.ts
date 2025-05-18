@@ -1,12 +1,12 @@
 // User services
 import {
+  type CreateUserInput,
+  type User,
   createUser as createUserController,
-  CreateUserInput,
   deleteUser as deleteUserController,
   getUserById as getUserByIdController,
   getUsers as getUsersController,
   updateUser as updateUserController,
-  User
 } from './controllers';
 
 // User service
@@ -27,7 +27,10 @@ export const userService = {
   },
 
   // Update a user
-  updateUser: async (id: number, userData: Partial<CreateUserInput>): Promise<User> => {
+  updateUser: async (
+    id: number,
+    userData: Partial<CreateUserInput>
+  ): Promise<User> => {
     return updateUserController(id, userData);
   },
 
@@ -40,5 +43,5 @@ export const userService = {
   getUserCount: async (): Promise<number> => {
     const users = await getUsersController();
     return users.length;
-  }
+  },
 };

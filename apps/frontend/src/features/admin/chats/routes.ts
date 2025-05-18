@@ -5,6 +5,8 @@ export const CHAT_ROUTES = {
   create: '/admin/chats/create',
   userChats: (userId: string | number) => `/users/${userId}/chats`,
   chatMessages: (chatId: string | number) => `/chats/${chatId}/messages`,
-  markAsRead: (chatId: string | number, userId: string | number) => `/chats/${chatId}/users/${userId}/read`,
-  unreadMessages: (userId: string | number) => `/users/${userId}/unread-messages`,
+  markAsRead: (chatId: string | number, userId: string | number) =>
+    `/chats/${chatId}/users/${userId}/read`,
+  unreadMessages: (userId: string | number) =>
+    `/users/${userId}/unread-messages`,
 };

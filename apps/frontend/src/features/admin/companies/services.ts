@@ -1,12 +1,12 @@
 // Company services
 import {
+  type Company,
+  type CreateCompanyInput,
   createCompany as createCompanyController,
-  CreateCompanyInput,
   deleteCompany as deleteCompanyController,
-  getCompanyById as getCompanyByIdController,
   getCompanies as getCompaniesController,
-  Company,
-  updateCompany as updateCompanyController
+  getCompanyById as getCompanyByIdController,
+  updateCompany as updateCompanyController,
 } from './controllers';
 
 // Company service
@@ -27,12 +27,15 @@ export const companyService = {
   },
 
   // Update a company
-  updateCompany: async (id: number, companyData: Partial<CreateCompanyInput>): Promise<Company> => {
+  updateCompany: async (
+    id: number,
+    companyData: Partial<CreateCompanyInput>
+  ): Promise<Company> => {
     return updateCompanyController(id, companyData);
   },
 
   // Delete a company
   deleteCompany: async (id: number): Promise<void> => {
     return deleteCompanyController(id);
-  }
+  },
 };

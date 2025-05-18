@@ -1,13 +1,13 @@
 // Order services
 import {
+  type CreateOrderInput,
+  type Order,
   createOrder as createOrderController,
-  CreateOrderInput,
   deleteOrder as deleteOrderController,
   getOrderById as getOrderByIdController,
   getOrders as getOrdersController,
-  Order,
   updateOrder as updateOrderController,
-  updateOrderStatus as updateOrderStatusController
+  updateOrderStatus as updateOrderStatusController,
 } from './controllers';
 
 // Order service
@@ -28,7 +28,10 @@ export const orderService = {
   },
 
   // Update an order
-  updateOrder: async (id: number, orderData: Partial<CreateOrderInput>): Promise<Order> => {
+  updateOrder: async (
+    id: number,
+    orderData: Partial<CreateOrderInput>
+  ): Promise<Order> => {
     return updateOrderController(id, orderData);
   },
 
@@ -38,21 +41,27 @@ export const orderService = {
   },
 
   // Update order status
-  updateOrderStatus: async (id: number, status: Order['status']): Promise<Order> => {
+  updateOrderStatus: async (
+    id: number,
+    status: Order['status']
+  ): Promise<Order> => {
     return updateOrderStatusController(id, status);
   },
 
   // Get orders by status
   getOrdersByStatus: async (status: Order['status']): Promise<Order[]> => {
     const orders = await getOrdersController();
-    return orders.filter(order => order.status === status);
+    return orders.filter((order) => order.status === status);
   },
 
   // Get recent orders
-  getRecentOrders: async (limit: number = 5): Promise<Order[]> => {
+  getRecentOrders: async (limit = 5): Promise<Order[]> => {
     const orders = await getOrdersController();
     return orders
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
       .slice(0, limit);
   },
 
@@ -60,5 +69,5 @@ export const orderService = {
   calculateTotalRevenue: async (): Promise<number> => {
     const orders = await getOrdersController();
     return orders.reduce((total, order) => total + order.total_amount, 0);
-  }
+  },
 };

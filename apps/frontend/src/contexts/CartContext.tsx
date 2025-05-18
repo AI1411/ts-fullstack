@@ -1,6 +1,13 @@
-'use client'
+'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type React from 'react';
+import {
+  type ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 // Define the cart item type
 export interface CartItem {
@@ -44,7 +51,9 @@ const TAX_RATE = 0.1; // 10% tax
 const SHIPPING_FEE = 800; // 800 yen shipping fee
 
 // Create a provider component
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   // Initialize cart state from localStorage if available
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
@@ -71,7 +80,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Update derived state whenever cart changes
   useEffect(() => {
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
-    const newSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const newSubtotal = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
     const newTax = Math.round(newSubtotal * TAX_RATE);
     const newShipping = items.length > 0 ? SHIPPING_FEE : 0;
     const newTotal = newSubtotal + newTax + newShipping;
@@ -85,10 +97,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Add an item to the cart
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
-    setItems(prevItems => {
+    setItems((prevItems) => {
       // Check if the item is already in the cart
-      const existingItemIndex = prevItems.findIndex(i => i.id === item.id);
-      
+      const existingItemIndex = prevItems.findIndex((i) => i.id === item.id);
+
       if (existingItemIndex >= 0) {
         // If the item exists, increase its quantity
         const updatedItems = [...prevItems];
@@ -103,15 +115,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Remove an item from the cart
   const removeItem = (id: number) => {
-    setItems(prevItems => prevItems.filter(item => item.id !== id));
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   // Update the quantity of an item
   const updateQuantity = (id: number, quantity: number) => {
-    setItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      )
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
   };
 

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React from 'react';
 import Image from 'next/image';
+import type React from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface CartItemProps {
@@ -27,16 +27,15 @@ const CartItem: React.FC<CartItemProps> = ({
     <div className="flex items-center justify-between border-b border-gray-200 py-4 dark:border-gray-700">
       <div className="flex items-center space-x-4">
         <div className="relative h-20 w-20 overflow-hidden rounded-md">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover"
-          />
+          <Image src={image} alt={name} fill className="object-cover" />
         </div>
         <div>
-          <h3 className="text-lg font-medium text-gray-800 dark:text-white">{name}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">¥{price.toLocaleString()}</p>
+          <h3 className="text-lg font-medium text-gray-800 dark:text-white">
+            {name}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            ¥{price.toLocaleString()}
+          </p>
         </div>
       </div>
       <div className="flex items-center space-x-4">
@@ -47,7 +46,9 @@ const CartItem: React.FC<CartItemProps> = ({
           >
             -
           </button>
-          <span className="px-3 py-1 text-gray-800 dark:text-white">{quantity}</span>
+          <span className="px-3 py-1 text-gray-800 dark:text-white">
+            {quantity}
+          </span>
           <button
             onClick={() => onUpdateQuantity(id, quantity + 1)}
             className="px-3 py-1 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"

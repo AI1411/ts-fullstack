@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { notificationService } from '@/features/admin/notifications/services';
 import * as controllers from '@/features/admin/notifications/controllers';
+import { notificationService } from '@/features/admin/notifications/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/notifications/controllers', () => ({
@@ -9,7 +9,7 @@ vi.mock('@/features/admin/notifications/controllers', () => ({
   getNotificationById: vi.fn(),
   updateNotification: vi.fn(),
   deleteNotification: vi.fn(),
-  toggleNotificationReadStatus: vi.fn()
+  toggleNotificationReadStatus: vi.fn(),
 }));
 
 describe('Notification Service', () => {
@@ -26,11 +26,13 @@ describe('Notification Service', () => {
           message: 'This is a test notification',
           user_id: 1,
           is_read: false,
-          created_at: '2023-01-01T00:00:00Z'
-        }
+          created_at: '2023-01-01T00:00:00Z',
+        },
       ];
 
-      vi.mocked(controllers.getNotifications).mockResolvedValue(mockNotifications);
+      vi.mocked(controllers.getNotifications).mockResolvedValue(
+        mockNotifications
+      );
 
       const result = await notificationService.getNotifications();
 
@@ -45,20 +47,25 @@ describe('Notification Service', () => {
         title: 'Test Notification',
         message: 'This is a test notification',
         user_id: 1,
-        is_read: false
+        is_read: false,
       };
 
       const mockNotification = {
         id: 1,
         ...notificationData,
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       };
 
-      vi.mocked(controllers.createNotification).mockResolvedValue(mockNotification);
+      vi.mocked(controllers.createNotification).mockResolvedValue(
+        mockNotification
+      );
 
-      const result = await notificationService.createNotification(notificationData);
+      const result =
+        await notificationService.createNotification(notificationData);
 
-      expect(controllers.createNotification).toHaveBeenCalledWith(notificationData);
+      expect(controllers.createNotification).toHaveBeenCalledWith(
+        notificationData
+      );
       expect(result).toBe(mockNotification);
     });
   });
@@ -71,10 +78,12 @@ describe('Notification Service', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       };
 
-      vi.mocked(controllers.getNotificationById).mockResolvedValue(mockNotification);
+      vi.mocked(controllers.getNotificationById).mockResolvedValue(
+        mockNotification
+      );
 
       const result = await notificationService.getNotificationById(1);
 
@@ -87,7 +96,7 @@ describe('Notification Service', () => {
     it('should call the controller to update a notification', async () => {
       const notificationData = {
         title: 'Updated Notification',
-        message: 'This is an updated notification'
+        message: 'This is an updated notification',
       };
 
       const mockNotification = {
@@ -96,14 +105,22 @@ describe('Notification Service', () => {
         message: 'This is an updated notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       };
 
-      vi.mocked(controllers.updateNotification).mockResolvedValue(mockNotification);
+      vi.mocked(controllers.updateNotification).mockResolvedValue(
+        mockNotification
+      );
 
-      const result = await notificationService.updateNotification(1, notificationData);
+      const result = await notificationService.updateNotification(
+        1,
+        notificationData
+      );
 
-      expect(controllers.updateNotification).toHaveBeenCalledWith(1, notificationData);
+      expect(controllers.updateNotification).toHaveBeenCalledWith(
+        1,
+        notificationData
+      );
       expect(result).toBe(mockNotification);
     });
   });
@@ -126,14 +143,22 @@ describe('Notification Service', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: true,
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       };
 
-      vi.mocked(controllers.toggleNotificationReadStatus).mockResolvedValue(mockNotification);
+      vi.mocked(controllers.toggleNotificationReadStatus).mockResolvedValue(
+        mockNotification
+      );
 
-      const result = await notificationService.toggleNotificationReadStatus(1, true);
+      const result = await notificationService.toggleNotificationReadStatus(
+        1,
+        true
+      );
 
-      expect(controllers.toggleNotificationReadStatus).toHaveBeenCalledWith(1, true);
+      expect(controllers.toggleNotificationReadStatus).toHaveBeenCalledWith(
+        1,
+        true
+      );
       expect(result).toBe(mockNotification);
     });
   });
@@ -147,7 +172,7 @@ describe('Notification Service', () => {
           message: 'This is test notification 1',
           user_id: 1,
           is_read: false,
-          created_at: '2023-01-01T00:00:00Z'
+          created_at: '2023-01-01T00:00:00Z',
         },
         {
           id: 2,
@@ -155,11 +180,13 @@ describe('Notification Service', () => {
           message: 'This is test notification 2',
           user_id: 2,
           is_read: true,
-          created_at: '2023-01-02T00:00:00Z'
-        }
+          created_at: '2023-01-02T00:00:00Z',
+        },
       ];
 
-      vi.mocked(controllers.getNotifications).mockResolvedValue(mockNotifications);
+      vi.mocked(controllers.getNotifications).mockResolvedValue(
+        mockNotifications
+      );
 
       const result = await notificationService.getUnreadNotifications();
 
@@ -177,7 +204,7 @@ describe('Notification Service', () => {
           message: 'This is test notification 1',
           user_id: 1,
           is_read: false,
-          created_at: '2023-01-01T00:00:00Z'
+          created_at: '2023-01-01T00:00:00Z',
         },
         {
           id: 2,
@@ -185,11 +212,13 @@ describe('Notification Service', () => {
           message: 'This is test notification 2',
           user_id: 2,
           is_read: true,
-          created_at: '2023-01-02T00:00:00Z'
-        }
+          created_at: '2023-01-02T00:00:00Z',
+        },
       ];
 
-      vi.mocked(controllers.getNotifications).mockResolvedValue(mockNotifications);
+      vi.mocked(controllers.getNotifications).mockResolvedValue(
+        mockNotifications
+      );
 
       const result = await notificationService.getReadNotifications();
 

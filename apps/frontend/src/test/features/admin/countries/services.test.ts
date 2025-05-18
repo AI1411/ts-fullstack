@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { countryService } from '@/features/admin/countries/services';
 import * as controllers from '@/features/admin/countries/controllers';
+import { countryService } from '@/features/admin/countries/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/countries/controllers', () => ({
@@ -18,7 +18,7 @@ describe('Country Service', () => {
     code: 'JP',
     flag_url: 'https://example.com/japan.png',
     created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-02T00:00:00Z'
+    updated_at: '2023-01-02T00:00:00Z',
   };
 
   const mockCountries = [mockCountry];
@@ -50,7 +50,7 @@ describe('Country Service', () => {
     const countryData = {
       name: 'Japan',
       code: 'JP',
-      flag_url: 'https://example.com/japan.png'
+      flag_url: 'https://example.com/japan.png',
     };
 
     it('should call the controller and return the created country', async () => {
@@ -67,7 +67,9 @@ describe('Country Service', () => {
       const error = new Error('Failed to create country');
       vi.mocked(controllers.createCountry).mockRejectedValue(error);
 
-      await expect(countryService.createCountry(countryData)).rejects.toThrow(error);
+      await expect(countryService.createCountry(countryData)).rejects.toThrow(
+        error
+      );
       expect(controllers.createCountry).toHaveBeenCalledTimes(1);
       expect(controllers.createCountry).toHaveBeenCalledWith(countryData);
     });
@@ -115,7 +117,9 @@ describe('Country Service', () => {
       const error = new Error('Failed to update country');
       vi.mocked(controllers.updateCountry).mockRejectedValue(error);
 
-      await expect(countryService.updateCountry(1, countryData)).rejects.toThrow(error);
+      await expect(
+        countryService.updateCountry(1, countryData)
+      ).rejects.toThrow(error);
       expect(controllers.updateCountry).toHaveBeenCalledTimes(1);
       expect(controllers.updateCountry).toHaveBeenCalledWith(1, countryData);
     });

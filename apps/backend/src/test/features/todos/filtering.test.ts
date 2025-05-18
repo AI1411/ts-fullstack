@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getTodos } from '../../../features/todos/controllers';
-import { todosTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { todosTable } from '../../../db/schema';
+import { getTodos } from '../../../features/todos/controllers';
 
 // Mock todo data
 const mockTodos = [
@@ -12,7 +12,7 @@ const mockTodos = [
     user_id: 1,
     status: 'PENDING',
     created_at: new Date('2023-01-01'),
-    updated_at: new Date('2023-01-01')
+    updated_at: new Date('2023-01-01'),
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const mockTodos = [
     user_id: 1,
     status: 'COMPLETED',
     created_at: new Date('2023-01-02'),
-    updated_at: new Date('2023-01-02')
+    updated_at: new Date('2023-01-02'),
   },
   {
     id: 3,
@@ -30,25 +30,25 @@ const mockTodos = [
     user_id: 2,
     status: 'PENDING',
     created_at: new Date('2023-01-03'),
-    updated_at: new Date('2023-01-03')
-  }
+    updated_at: new Date('2023-01-03'),
+  },
 ];
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (query = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(query),
-    query: vi.fn((key) => query[key])
+    query: vi.fn((key) => query[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -59,7 +59,7 @@ const mockDbClient = {
   orderBy: vi.fn().mockReturnThis(),
   limit: vi.fn().mockReturnThis(),
   offset: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue(mockTodos)
+  returning: vi.fn().mockResolvedValue(mockTodos),
 };
 
 describe('Todo Filtering and Sorting', () => {
@@ -84,31 +84,44 @@ describe('Todo Filtering and Sorting', () => {
 
     it('should filter todos by status', async () => {
       const mockContext = createMockContext({ status: 'PENDING' });
-      const filteredTodos = mockTodos.filter(todo => todo.status === 'PENDING');
+      const filteredTodos = mockTodos.filter(
+        (todo) => todo.status === 'PENDING'
+      );
       mockDbClient.from.mockResolvedValueOnce(filteredTodos);
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: filteredTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: filteredTodos },
+        200
+      );
     });
 
     it('should filter todos by user_id', async () => {
       const mockContext = createMockContext({ user_id: '1' });
-      const filteredTodos = mockTodos.filter(todo => todo.user_id === 1);
+      const filteredTodos = mockTodos.filter((todo) => todo.user_id === 1);
       mockDbClient.from.mockResolvedValueOnce(filteredTodos);
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: filteredTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: filteredTodos },
+        200
+      );
     });
 
     it('should handle errors when filtering', async () => {
       const mockContext = createMockContext({ status: 'INVALID_STATUS' });
-      mockDbClient.from.mockRejectedValueOnce(new Error('Invalid status filter'));
+      mockDbClient.from.mockRejectedValueOnce(
+        new Error('Invalid status filter')
+      );
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Invalid status filter' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Invalid status filter' },
+        500
+      );
     });
   });
 
@@ -118,23 +131,36 @@ describe('Todo Filtering and Sorting', () => {
     // demonstrate how sorting could be tested if implemented.
 
     it('should sort todos by created_at in descending order', async () => {
-      const mockContext = createMockContext({ sort: 'created_at', order: 'desc' });
-      const sortedTodos = [...mockTodos].sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
+      const mockContext = createMockContext({
+        sort: 'created_at',
+        order: 'desc',
+      });
+      const sortedTodos = [...mockTodos].sort(
+        (a, b) => b.created_at.getTime() - a.created_at.getTime()
+      );
       mockDbClient.from.mockResolvedValueOnce(sortedTodos);
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: sortedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: sortedTodos },
+        200
+      );
     });
 
     it('should sort todos by title in ascending order', async () => {
       const mockContext = createMockContext({ sort: 'title', order: 'asc' });
-      const sortedTodos = [...mockTodos].sort((a, b) => a.title.localeCompare(b.title));
+      const sortedTodos = [...mockTodos].sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
       mockDbClient.from.mockResolvedValueOnce(sortedTodos);
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: sortedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: sortedTodos },
+        200
+      );
     });
 
     it('should handle errors when sorting', async () => {
@@ -143,7 +169,10 @@ describe('Todo Filtering and Sorting', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Invalid sort field' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Invalid sort field' },
+        500
+      );
     });
   });
 });

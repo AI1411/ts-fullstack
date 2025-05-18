@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import UserList from "@/features/admin/users/components/UserList";
-import UserForm from "@/features/admin/users/components/UserForm";
+import UserForm from '@/features/admin/users/components/UserForm';
+import UserList from '@/features/admin/users/components/UserList';
 
 export default function UsersPage() {
   return (
@@ -10,14 +10,16 @@ export default function UsersPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">ユーザー一覧</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                ユーザー一覧
+              </h2>
             </div>
-            <UserList/>
+            <UserList />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <UserForm/>
+          <UserForm />
         </div>
       </div>
     </div>

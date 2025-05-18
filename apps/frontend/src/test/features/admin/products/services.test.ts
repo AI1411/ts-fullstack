@@ -1,7 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { productService } from '@/features/admin/products/services';
 import * as controllers from '@/features/admin/products/controllers';
-import { Product, CreateProductInput } from '@/features/admin/products/controllers';
+import type {
+  CreateProductInput,
+  Product,
+} from '@/features/admin/products/controllers';
+import { productService } from '@/features/admin/products/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/products/controllers', () => ({
@@ -9,7 +12,7 @@ vi.mock('@/features/admin/products/controllers', () => ({
   createProduct: vi.fn(),
   getProductById: vi.fn(),
   updateProduct: vi.fn(),
-  deleteProduct: vi.fn()
+  deleteProduct: vi.fn(),
 }));
 
 describe('Product Service', () => {
@@ -29,8 +32,8 @@ describe('Product Service', () => {
           stock: 10,
           image_url: 'https://example.com/image1.jpg',
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
-        }
+          updated_at: '2023-01-02T00:00:00Z',
+        },
       ];
 
       vi.mocked(controllers.getProducts).mockResolvedValue(mockProducts);
@@ -50,7 +53,7 @@ describe('Product Service', () => {
         description: 'New Description',
         price: 1500,
         stock: 15,
-        image_url: 'https://example.com/new-image.jpg'
+        image_url: 'https://example.com/new-image.jpg',
       };
 
       // Mock created product
@@ -62,7 +65,7 @@ describe('Product Service', () => {
         stock: 15,
         image_url: 'https://example.com/new-image.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
 
       vi.mocked(controllers.createProduct).mockResolvedValue(createdProduct);
@@ -85,7 +88,7 @@ describe('Product Service', () => {
         stock: 10,
         image_url: 'https://example.com/image.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       };
 
       vi.mocked(controllers.getProductById).mockResolvedValue(product);
@@ -102,7 +105,7 @@ describe('Product Service', () => {
       // Mock update data
       const updateData: Partial<CreateProductInput> = {
         name: 'Updated Product',
-        price: 2000
+        price: 2000,
       };
 
       // Mock updated product
@@ -114,7 +117,7 @@ describe('Product Service', () => {
         stock: 10,
         image_url: 'https://example.com/image.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-03T00:00:00Z'
+        updated_at: '2023-01-03T00:00:00Z',
       };
 
       vi.mocked(controllers.updateProduct).mockResolvedValue(updatedProduct);
@@ -148,7 +151,7 @@ describe('Product Service', () => {
           stock: 5,
           image_url: 'https://example.com/image1.jpg',
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
+          updated_at: '2023-01-02T00:00:00Z',
         },
         {
           id: 2,
@@ -158,8 +161,8 @@ describe('Product Service', () => {
           stock: 20,
           image_url: 'https://example.com/image2.jpg',
           created_at: '2023-01-03T00:00:00Z',
-          updated_at: '2023-01-04T00:00:00Z'
-        }
+          updated_at: '2023-01-04T00:00:00Z',
+        },
       ];
 
       vi.mocked(controllers.getProducts).mockResolvedValue(mockProducts);
@@ -188,7 +191,7 @@ describe('Product Service', () => {
           stock: 10,
           image_url: 'https://example.com/image1.jpg',
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
+          updated_at: '2023-01-02T00:00:00Z',
         },
         {
           id: 2,
@@ -198,7 +201,7 @@ describe('Product Service', () => {
           stock: 20,
           image_url: 'https://example.com/image2.jpg',
           created_at: '2023-01-03T00:00:00Z',
-          updated_at: '2023-01-04T00:00:00Z'
+          updated_at: '2023-01-04T00:00:00Z',
         },
         {
           id: 3,
@@ -208,14 +211,14 @@ describe('Product Service', () => {
           stock: 5,
           image_url: 'https://example.com/image3.jpg',
           created_at: '2023-01-05T00:00:00Z',
-          updated_at: '2023-01-06T00:00:00Z'
-        }
+          updated_at: '2023-01-06T00:00:00Z',
+        },
       ];
 
       vi.mocked(controllers.getProducts).mockResolvedValue(mockProducts);
 
       const result = await productService.getProductsByPriceRange(1000, 2000);
-      
+
       expect(controllers.getProducts).toHaveBeenCalledTimes(1);
       expect(result).toEqual([mockProducts[1]]);
     });

@@ -1,5 +1,5 @@
 // Company controllers
-import {companyRepository} from './repositories';
+import { companyRepository } from './repositories';
 
 // Types
 export interface Company {
@@ -30,7 +30,7 @@ export const getCompanies = async (): Promise<Company[]> => {
     if (!response.ok) {
       throw new Error('Error fetching companies');
     }
-    const {companies} = await response.json();
+    const { companies } = await response.json();
     return companies;
   } catch (error) {
     console.error('Error fetching companies:', error);
@@ -39,14 +39,16 @@ export const getCompanies = async (): Promise<Company[]> => {
 };
 
 // Create a new company
-export const createCompany = async (companyData: CreateCompanyInput): Promise<Company> => {
+export const createCompany = async (
+  companyData: CreateCompanyInput
+): Promise<Company> => {
   try {
     const response = await companyRepository.createCompany(companyData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {company} = await response.json();
+    const { company } = await response.json();
     return company;
   } catch (error) {
     console.error('Error creating company:', error);
@@ -61,7 +63,7 @@ export const getCompanyById = async (id: number): Promise<Company> => {
     if (!response.ok) {
       throw new Error('Company not found');
     }
-    const {company} = await response.json();
+    const { company } = await response.json();
     return company;
   } catch (error) {
     console.error(`Error fetching company ${id}:`, error);
@@ -70,14 +72,17 @@ export const getCompanyById = async (id: number): Promise<Company> => {
 };
 
 // Update a company
-export const updateCompany = async (id: number, companyData: Partial<CreateCompanyInput>): Promise<Company> => {
+export const updateCompany = async (
+  id: number,
+  companyData: Partial<CreateCompanyInput>
+): Promise<Company> => {
   try {
     const response = await companyRepository.updateCompany(id, companyData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {company} = await response.json();
+    const { company } = await response.json();
     return company;
   } catch (error) {
     console.error(`Error updating company ${id}:`, error);

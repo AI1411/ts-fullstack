@@ -1,7 +1,8 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
 interface Category {
   id: number;
@@ -48,7 +49,10 @@ const Categories: React.FC = () => {
 
           const text = await response.text();
           // Check if the response starts with HTML doctype or tags
-          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+          if (
+            text.trim().startsWith('<!DOCTYPE') ||
+            text.trim().startsWith('<html')
+          ) {
             console.error('Received HTML response instead of JSON');
             throw new Error('Invalid JSON response from server');
           }
@@ -75,9 +79,15 @@ const Categories: React.FC = () => {
             imageUrl: getImageUrlForCategory(category.id),
             // If href property doesn't exist in the object, generate one
             // If href property exists but is undefined, use fallback '#'
-            href: category.href === null ? '#' : (category.href || `/categories/${slug}`),
+            href:
+              category.href === null
+                ? '#'
+                : category.href || `/categories/${slug}`,
             // Add a data-testid attribute to help with debugging
-            testId: category.href === null ? 'category-with-null-href' : 'category-with-generated-href'
+            testId:
+              category.href === null
+                ? 'category-with-null-href'
+                : 'category-with-generated-href',
           };
         });
 
@@ -125,14 +135,19 @@ const Categories: React.FC = () => {
             className="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
           >
             すべてのカテゴリーを見る
-            <span aria-hidden="true" className="ml-1">→</span>
+            <span aria-hidden="true" className="ml-1">
+              →
+            </span>
           </Link>
         </div>
 
         {/* ローディング状態 */}
         {loading && (
           <div className="flex justify-center py-10">
-            <div role="status" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div
+              role="status"
+              className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+            ></div>
           </div>
         )}
 
@@ -140,8 +155,8 @@ const Categories: React.FC = () => {
         {error && (
           <div className="text-center py-10">
             <p className="text-red-500">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               再読み込み
@@ -156,7 +171,10 @@ const Categories: React.FC = () => {
               <Link
                 key={category.id}
                 href={category.href || '#'}
-                data-testid={category.testId || `category-link-${'href' in category && category.href === undefined ? 'fallback' : 'with-href'}`}
+                data-testid={
+                  category.testId ||
+                  `category-link-${'href' in category && category.href === undefined ? 'fallback' : 'with-href'}`
+                }
                 className="group overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:-translate-y-1 hover:shadow-lg dark:bg-gray-700"
               >
                 <div className="aspect-h-2 aspect-w-3 w-full overflow-hidden">

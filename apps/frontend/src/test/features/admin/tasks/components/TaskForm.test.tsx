@@ -1,28 +1,28 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TaskForm from '@/features/admin/tasks/components/TaskForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { taskService } from '@/features/admin/tasks/services';
-import { userService } from '@/features/admin/users/services';
 import { teamService } from '@/features/admin/teams/services';
+import { userService } from '@/features/admin/users/services';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/tasks/services', () => ({
   taskService: {
-    createTask: vi.fn()
-  }
+    createTask: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUsers: vi.fn()
-  }
+    getUsers: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/teams/services', () => ({
   teamService: {
-    getTeams: vi.fn()
-  }
+    getTeams: vi.fn(),
+  },
 }));
 
 describe('TaskForm Component', () => {
@@ -55,21 +55,25 @@ describe('TaskForm Component', () => {
     expect(typeof TaskForm).toBe('function');
 
     // Check if form elements are rendered
-    expect(screen.getByRole('heading', { name: 'タスクを追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'タスクを追加' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText(/タイトル/)).toBeInTheDocument();
     expect(screen.getByLabelText(/説明/)).toBeInTheDocument();
     expect(screen.getByLabelText(/担当ユーザー/)).toBeInTheDocument();
     expect(screen.getByLabelText(/チーム/)).toBeInTheDocument();
     expect(screen.getByLabelText(/期限日/)).toBeInTheDocument();
     expect(screen.getByLabelText(/ステータス/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'タスクを追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'タスクを追加' })
+    ).toBeInTheDocument();
   });
 
   it('should display user options when users are loaded', async () => {
     // Mock users and teams data
     const mockUsers = [
       { id: 1, name: 'User 1', email: 'user1@example.com' },
-      { id: 2, name: 'User 2', email: 'user2@example.com' }
+      { id: 2, name: 'User 2', email: 'user2@example.com' },
     ];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
@@ -83,20 +87,26 @@ describe('TaskForm Component', () => {
 
     // Wait for users to load
     await waitFor(() => {
-      expect(screen.getByText(/User 1 \(user1@example.com\)/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/User 1 \(user1@example.com\)/)
+      ).toBeInTheDocument();
     });
 
     // Check if user options are displayed
     expect(screen.getByText('担当者なし')).toBeInTheDocument();
-    expect(screen.getByText(/User 1 \(user1@example.com\)/)).toBeInTheDocument();
-    expect(screen.getByText(/User 2 \(user2@example.com\)/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/User 1 \(user1@example.com\)/)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/User 2 \(user2@example.com\)/)
+    ).toBeInTheDocument();
   });
 
   it('should display team options when teams are loaded', async () => {
     // Mock users and teams data
     const mockTeams = [
       { id: 1, name: 'Team 1', description: 'Description 1' },
-      { id: 2, name: 'Team 2', description: 'Description 2' }
+      { id: 2, name: 'Team 2', description: 'Description 2' },
     ];
 
     vi.mocked(userService.getUsers).mockResolvedValue([]);
@@ -121,13 +131,9 @@ describe('TaskForm Component', () => {
 
   it('should submit the form with correct data', async () => {
     // Mock users and teams data
-    const mockUsers = [
-      { id: 1, name: 'User 1', email: 'user1@example.com' }
-    ];
+    const mockUsers = [{ id: 1, name: 'User 1', email: 'user1@example.com' }];
 
-    const mockTeams = [
-      { id: 1, name: 'Team 1', description: 'Description 1' }
-    ];
+    const mockTeams = [{ id: 1, name: 'Team 1', description: 'Description 1' }];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
     vi.mocked(teamService.getTeams).mockResolvedValue(mockTeams);
@@ -139,7 +145,7 @@ describe('TaskForm Component', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-01-01',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -159,7 +165,9 @@ describe('TaskForm Component', () => {
     fireEvent.change(titleInput, { target: { value: 'Test Task' } });
 
     const descriptionInput = screen.getByLabelText(/説明/);
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
 
     const userSelect = screen.getByLabelText(/担当ユーザー/);
     fireEvent.change(userSelect, { target: { value: '1' } });
@@ -185,7 +193,7 @@ describe('TaskForm Component', () => {
         user_id: 1,
         team_id: 1,
         status: 'PENDING',
-        due_date: '2023-01-01'
+        due_date: '2023-01-01',
       });
     });
 
@@ -218,7 +226,9 @@ describe('TaskForm Component', () => {
 
     // Check if error message is displayed
     await waitFor(() => {
-      expect(screen.getByText('タスクの追加に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('タスクの追加に失敗しました')
+      ).toBeInTheDocument();
     });
 
     // Form should not be reset
@@ -232,16 +242,23 @@ describe('TaskForm Component', () => {
 
     // Mock a delayed response to ensure we see the submitting state
     vi.mocked(taskService.createTask).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({
-        id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        status: 'PENDING',
-        user_id: null,
-        team_id: null,
-        due_date: null,
-        created_at: '2023-01-01T00:00:00Z'
-      }), 100))
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                id: 1,
+                title: 'Test Task',
+                description: 'Test Description',
+                status: 'PENDING',
+                user_id: null,
+                team_id: null,
+                due_date: null,
+                created_at: '2023-01-01T00:00:00Z',
+              }),
+            100
+          )
+        )
     );
 
     render(

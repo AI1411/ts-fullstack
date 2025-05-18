@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { userSchema } from '../../../features/users/schemas';
 
 describe('User Schemas', () => {
@@ -9,7 +9,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: 'password123',
       };
-      
+
       const result = userSchema.safeParse(validUser);
       expect(result.success).toBe(true);
     });
@@ -21,7 +21,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: 'password123',
       };
-      
+
       const result = userSchema.safeParse(validUser);
       expect(result.success).toBe(true);
     });
@@ -32,7 +32,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: 'password123',
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });
@@ -43,7 +43,7 @@ describe('User Schemas', () => {
         email: 'not-an-email',
         password: 'password123',
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });
@@ -54,7 +54,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: '12345', // Too short
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });
@@ -64,7 +64,7 @@ describe('User Schemas', () => {
         name: 'Test User',
         // Missing email and password
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });
@@ -75,7 +75,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: 'password123',
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });
@@ -86,7 +86,7 @@ describe('User Schemas', () => {
         email: 'test@example.com',
         password: 123456, // Should be string
       };
-      
+
       const result = userSchema.safeParse(invalidUser);
       expect(result.success).toBe(false);
     });

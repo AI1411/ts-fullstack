@@ -1,6 +1,6 @@
 // Notification repositories
-import {client} from '@/common/utils/client';
-import {CreateNotificationInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateNotificationInput } from './controllers';
 
 // Notification repository
 export const notificationRepository = {
@@ -19,22 +19,25 @@ export const notificationRepository = {
   // Get a notification by ID
   getNotificationById: async (id: number) => {
     return client.notifications[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a notification
-  updateNotification: async (id: number, notificationData: Partial<CreateNotificationInput>) => {
+  updateNotification: async (
+    id: number,
+    notificationData: Partial<CreateNotificationInput>
+  ) => {
     return client.notifications[':id'].$put({
-      param: {id: id.toString()},
-      json: notificationData
+      param: { id: id.toString() },
+      json: notificationData,
     });
   },
 
   // Delete a notification
   deleteNotification: async (id: number) => {
     return client.notifications[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

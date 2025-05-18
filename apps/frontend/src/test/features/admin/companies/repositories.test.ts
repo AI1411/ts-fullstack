@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { companyRepository } from '@/features/admin/companies/repositories';
 import { client } from '@/common/utils/client';
-import { CreateCompanyInput } from '@/features/admin/companies/controllers';
+import type { CreateCompanyInput } from '@/features/admin/companies/controllers';
+import { companyRepository } from '@/features/admin/companies/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the client
 vi.mock('@/common/utils/client', () => ({
@@ -12,10 +12,10 @@ vi.mock('@/common/utils/client', () => ({
       ':id': {
         $get: vi.fn(),
         $put: vi.fn(),
-        $delete: vi.fn()
-      }
-    }
-  }
+        $delete: vi.fn(),
+      },
+    },
+  },
 }));
 
 describe('Company Repository', () => {
@@ -26,7 +26,9 @@ describe('Company Repository', () => {
   describe('getCompanies', () => {
     it('should call client.companies.$get', async () => {
       const mockResponse = { data: 'test' };
-      vi.mocked(client.companies.$get).mockResolvedValue(mockResponse as unknown as Response);
+      vi.mocked(client.companies.$get).mockResolvedValue(
+        mockResponse as unknown as Response
+      );
 
       const result = await companyRepository.getCompanies();
 
@@ -43,16 +45,18 @@ describe('Company Repository', () => {
         address: 'Test Address',
         phone: '123-456-7890',
         email: 'test@example.com',
-        website: 'https://example.com'
+        website: 'https://example.com',
       };
       const mockResponse = { data: 'test' };
 
-      vi.mocked(client.companies.$post).mockResolvedValue(mockResponse as unknown as Response);
+      vi.mocked(client.companies.$post).mockResolvedValue(
+        mockResponse as unknown as Response
+      );
 
       const result = await companyRepository.createCompany(mockCompanyData);
 
       expect(client.companies.$post).toHaveBeenCalledWith({
-        json: mockCompanyData
+        json: mockCompanyData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -65,7 +69,7 @@ describe('Company Repository', () => {
 
       // Setup the mock directly in the mock definition
       const mockIdEndpoint = {
-        $get: vi.fn().mockResolvedValue(mockResponse)
+        $get: vi.fn().mockResolvedValue(mockResponse),
       };
 
       // Replace the mock implementation temporarily
@@ -76,7 +80,7 @@ describe('Company Repository', () => {
         const result = await companyRepository.getCompanyById(mockId);
 
         expect(mockIdEndpoint.$get).toHaveBeenCalledWith({
-          param: { id: mockId.toString() }
+          param: { id: mockId.toString() },
         });
         expect(result).toBe(mockResponse);
       } finally {
@@ -91,13 +95,13 @@ describe('Company Repository', () => {
       const mockId = 123;
       const mockCompanyData: Partial<CreateCompanyInput> = {
         name: 'Updated Company',
-        description: 'Updated Description'
+        description: 'Updated Description',
       };
       const mockResponse = { data: 'test' };
 
       // Setup the mock directly in the mock definition
       const mockIdEndpoint = {
-        $put: vi.fn().mockResolvedValue(mockResponse)
+        $put: vi.fn().mockResolvedValue(mockResponse),
       };
 
       // Replace the mock implementation temporarily
@@ -105,11 +109,14 @@ describe('Company Repository', () => {
       vi.mocked(client.companies)[':id'] = mockIdEndpoint;
 
       try {
-        const result = await companyRepository.updateCompany(mockId, mockCompanyData);
+        const result = await companyRepository.updateCompany(
+          mockId,
+          mockCompanyData
+        );
 
         expect(mockIdEndpoint.$put).toHaveBeenCalledWith({
           param: { id: mockId.toString() },
-          json: mockCompanyData
+          json: mockCompanyData,
         });
         expect(result).toBe(mockResponse);
       } finally {
@@ -126,7 +133,7 @@ describe('Company Repository', () => {
 
       // Setup the mock directly in the mock definition
       const mockIdEndpoint = {
-        $delete: vi.fn().mockResolvedValue(mockResponse)
+        $delete: vi.fn().mockResolvedValue(mockResponse),
       };
 
       // Replace the mock implementation temporarily
@@ -137,7 +144,7 @@ describe('Company Repository', () => {
         const result = await companyRepository.deleteCompany(mockId);
 
         expect(mockIdEndpoint.$delete).toHaveBeenCalledWith({
-          param: { id: mockId.toString() }
+          param: { id: mockId.toString() },
         });
         expect(result).toBe(mockResponse);
       } finally {

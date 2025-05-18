@@ -1,46 +1,58 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
-import { createTodo, deleteTodo, getTodoById, getTodos, updateTodo } from './controllers';
+import {
+  createTodo,
+  deleteTodo,
+  getTodoById,
+  getTodos,
+  updateTodo,
+} from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const todoRoutes = new OpenAPIHono();
 
 // OpenAPI用のTodoスキーマを定義
-const todoSchema = z.object({
-  title: z.string().openapi({
-    description: 'Todoのタイトル',
-    example: 'プロジェクトの完了'
-  }),
-  completed: z.boolean().optional().openapi({
-    description: '完了状態',
-    example: false
+const todoSchema = z
+  .object({
+    title: z.string().openapi({
+      description: 'Todoのタイトル',
+      example: 'プロジェクトの完了',
+    }),
+    completed: z.boolean().optional().openapi({
+      description: '完了状態',
+      example: false,
+    }),
   })
-}).openapi('Todo');
+  .openapi('Todo');
 
 // レスポンス用のTodoスキーマ（IDを含む）
-const todoResponseSchema = z.object({
-  id: z.string().openapi({
-    description: 'TodoのID',
-    example: '1234-5678-90ab-cdef'
-  }),
-  title: z.string().openapi({
-    description: 'Todoのタイトル',
-    example: 'プロジェクトの完了'
-  }),
-  completed: z.boolean().openapi({
-    description: '完了状態',
-    example: false
+const todoResponseSchema = z
+  .object({
+    id: z.string().openapi({
+      description: 'TodoのID',
+      example: '1234-5678-90ab-cdef',
+    }),
+    title: z.string().openapi({
+      description: 'Todoのタイトル',
+      example: 'プロジェクトの完了',
+    }),
+    completed: z.boolean().openapi({
+      description: '完了状態',
+      example: false,
+    }),
   })
-}).openapi('TodoResponse');
+  .openapi('TodoResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // Todo一覧取得ルート
 const getTodosRoute = createRoute({
@@ -54,11 +66,11 @@ const getTodosRoute = createRoute({
       description: 'Todo一覧',
       content: {
         'application/json': {
-          schema: z.array(todoResponseSchema)
-        }
-      }
-    }
-  }
+          schema: z.array(todoResponseSchema),
+        },
+      },
+    },
+  },
 });
 
 // 単一のTodo取得ルート
@@ -72,9 +84,9 @@ const getTodoRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'TodoのID',
-        example: '1234-5678-90ab-cdef'
-      })
-    })
+        example: '1234-5678-90ab-cdef',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -82,20 +94,20 @@ const getTodoRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            todo: todoResponseSchema
-          })
-        }
-      }
+            todo: todoResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'Todoが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // Todo作成ルート
@@ -109,10 +121,10 @@ const createTodoRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: todoSchema
-        }
-      }
-    }
+          schema: todoSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -120,20 +132,20 @@ const createTodoRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            todo: todoResponseSchema
-          })
-        }
-      }
+            todo: todoResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // Todo更新ルート
@@ -147,16 +159,16 @@ const updateTodoRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'TodoのID',
-        example: '1234-5678-90ab-cdef'
-      })
+        example: '1234-5678-90ab-cdef',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: todoSchema
-        }
-      }
-    }
+          schema: todoSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -164,28 +176,28 @@ const updateTodoRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            todo: todoResponseSchema
-          })
-        }
-      }
+            todo: todoResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'Todoが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // Todo削除ルート
@@ -199,9 +211,9 @@ const deleteTodoRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'TodoのID',
-        example: '1234-5678-90ab-cdef'
-      })
-    })
+        example: '1234-5678-90ab-cdef',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -211,21 +223,21 @@ const deleteTodoRoute = createRoute({
           schema: z.object({
             message: z.string().openapi({
               description: '成功メッセージ',
-              example: 'Todo deleted successfully'
-            })
-          })
-        }
-      }
+              example: 'Todo deleted successfully',
+            }),
+          }),
+        },
+      },
     },
     404: {
       description: 'Todoが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 互換性のためのTodo作成ルート（/todo）
@@ -239,10 +251,10 @@ const createSingleTodoRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: todoSchema
-        }
-      }
-    }
+          schema: todoSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -250,20 +262,20 @@ const createSingleTodoRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            todo: todoResponseSchema
-          })
-        }
-      }
+            todo: todoResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

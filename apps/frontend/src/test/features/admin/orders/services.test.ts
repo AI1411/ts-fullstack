@@ -1,7 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { orderService } from '@/features/admin/orders/services';
 import * as controllers from '@/features/admin/orders/controllers';
-import { Order, CreateOrderInput } from '@/features/admin/orders/controllers';
+import type {
+  CreateOrderInput,
+  Order,
+} from '@/features/admin/orders/controllers';
+import { orderService } from '@/features/admin/orders/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/orders/controllers', () => ({
@@ -13,7 +16,7 @@ vi.mock('@/features/admin/orders/controllers', () => ({
   updateOrderStatus: vi.fn(),
   // Re-export types
   Order: {},
-  CreateOrderInput: {}
+  CreateOrderInput: {},
 }));
 
 describe('Order Service', () => {
@@ -36,12 +39,12 @@ describe('Order Service', () => {
             product_id: 1,
             product_name: 'Product 1',
             quantity: 2,
-            price: 2500
-          }
+            price: 2500,
+          },
         ],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should call the controller method', async () => {
@@ -49,7 +52,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.getOrders).mockResolvedValue(mockOrders);
 
       const result = await orderService.getOrders();
-      
+
       expect(controllers.getOrders).toHaveBeenCalled();
       expect(result).toEqual(mockOrders);
     });
@@ -62,9 +65,9 @@ describe('Order Service', () => {
       items: [
         {
           product_id: 1,
-          quantity: 2
-        }
-      ]
+          quantity: 2,
+        },
+      ],
     };
     const mockOrder: Order = {
       id: 1,
@@ -79,11 +82,11 @@ describe('Order Service', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -91,7 +94,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.createOrder).mockResolvedValue(mockOrder);
 
       const result = await orderService.createOrder(orderData);
-      
+
       expect(controllers.createOrder).toHaveBeenCalledWith(orderData);
       expect(result).toEqual(mockOrder);
     });
@@ -112,11 +115,11 @@ describe('Order Service', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -124,7 +127,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.getOrderById).mockResolvedValue(mockOrder);
 
       const result = await orderService.getOrderById(orderId);
-      
+
       expect(controllers.getOrderById).toHaveBeenCalledWith(orderId);
       expect(result).toEqual(mockOrder);
     });
@@ -133,7 +136,7 @@ describe('Order Service', () => {
   describe('updateOrder', () => {
     const orderId = 1;
     const orderData: Partial<CreateOrderInput> = {
-      customer_name: 'Updated Customer'
+      customer_name: 'Updated Customer',
     };
     const mockOrder: Order = {
       id: 1,
@@ -148,11 +151,11 @@ describe('Order Service', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -160,7 +163,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.updateOrder).mockResolvedValue(mockOrder);
 
       const result = await orderService.updateOrder(orderId, orderData);
-      
+
       expect(controllers.updateOrder).toHaveBeenCalledWith(orderId, orderData);
       expect(result).toEqual(mockOrder);
     });
@@ -174,7 +177,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.deleteOrder).mockResolvedValue(undefined);
 
       await orderService.deleteOrder(orderId);
-      
+
       expect(controllers.deleteOrder).toHaveBeenCalledWith(orderId);
     });
   });
@@ -195,11 +198,11 @@ describe('Order Service', () => {
           product_id: 1,
           product_name: 'Product 1',
           quantity: 2,
-          price: 2500
-        }
+          price: 2500,
+        },
       ],
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -207,8 +210,11 @@ describe('Order Service', () => {
       vi.mocked(controllers.updateOrderStatus).mockResolvedValue(mockOrder);
 
       const result = await orderService.updateOrderStatus(orderId, status);
-      
-      expect(controllers.updateOrderStatus).toHaveBeenCalledWith(orderId, status);
+
+      expect(controllers.updateOrderStatus).toHaveBeenCalledWith(
+        orderId,
+        status
+      );
       expect(result).toEqual(mockOrder);
     });
   });
@@ -229,12 +235,12 @@ describe('Order Service', () => {
             product_id: 1,
             product_name: 'Product 1',
             quantity: 2,
-            price: 2500
-          }
+            price: 2500,
+          },
         ],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should filter orders by status', async () => {
@@ -249,12 +255,12 @@ describe('Order Service', () => {
           status: 'completed',
           items: [],
           created_at: '2023-01-02T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
-        }
+          updated_at: '2023-01-02T00:00:00Z',
+        },
       ]);
 
       const result = await orderService.getOrdersByStatus(status);
-      
+
       expect(controllers.getOrders).toHaveBeenCalled();
       expect(result).toEqual(mockOrders);
     });
@@ -270,7 +276,7 @@ describe('Order Service', () => {
         status: 'pending',
         items: [],
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 1,
@@ -280,8 +286,8 @@ describe('Order Service', () => {
         status: 'completed',
         items: [],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should return recent orders limited by count', async () => {
@@ -289,7 +295,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.getOrders).mockResolvedValue(mockOrders);
 
       const result = await orderService.getRecentOrders(1);
-      
+
       expect(controllers.getOrders).toHaveBeenCalled();
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(2); // The most recent order
@@ -307,7 +313,7 @@ describe('Order Service', () => {
           status: 'pending',
           items: [],
           created_at: '2023-01-03T00:00:00Z',
-          updated_at: '2023-01-03T00:00:00Z'
+          updated_at: '2023-01-03T00:00:00Z',
         },
         {
           id: 4,
@@ -317,7 +323,7 @@ describe('Order Service', () => {
           status: 'pending',
           items: [],
           created_at: '2023-01-04T00:00:00Z',
-          updated_at: '2023-01-04T00:00:00Z'
+          updated_at: '2023-01-04T00:00:00Z',
         },
         {
           id: 5,
@@ -327,7 +333,7 @@ describe('Order Service', () => {
           status: 'pending',
           items: [],
           created_at: '2023-01-05T00:00:00Z',
-          updated_at: '2023-01-05T00:00:00Z'
+          updated_at: '2023-01-05T00:00:00Z',
         },
         {
           id: 6,
@@ -337,12 +343,12 @@ describe('Order Service', () => {
           status: 'pending',
           items: [],
           created_at: '2023-01-06T00:00:00Z',
-          updated_at: '2023-01-06T00:00:00Z'
-        }
+          updated_at: '2023-01-06T00:00:00Z',
+        },
       ]);
 
       const result = await orderService.getRecentOrders();
-      
+
       expect(controllers.getOrders).toHaveBeenCalled();
       expect(result).toHaveLength(5); // Default limit is 5
       expect(result[0].id).toBe(6); // The most recent order
@@ -359,7 +365,7 @@ describe('Order Service', () => {
         status: 'completed',
         items: [],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -369,8 +375,8 @@ describe('Order Service', () => {
         status: 'completed',
         items: [],
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     it('should calculate total revenue from all orders', async () => {
@@ -378,7 +384,7 @@ describe('Order Service', () => {
       vi.mocked(controllers.getOrders).mockResolvedValue(mockOrders);
 
       const result = await orderService.calculateTotalRevenue();
-      
+
       expect(controllers.getOrders).toHaveBeenCalled();
       expect(result).toBe(8000); // 5000 + 3000
     });

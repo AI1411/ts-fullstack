@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { getDB } from '../../../common/utils/db';
 import * as schema from '../../../db/schema';
 
@@ -9,8 +9,8 @@ describe.skip('Database Utilities', () => {
       // Create a mock context with DATABASE_URL
       const mockContext = {
         env: {
-          DATABASE_URL: 'postgres://user:password@localhost:5432/testdb'
-        }
+          DATABASE_URL: 'postgres://user:password@localhost:5432/testdb',
+        },
       };
 
       // Call the getDB function

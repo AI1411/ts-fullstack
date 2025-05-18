@@ -1,12 +1,16 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
 import Categories from '@/features/user/home/components/Categories';
+import { render, screen, waitFor } from '@testing-library/react';
+import type React from 'react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href, 'data-testid': dataTestId }: { children: React.ReactNode; href: string; 'data-testid'?: string }) => (
-    <a href={href} data-testid={dataTestId || "link"}>
+  default: ({
+    children,
+    href,
+    'data-testid': dataTestId,
+  }: { children: React.ReactNode; href: string; 'data-testid'?: string }) => (
+    <a href={href} data-testid={dataTestId || 'link'}>
       {children}
     </a>
   ),
@@ -75,7 +79,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
       text: () => Promise.resolve(JSON.stringify(mockCategories)),
     });
@@ -101,13 +106,25 @@ describe('Categories Component', () => {
     // First link is "すべてのカテゴリーを見る", then category links
     expect(links[1]).toHaveAttribute('href', '/categories/test-category-1');
     expect(links[2]).toHaveAttribute('href', '/categories/test-category-2');
-    expect(links[3]).toHaveAttribute('href', '/categories/test-category-with-spaces');
+    expect(links[3]).toHaveAttribute(
+      'href',
+      '/categories/test-category-with-spaces'
+    );
 
     // Check if images are rendered with correct URLs
     const images = screen.getAllByRole('img');
-    expect(images[0]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
-    expect(images[1]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
-    expect(images[2]).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
+    expect(images[0]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
+    expect(images[1]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
+    expect(images[2]).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
   });
 
   it('should render error state when fetch fails', async () => {
@@ -118,7 +135,9 @@ describe('Categories Component', () => {
 
     // Wait for error message to be displayed
     await waitFor(() => {
-      expect(screen.getByText('カテゴリデータの取得に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('カテゴリデータの取得に失敗しました')
+      ).toBeInTheDocument();
     });
 
     // Check if reload button is displayed
@@ -137,7 +156,9 @@ describe('Categories Component', () => {
 
     // Wait for error message to be displayed
     await waitFor(() => {
-      expect(screen.getByText('カテゴリデータの取得に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('カテゴリデータの取得に失敗しました')
+      ).toBeInTheDocument();
     });
   });
 
@@ -146,7 +167,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'text/html' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'text/html' : null,
       },
       text: () => Promise.resolve(JSON.stringify(mockCategories)),
     });
@@ -155,7 +177,9 @@ describe('Categories Component', () => {
 
     // Wait for error message to be displayed
     await waitFor(() => {
-      expect(screen.getByText('カテゴリデータの取得に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('カテゴリデータの取得に失敗しました')
+      ).toBeInTheDocument();
     });
   });
 
@@ -164,16 +188,20 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
-      text: () => Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>'),
+      text: () =>
+        Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>'),
     });
 
     render(<Categories />);
 
     // Wait for error message to be displayed
     await waitFor(() => {
-      expect(screen.getByText('カテゴリデータの取得に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('カテゴリデータの取得に失敗しました')
+      ).toBeInTheDocument();
     });
   });
 
@@ -182,7 +210,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
       text: () => Promise.resolve(JSON.stringify({ categories: [] })),
     });
@@ -196,7 +225,9 @@ describe('Categories Component', () => {
 
     // Check for the heading and subheading
     expect(screen.getByText('カテゴリーから探す')).toBeInTheDocument();
-    expect(screen.getByText('お探しの商品カテゴリーを選択してください')).toBeInTheDocument();
+    expect(
+      screen.getByText('お探しの商品カテゴリーを選択してください')
+    ).toBeInTheDocument();
 
     // Check for the "view all categories" link
     expect(screen.getByText('すべてのカテゴリーを見る')).toBeInTheDocument();
@@ -217,7 +248,9 @@ describe('Categories Component', () => {
 
     // Wait for error message to be displayed
     await waitFor(() => {
-      expect(screen.getByText('カテゴリデータの取得に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('カテゴリデータの取得に失敗しました')
+      ).toBeInTheDocument();
     });
 
     // Click reload button
@@ -233,9 +266,15 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
-      text: () => Promise.resolve(JSON.stringify({ /* no categories property */ })),
+      text: () =>
+        Promise.resolve(
+          JSON.stringify({
+            /* no categories property */
+          })
+        ),
     });
 
     render(<Categories />);
@@ -262,7 +301,7 @@ describe('Categories Component', () => {
           description: 'Test Description',
           created_at: '2023-01-01T00:00:00.000Z',
           updated_at: '2023-01-01T00:00:00.000Z',
-        }
+        },
       ],
     };
 
@@ -270,7 +309,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
       text: () => Promise.resolve(JSON.stringify(mockCategoriesWithoutHref)),
     });
@@ -279,13 +319,18 @@ describe('Categories Component', () => {
 
     // Wait for categories to be displayed
     await waitFor(() => {
-      expect(screen.getByText('Test Category Without Href')).toBeInTheDocument();
+      expect(
+        screen.getByText('Test Category Without Href')
+      ).toBeInTheDocument();
     });
 
     // The component should generate href based on the name
     const links = screen.getAllByRole('link');
     // First link is "すべてのカテゴリーを見る", then category links
-    expect(links[1]).toHaveAttribute('href', '/categories/test-category-without-href');
+    expect(links[1]).toHaveAttribute(
+      'href',
+      '/categories/test-category-without-href'
+    );
   });
 
   it('should use fallback # when href is undefined', async () => {
@@ -299,7 +344,7 @@ describe('Categories Component', () => {
           created_at: '2023-01-01T00:00:00.000Z',
           updated_at: '2023-01-01T00:00:00.000Z',
           // No href property
-        }
+        },
       ],
     };
 
@@ -307,7 +352,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
       text: () => Promise.resolve(JSON.stringify(mockCategoryWithoutHref)),
     });
@@ -336,7 +382,7 @@ describe('Categories Component', () => {
           created_at: '2023-01-01T00:00:00.000Z',
           updated_at: '2023-01-01T00:00:00.000Z',
           href: null, // Use null instead of undefined for JSON serialization
-        }
+        },
       ],
     };
 
@@ -344,9 +390,11 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
-      text: () => Promise.resolve(JSON.stringify(mockCategoryWithUndefinedHref)),
+      text: () =>
+        Promise.resolve(JSON.stringify(mockCategoryWithUndefinedHref)),
     });
 
     // Re-render the component
@@ -364,7 +412,10 @@ describe('Categories Component', () => {
     expect(screen.getByTestId('category-with-null-href')).toBeInTheDocument();
 
     // Now check the href attribute
-    expect(screen.getByTestId('category-with-null-href')).toHaveAttribute('href', '#');
+    expect(screen.getByTestId('category-with-null-href')).toHaveAttribute(
+      'href',
+      '#'
+    );
   });
 
   it('should generate correct slugs from category names', async () => {
@@ -372,7 +423,8 @@ describe('Categories Component', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       headers: {
-        get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/json' : null,
+        get: (name: string) =>
+          name.toLowerCase() === 'content-type' ? 'application/json' : null,
       },
       text: () => Promise.resolve(JSON.stringify(mockCategories)),
     });
@@ -389,6 +441,9 @@ describe('Categories Component', () => {
     // First link is "すべてのカテゴリーを見る", then category links
     expect(links[1]).toHaveAttribute('href', '/categories/test-category-1');
     expect(links[2]).toHaveAttribute('href', '/categories/test-category-2');
-    expect(links[3]).toHaveAttribute('href', '/categories/test-category-with-spaces');
+    expect(links[3]).toHaveAttribute(
+      'href',
+      '/categories/test-category-with-spaces'
+    );
   });
 });

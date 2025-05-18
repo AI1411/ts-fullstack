@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { invoiceService } from '@/features/admin/invoices/services';
 import * as controllers from '@/features/admin/invoices/controllers';
+import { invoiceService } from '@/features/admin/invoices/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/invoices/controllers', () => ({
@@ -23,7 +23,7 @@ describe('Invoice Service', () => {
     payment_method: 'Credit Card',
     notes: 'Test notes',
     created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-01T00:00:00Z'
+    updated_at: '2023-01-01T00:00:00Z',
   };
 
   const mockInvoices = [mockInvoice];
@@ -60,7 +60,7 @@ describe('Invoice Service', () => {
       total_amount: 10000,
       status: 'PENDING',
       payment_method: 'Credit Card',
-      notes: 'Test notes'
+      notes: 'Test notes',
     };
 
     it('should call the controller and return the created invoice', async () => {
@@ -77,7 +77,9 @@ describe('Invoice Service', () => {
       const error = new Error('Failed to create invoice');
       vi.mocked(controllers.createInvoice).mockRejectedValue(error);
 
-      await expect(invoiceService.createInvoice(invoiceData)).rejects.toThrow(error);
+      await expect(invoiceService.createInvoice(invoiceData)).rejects.toThrow(
+        error
+      );
       expect(controllers.createInvoice).toHaveBeenCalledTimes(1);
       expect(controllers.createInvoice).toHaveBeenCalledWith(invoiceData);
     });
@@ -108,7 +110,7 @@ describe('Invoice Service', () => {
     const invoiceData = {
       invoice_number: 'INV-001-UPDATED',
       total_amount: 15000,
-      status: 'PAID'
+      status: 'PAID',
     };
 
     it('should call the controller and return the updated invoice', async () => {
@@ -126,7 +128,9 @@ describe('Invoice Service', () => {
       const error = new Error('Failed to update invoice');
       vi.mocked(controllers.updateInvoice).mockRejectedValue(error);
 
-      await expect(invoiceService.updateInvoice(1, invoiceData)).rejects.toThrow(error);
+      await expect(
+        invoiceService.updateInvoice(1, invoiceData)
+      ).rejects.toThrow(error);
       expect(controllers.updateInvoice).toHaveBeenCalledTimes(1);
       expect(controllers.updateInvoice).toHaveBeenCalledWith(1, invoiceData);
     });

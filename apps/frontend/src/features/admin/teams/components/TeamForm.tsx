@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import {useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
-import {teamService} from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { teamService } from '../services';
 
 const TeamForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    name: "",
-    description: ""
+    name: '',
+    description: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,10 +17,10 @@ const TeamForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const {name, value} = e.target;
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -35,12 +35,14 @@ const TeamForm = () => {
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        name: "",
-        description: ""
+        name: '',
+        description: '',
       });
-      await queryClient.invalidateQueries({queryKey: ['teams']});
+      await queryClient.invalidateQueries({ queryKey: ['teams'] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'チームの追加に失敗しました');
+      setError(
+        err instanceof Error ? err.message : 'チームの追加に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -59,7 +61,10 @@ const TeamForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             チーム名
           </label>
           <input
@@ -74,7 +79,10 @@ const TeamForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             説明
           </label>
           <textarea

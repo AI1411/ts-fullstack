@@ -14,7 +14,10 @@ export const authRepository = {
     // });
 
     // Mock implementation
-    return {ok: true, json: () => Promise.resolve({success: true, user: {email}})};
+    return {
+      ok: true,
+      json: () => Promise.resolve({ success: true, user: { email } }),
+    };
   },
 
   // Register repository method
@@ -25,6 +28,9 @@ export const authRepository = {
     // });
 
     // Mock implementation
-    return {ok: true, json: () => Promise.resolve({success: true, user: {name, email}})};
-  }
+    return {
+      ok: true,
+      json: () => Promise.resolve({ success: true, user: { name, email } }),
+    };
+  },
 };

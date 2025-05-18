@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import SalePromotion from '@/features/user/home/components/SalePromotion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="link">
       {children}
     </a>
@@ -17,7 +20,9 @@ describe('SalePromotion Component', () => {
 
     // Check if the component renders without crashing
     expect(screen.getByText('期間限定セール開催中！')).toBeInTheDocument();
-    expect(screen.getByText('最大50%オフの特別価格でお買い得。お見逃しなく！')).toBeInTheDocument();
+    expect(
+      screen.getByText('最大50%オフの特別価格でお買い得。お見逃しなく！')
+    ).toBeInTheDocument();
   });
 
   it('should render the call-to-action button with correct link', () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import baseRoutes from '../../../features/base/routes';
 
 describe('Base Routes', () => {
@@ -9,7 +9,7 @@ describe('Base Routes', () => {
   describe('GET /', () => {
     it('should return health check message', async () => {
       const res = await baseRoutes.request('/', {
-        method: 'GET'
+        method: 'GET',
       });
 
       expect(res.status).toBe(200);
@@ -21,7 +21,7 @@ describe('Base Routes', () => {
   describe('GET /hello', () => {
     it('should return hello message', async () => {
       const res = await baseRoutes.request('/hello', {
-        method: 'GET'
+        method: 'GET',
       });
 
       expect(res.status).toBe(200);

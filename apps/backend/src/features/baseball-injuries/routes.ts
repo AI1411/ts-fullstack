@@ -2,19 +2,19 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
+  createBaseballInjury,
+  deleteBaseballInjury,
+  getActiveBaseballInjuries,
   getBaseballInjuries,
   getBaseballInjuriesByPlayerId,
   getBaseballInjuryById,
-  createBaseballInjury,
   updateBaseballInjury,
-  deleteBaseballInjury,
-  getActiveBaseballInjuries
 } from './controllers';
 import {
-  baseballInjurySchema,
   baseballInjuryResponseSchema,
+  baseballInjurySchema,
   baseballInjuryUpdateSchema,
-  errorResponseSchema
+  errorResponseSchema,
 } from './schemas';
 
 // OpenAPIHonoインスタンスを作成
@@ -33,12 +33,12 @@ const getBaseballInjuriesRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            injuries: z.array(baseballInjuryResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            injuries: z.array(baseballInjuryResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // アクティブな怪我記録一覧取得ルート
@@ -47,19 +47,20 @@ const getActiveBaseballInjuriesRoute = createRoute({
   path: '/baseball-injuries/active',
   tags: ['BaseballInjuries'],
   summary: '現在療養中の野球選手の怪我記録一覧を取得する',
-  description: '現在療養中（ステータスがACTIVE）の野球選手の怪我記録を取得します',
+  description:
+    '現在療養中（ステータスがACTIVE）の野球選手の怪我記録を取得します',
   responses: {
     200: {
       description: 'アクティブな怪我記録一覧',
       content: {
         'application/json': {
           schema: z.object({
-            injuries: z.array(baseballInjuryResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            injuries: z.array(baseballInjuryResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 特定の選手の怪我記録一覧取得ルート
@@ -73,9 +74,9 @@ const getBaseballInjuriesByPlayerIdRoute = createRoute({
     params: z.object({
       playerId: z.string().openapi({
         description: '選手ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -83,20 +84,20 @@ const getBaseballInjuriesByPlayerIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            injuries: z.array(baseballInjuryResponseSchema)
-          })
-        }
-      }
+            injuries: z.array(baseballInjuryResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 怪我記録取得ルート
@@ -110,9 +111,9 @@ const getBaseballInjuryByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '怪我記録ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -120,20 +121,20 @@ const getBaseballInjuryByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            injury: baseballInjuryResponseSchema
-          })
-        }
-      }
+            injury: baseballInjuryResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '怪我記録が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 怪我記録作成ルート
@@ -147,10 +148,10 @@ const createBaseballInjuryRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: baseballInjurySchema
-        }
-      }
-    }
+          schema: baseballInjurySchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -158,28 +159,28 @@ const createBaseballInjuryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            injury: baseballInjuryResponseSchema
-          })
-        }
-      }
+            injury: baseballInjuryResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 怪我記録更新ルート
@@ -193,16 +194,16 @@ const updateBaseballInjuryRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '怪我記録ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: baseballInjuryUpdateSchema
-        }
-      }
-    }
+          schema: baseballInjuryUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -210,28 +211,28 @@ const updateBaseballInjuryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            injury: baseballInjuryResponseSchema
-          })
-        }
-      }
+            injury: baseballInjuryResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '怪我記録または選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 怪我記録削除ルート
@@ -245,9 +246,9 @@ const deleteBaseballInjuryRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '怪我記録ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -256,26 +257,32 @@ const deleteBaseballInjuryRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '怪我記録が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装
 baseballInjuryRoutes.openapi(getBaseballInjuriesRoute, getBaseballInjuries);
-baseballInjuryRoutes.openapi(getActiveBaseballInjuriesRoute, getActiveBaseballInjuries);
-baseballInjuryRoutes.openapi(getBaseballInjuriesByPlayerIdRoute, getBaseballInjuriesByPlayerId);
+baseballInjuryRoutes.openapi(
+  getActiveBaseballInjuriesRoute,
+  getActiveBaseballInjuries
+);
+baseballInjuryRoutes.openapi(
+  getBaseballInjuriesByPlayerIdRoute,
+  getBaseballInjuriesByPlayerId
+);
 baseballInjuryRoutes.openapi(getBaseballInjuryByIdRoute, getBaseballInjuryById);
 baseballInjuryRoutes.openapi(createBaseballInjuryRoute, createBaseballInjury);
 baseballInjuryRoutes.openapi(updateBaseballInjuryRoute, updateBaseballInjury);

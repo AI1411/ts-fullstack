@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import ChatDetail from "@/features/admin/chats/components/ChatDetail";
+import ChatDetail from '@/features/admin/chats/components/ChatDetail';
 
 interface ChatDetailPageProps {
   params: {
@@ -9,7 +9,7 @@ interface ChatDetailPageProps {
 }
 
 export default function ChatDetailPage({ params }: ChatDetailPageProps) {
-  const chatId = parseInt(params.id);
+  const chatId = Number.parseInt(params.id);
 
   return (
     <div className="space-y-6">

@@ -5,12 +5,14 @@ import { z } from '@hono/zod-openapi';
 const baseRoutes = new OpenAPIHono();
 
 // レスポーススキーマの定義
-const messageResponseSchema = z.object({
-  message: z.string().openapi({
-    description: 'レスポンスメッセージ',
-    example: 'API is running'
+const messageResponseSchema = z
+  .object({
+    message: z.string().openapi({
+      description: 'レスポンスメッセージ',
+      example: 'API is running',
+    }),
   })
-}).openapi('MessageResponse');
+  .openapi('MessageResponse');
 
 // ヘルスチェックルート
 const healthCheckRoute = createRoute({
@@ -24,11 +26,11 @@ const healthCheckRoute = createRoute({
       description: '正常なレスポンス',
       content: {
         'application/json': {
-          schema: messageResponseSchema
-        }
-      }
-    }
-  }
+          schema: messageResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // Helloルート
@@ -43,11 +45,11 @@ const helloRoute = createRoute({
       description: '正常なレスポンス',
       content: {
         'application/json': {
-          schema: messageResponseSchema
-        }
-      }
-    }
-  }
+          schema: messageResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React from 'react';
 import Link from 'next/link';
+import type React from 'react';
 
 const SalesBanner: React.FC = () => {
   return (
@@ -37,7 +37,7 @@ const SalesBanner: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* セール終了カウントダウン */}
       <div className="mt-10 text-center">
         <div className="mx-auto max-w-xl rounded-lg bg-white bg-opacity-10 p-4 backdrop-blur-sm">

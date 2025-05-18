@@ -1,21 +1,25 @@
-'use client'
+'use client';
 
-import React from 'react';
-import { useParams } from 'next/navigation';
+import {
+  categories,
+  productsByCategory,
+} from '@/features/user/categories/data/categories';
 import UserLayout from '@/features/user/layout/UserLayout';
 import ProductCard from '@/features/user/products/components/ProductCard';
 import Link from 'next/link';
-import { categories, productsByCategory } from '@/features/user/categories/data/categories';
+import { useParams } from 'next/navigation';
+import React from 'react';
 
 export default function CategoryPage() {
   const params = useParams();
   const slug = params.slug as string;
 
   // カテゴリー情報を取得
-  const category = categories.find(cat => cat.slug === slug);
+  const category = categories.find((cat) => cat.slug === slug);
 
   // カテゴリーに属する商品を取得
-  const products = productsByCategory[slug as keyof typeof productsByCategory] || [];
+  const products =
+    productsByCategory[slug as keyof typeof productsByCategory] || [];
 
   if (!category) {
     return (
@@ -24,7 +28,10 @@ export default function CategoryPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             カテゴリーが見つかりません
           </h1>
-          <Link href="/" className="mt-4 inline-block text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+          <Link
+            href="/"
+            className="mt-4 inline-block text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+          >
             ホームに戻る
           </Link>
         </div>
@@ -49,9 +56,7 @@ export default function CategoryPage() {
             <h1 className="text-3xl font-bold text-white sm:text-4xl">
               {category.name}
             </h1>
-            <p className="mt-2 text-lg text-white">
-              {category.description}
-            </p>
+            <p className="mt-2 text-lg text-white">{category.description}</p>
           </div>
         </div>
       </div>

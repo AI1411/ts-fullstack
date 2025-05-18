@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getInvoices, 
-  getInvoiceById, 
-  createInvoice, 
-  updateInvoice, 
-  deleteInvoice 
-} from '../../../features/invoices/controllers';
-import { invoicesTable, ordersTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { invoicesTable, ordersTable } from '../../../db/schema';
+import {
+  createInvoice,
+  deleteInvoice,
+  getInvoiceById,
+  getInvoices,
+  updateInvoice,
+} from '../../../features/invoices/controllers';
 
 // Mock invoice data
 const mockInvoice = {
@@ -21,7 +21,7 @@ const mockInvoice = {
   payment_method: 'CREDIT_CARD',
   notes: 'テスト用の領収書です',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock order data
@@ -31,7 +31,7 @@ const mockOrder = {
   status: 'COMPLETED',
   total_amount: 10000,
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
@@ -44,12 +44,12 @@ const mockOrder = {
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -62,7 +62,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockInvoice])
+  returning: vi.fn().mockResolvedValue([mockInvoice]),
 };
 
 describe.skip('Invoice Controllers', () => {
@@ -80,7 +80,9 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await getInvoices(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ invoices: [mockInvoice] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        invoices: [mockInvoice],
+      });
     });
 
     it('should handle errors', async () => {
@@ -90,7 +92,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await getInvoices(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -115,7 +120,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await getInvoiceById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '領収書が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '領収書が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -126,7 +134,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await getInvoiceById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -140,7 +151,7 @@ describe.skip('Invoice Controllers', () => {
         total_amount: 10000,
         status: 'PENDING',
         payment_method: 'CREDIT_CARD',
-        notes: 'テスト用の領収書です'
+        notes: 'テスト用の領収書です',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -152,7 +163,10 @@ describe.skip('Invoice Controllers', () => {
       const result = await createInvoice(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ invoice: mockInvoice }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { invoice: mockInvoice },
+        201
+      );
     });
 
     it('should create a new invoice without order_id and return it', async () => {
@@ -163,35 +177,41 @@ describe.skip('Invoice Controllers', () => {
         total_amount: 10000,
         status: 'PENDING',
         payment_method: 'CREDIT_CARD',
-        notes: 'テスト用の領収書です'
+        notes: 'テスト用の領収書です',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createInvoice(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ invoice: mockInvoice }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { invoice: mockInvoice },
+        201
+      );
     });
 
     it('should create a new invoice with default values', async () => {
       const mockBody = {
         invoice_number: 'INV-2023-001',
         total_amount: 10000,
-        payment_method: 'CREDIT_CARD'
+        payment_method: 'CREDIT_CARD',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createInvoice(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ invoice: mockInvoice }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { invoice: mockInvoice },
+        201
+      );
     });
 
     it('should return 404 if order not found', async () => {
       const mockBody = {
         order_id: 999,
         invoice_number: 'INV-2023-001',
-        total_amount: 10000
+        total_amount: 10000,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -202,13 +222,16 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await createInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '指定された注文が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '指定された注文が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         invoice_number: 'INV-2023-001',
-        total_amount: 10000
+        total_amount: 10000,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -217,7 +240,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await createInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -226,7 +252,7 @@ describe.skip('Invoice Controllers', () => {
       const mockBody = {
         invoice_number: 'INV-2023-001-UPDATED',
         status: 'PAID',
-        payment_method: 'BANK_TRANSFER'
+        payment_method: 'BANK_TRANSFER',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -245,7 +271,7 @@ describe.skip('Invoice Controllers', () => {
     it('should update an invoice with order_id and return it', async () => {
       const mockBody = {
         order_id: 2,
-        invoice_number: 'INV-2023-001-UPDATED'
+        invoice_number: 'INV-2023-001-UPDATED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -266,7 +292,7 @@ describe.skip('Invoice Controllers', () => {
 
     it('should return 404 if invoice not found', async () => {
       const mockBody = {
-        invoice_number: 'INV-2023-001-UPDATED'
+        invoice_number: 'INV-2023-001-UPDATED',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
 
@@ -277,13 +303,16 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await updateInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '領収書が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '領収書が見つかりません' },
+        404
+      );
     });
 
     it('should return 404 if order not found', async () => {
       const mockBody = {
         order_id: 999,
-        invoice_number: 'INV-2023-001-UPDATED'
+        invoice_number: 'INV-2023-001-UPDATED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -299,12 +328,15 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await updateInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '指定された注文が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '指定された注文が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
-        invoice_number: 'INV-2023-001-UPDATED'
+        invoice_number: 'INV-2023-001-UPDATED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -315,7 +347,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await updateInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -331,7 +366,10 @@ describe.skip('Invoice Controllers', () => {
       const result = await deleteInvoice(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: '領収書が削除されました' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        success: true,
+        message: '領収書が削除されました',
+      });
     });
 
     it('should return 404 if invoice not found', async () => {
@@ -344,7 +382,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await deleteInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '領収書が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '領収書が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -357,7 +398,10 @@ describe.skip('Invoice Controllers', () => {
 
       const result = await deleteInvoice(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

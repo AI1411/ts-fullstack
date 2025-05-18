@@ -1,5 +1,5 @@
 // Todo controllers
-import {todoRepository} from './repositories';
+import { todoRepository } from './repositories';
 
 // Types
 export interface Todo {
@@ -25,7 +25,9 @@ export const getTodos = async (): Promise<Todo[]> => {
     const response = await todoRepository.getTodos();
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch todos: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch todos: ${response.status} ${response.statusText}`
+      );
     }
 
     try {
@@ -38,7 +40,10 @@ export const getTodos = async (): Promise<Todo[]> => {
 
       const text = await response.text();
       // Check if the response starts with HTML doctype or tags
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+      if (
+        text.trim().startsWith('<!DOCTYPE') ||
+        text.trim().startsWith('<html')
+      ) {
         console.error('Received HTML response instead of JSON');
         throw new Error('Invalid JSON response from server');
       }
@@ -63,7 +68,7 @@ export const createTodo = async (todoData: CreateTodoInput): Promise<Todo> => {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {todo} = await response.json();
+    const { todo } = await response.json();
     return todo;
   } catch (error) {
     console.error('Error creating todo:', error);
@@ -78,7 +83,7 @@ export const getTodoById = async (id: number): Promise<Todo> => {
     if (!response.ok) {
       throw new Error('Todo not found');
     }
-    const {todo} = await response.json();
+    const { todo } = await response.json();
     return todo;
   } catch (error) {
     console.error(`Error fetching todo ${id}:`, error);
@@ -87,14 +92,17 @@ export const getTodoById = async (id: number): Promise<Todo> => {
 };
 
 // Update a todo
-export const updateTodo = async (id: number, todoData: Partial<CreateTodoInput>): Promise<Todo> => {
+export const updateTodo = async (
+  id: number,
+  todoData: Partial<CreateTodoInput>
+): Promise<Todo> => {
   try {
     const response = await todoRepository.updateTodo(id, todoData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {todo} = await response.json();
+    const { todo } = await response.json();
     return todo;
   } catch (error) {
     console.error(`Error updating todo ${id}:`, error);

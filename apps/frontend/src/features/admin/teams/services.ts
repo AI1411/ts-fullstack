@@ -1,12 +1,12 @@
 // Team services
 import {
+  type CreateTeamInput,
+  type Team,
   createTeam as createTeamController,
-  CreateTeamInput,
   deleteTeam as deleteTeamController,
   getTeamById as getTeamByIdController,
   getTeams as getTeamsController,
-  Team,
-  updateTeam as updateTeamController
+  updateTeam as updateTeamController,
 } from './controllers';
 
 // Team service
@@ -27,12 +27,15 @@ export const teamService = {
   },
 
   // Update a team
-  updateTeam: async (id: number, teamData: Partial<CreateTeamInput>): Promise<Team> => {
+  updateTeam: async (
+    id: number,
+    teamData: Partial<CreateTeamInput>
+  ): Promise<Team> => {
     return updateTeamController(id, teamData);
   },
 
   // Delete a team
   deleteTeam: async (id: number): Promise<void> => {
     return deleteTeamController(id);
-  }
+  },
 };

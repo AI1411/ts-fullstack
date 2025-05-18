@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { todoService } from "../services";
-import { userService } from "@/features/admin/users/services";
+import { userService } from '@/features/admin/users/services';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { todoService } from '../services';
 
 // ユーザー型定義
 type User = {
@@ -15,10 +15,10 @@ type User = {
 const TodoForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    user_id: "",
-    status: "PENDING"
+    title: '',
+    description: '',
+    user_id: '',
+    status: 'PENDING',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,17 +26,19 @@ const TodoForm = () => {
   // ユーザー一覧を取得
   const { data: users } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getUsers
+    queryFn: userService.getUsers,
   });
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -50,17 +52,17 @@ const TodoForm = () => {
       // user_idを数値に変換
       const todoData = {
         ...formData,
-        user_id: formData.user_id ? parseInt(formData.user_id) : null
+        user_id: formData.user_id ? Number.parseInt(formData.user_id) : null,
       };
 
       await todoService.createTodo(todoData);
-      
+
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        title: "",
-        description: "",
-        user_id: "",
-        status: "PENDING"
+        title: '',
+        description: '',
+        user_id: '',
+        status: 'PENDING',
       });
       await queryClient.invalidateQueries({ queryKey: ['todos'] });
     } catch (err) {
@@ -74,16 +76,19 @@ const TodoForm = () => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Todoを追加</h2>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             タイトル
           </label>
           <input
@@ -96,9 +101,12 @@ const TodoForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             説明
           </label>
           <textarea
@@ -110,9 +118,12 @@ const TodoForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="user_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             担当ユーザー
           </label>
           <select
@@ -123,16 +134,19 @@ const TodoForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">担当者なし</option>
-            {users?.map(user => (
+            {users?.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name} ({user.email})
               </option>
             ))}
           </select>
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ステータス
           </label>
           <select
@@ -147,7 +161,7 @@ const TodoForm = () => {
             <option value="COMPLETED">完了</option>
           </select>
         </div>
-        
+
         <button
           type="submit"
           disabled={isSubmitting}

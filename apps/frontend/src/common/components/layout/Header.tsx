@@ -1,15 +1,20 @@
-'use client'
+'use client';
 
-import {usePathname} from "next/navigation";
-import {RiMenuLine, RiMoonLine, RiNotification3Line, RiSunLine} from "react-icons/ri";
-import {useEffect, useState} from "react";
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import {
+  RiMenuLine,
+  RiMoonLine,
+  RiNotification3Line,
+  RiSunLine,
+} from 'react-icons/ri';
 
 interface HeaderProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
-const Header = ({sidebarOpen, setSidebarOpen}: HeaderProps) => {
+const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const pathname = usePathname();
   const [darkMode, setDarkMode] = useState(false);
 
@@ -56,7 +61,7 @@ const Header = ({sidebarOpen, setSidebarOpen}: HeaderProps) => {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="z-50 block rounded-md p-1.5 text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 lg:hidden"
           >
-            <RiMenuLine className="h-6 w-6"/>
+            <RiMenuLine className="h-6 w-6" />
           </button>
 
           {/* モバイル用タイトル */}
@@ -80,26 +85,23 @@ const Header = ({sidebarOpen, setSidebarOpen}: HeaderProps) => {
             className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             {darkMode ? (
-              <RiSunLine className="h-5 w-5 text-gray-600 dark:text-gray-400"/>
+              <RiSunLine className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             ) : (
-              <RiMoonLine className="h-5 w-5 text-gray-600"/>
+              <RiMoonLine className="h-5 w-5 text-gray-600" />
             )}
           </button>
 
           {/* 通知アイコン */}
-          <button
-            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-            <RiNotification3Line className="h-5 w-5 text-gray-600 dark:text-gray-400"/>
-            <span
-              className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+          <button className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <RiNotification3Line className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
               4
             </span>
           </button>
 
           {/* ユーザーアイコン */}
           <div className="flex items-center gap-3">
-            <div
-              className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+            <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
               A
             </div>
             <span className="hidden text-right lg:block">

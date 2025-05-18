@@ -2,18 +2,18 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
+  createBaseballGameStat,
+  deleteBaseballGameStat,
+  getBaseballGameStatById,
   getBaseballGameStats,
   getBaseballGameStatsByPlayerId,
-  getBaseballGameStatById,
-  createBaseballGameStat,
   updateBaseballGameStat,
-  deleteBaseballGameStat
 } from './controllers';
 import {
-  baseballGameStatSchema,
   baseballGameStatResponseSchema,
+  baseballGameStatSchema,
   baseballGameStatUpdateSchema,
-  errorResponseSchema
+  errorResponseSchema,
 } from './schemas';
 
 // OpenAPIHonoインスタンスを作成
@@ -32,12 +32,12 @@ const getBaseballGameStatsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            stats: z.array(baseballGameStatResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            stats: z.array(baseballGameStatResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 特定の選手の試合統計一覧取得ルート
@@ -51,9 +51,9 @@ const getBaseballGameStatsByPlayerIdRoute = createRoute({
     params: z.object({
       playerId: z.string().openapi({
         description: '選手ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -61,20 +61,20 @@ const getBaseballGameStatsByPlayerIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            stats: z.array(baseballGameStatResponseSchema)
-          })
-        }
-      }
+            stats: z.array(baseballGameStatResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 特定の試合統計取得ルート
@@ -88,9 +88,9 @@ const getBaseballGameStatByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '試合統計ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -98,20 +98,20 @@ const getBaseballGameStatByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            stat: baseballGameStatResponseSchema
-          })
-        }
-      }
+            stat: baseballGameStatResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '試合統計が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 試合統計作成ルート
@@ -125,10 +125,10 @@ const createBaseballGameStatRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: baseballGameStatSchema
-        }
-      }
-    }
+          schema: baseballGameStatSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -136,28 +136,28 @@ const createBaseballGameStatRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            stat: baseballGameStatResponseSchema
-          })
-        }
-      }
+            stat: baseballGameStatResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 試合統計更新ルート
@@ -171,16 +171,16 @@ const updateBaseballGameStatRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '試合統計ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: baseballGameStatUpdateSchema
-        }
-      }
-    }
+          schema: baseballGameStatUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -188,28 +188,28 @@ const updateBaseballGameStatRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            stat: baseballGameStatResponseSchema
-          })
-        }
-      }
+            stat: baseballGameStatResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '試合統計または選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 試合統計削除ルート
@@ -223,9 +223,9 @@ const deleteBaseballGameStatRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '試合統計ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -234,28 +234,43 @@ const deleteBaseballGameStatRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '試合統計が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装
 baseballGameStatRoutes.openapi(getBaseballGameStatsRoute, getBaseballGameStats);
-baseballGameStatRoutes.openapi(getBaseballGameStatsByPlayerIdRoute, getBaseballGameStatsByPlayerId);
-baseballGameStatRoutes.openapi(getBaseballGameStatByIdRoute, getBaseballGameStatById);
-baseballGameStatRoutes.openapi(createBaseballGameStatRoute, createBaseballGameStat);
-baseballGameStatRoutes.openapi(updateBaseballGameStatRoute, updateBaseballGameStat);
-baseballGameStatRoutes.openapi(deleteBaseballGameStatRoute, deleteBaseballGameStat);
+baseballGameStatRoutes.openapi(
+  getBaseballGameStatsByPlayerIdRoute,
+  getBaseballGameStatsByPlayerId
+);
+baseballGameStatRoutes.openapi(
+  getBaseballGameStatByIdRoute,
+  getBaseballGameStatById
+);
+baseballGameStatRoutes.openapi(
+  createBaseballGameStatRoute,
+  createBaseballGameStat
+);
+baseballGameStatRoutes.openapi(
+  updateBaseballGameStatRoute,
+  updateBaseballGameStat
+);
+baseballGameStatRoutes.openapi(
+  deleteBaseballGameStatRoute,
+  deleteBaseballGameStat
+);
 
 export default baseballGameStatRoutes;

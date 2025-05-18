@@ -1,5 +1,5 @@
 // Country controllers
-import {countryRepository} from './repositories';
+import { countryRepository } from './repositories';
 
 // Types
 export interface Country {
@@ -24,7 +24,7 @@ export const getCountries = async (): Promise<Country[]> => {
     if (!response.ok) {
       throw new Error('Failed to fetch countries');
     }
-    const {countries} = await response.json();
+    const { countries } = await response.json();
     return countries;
   } catch (error) {
     console.error('Error fetching countries:', error);
@@ -36,14 +36,16 @@ export const getCountries = async (): Promise<Country[]> => {
 };
 
 // Create a new country
-export const createCountry = async (countryData: CreateCountryInput): Promise<Country> => {
+export const createCountry = async (
+  countryData: CreateCountryInput
+): Promise<Country> => {
   try {
     const response = await countryRepository.createCountry(countryData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {country} = await response.json();
+    const { country } = await response.json();
     return country;
   } catch (error) {
     console.error('Error creating country:', error);
@@ -58,7 +60,7 @@ export const getCountryById = async (id: number): Promise<Country> => {
     if (!response.ok) {
       throw new Error('Country not found');
     }
-    const {country} = await response.json();
+    const { country } = await response.json();
     return country;
   } catch (error) {
     console.error(`Error fetching country ${id}:`, error);
@@ -67,14 +69,17 @@ export const getCountryById = async (id: number): Promise<Country> => {
 };
 
 // Update a country
-export const updateCountry = async (id: number, countryData: Partial<CreateCountryInput>): Promise<Country> => {
+export const updateCountry = async (
+  id: number,
+  countryData: Partial<CreateCountryInput>
+): Promise<Country> => {
   try {
     const response = await countryRepository.updateCountry(id, countryData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {country} = await response.json();
+    const { country } = await response.json();
     return country;
   } catch (error) {
     console.error(`Error updating country ${id}:`, error);

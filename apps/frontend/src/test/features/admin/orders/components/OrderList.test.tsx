@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import OrderList from '@/features/admin/orders/components/OrderList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Order } from '@/features/admin/orders/controllers';
 import { orderService } from '@/features/admin/orders/services';
-import { Order } from '@/features/admin/orders/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the order service
 vi.mock('@/features/admin/orders/services', () => ({
   orderService: {
     getOrders: vi.fn(),
     updateOrderStatus: vi.fn(),
-    deleteOrder: vi.fn()
-  }
+    deleteOrder: vi.fn(),
+  },
 }));
 
 describe('OrderList Component', () => {
@@ -46,7 +46,7 @@ describe('OrderList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(orderService.getOrders).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -108,11 +108,11 @@ describe('OrderList Component', () => {
             product_id: 1,
             product_name: 'Product 1',
             quantity: 2,
-            price: 2500
-          }
+            price: 2500,
+          },
         ],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -127,12 +127,12 @@ describe('OrderList Component', () => {
             product_id: 2,
             product_name: 'Product 2',
             quantity: 1,
-            price: 3000
-          }
+            price: 3000,
+          },
         ],
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(orderService.getOrders).mockResolvedValue(mockOrders);
@@ -177,12 +177,12 @@ describe('OrderList Component', () => {
             product_id: 1,
             product_name: 'Product 1',
             quantity: 2,
-            price: 2500
-          }
+            price: 2500,
+          },
         ],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(orderService.getOrders).mockResolvedValue(mockOrders);
@@ -203,9 +203,10 @@ describe('OrderList Component', () => {
 
     // Find and click the expand button
     const expandButtons = screen.getAllByRole('button');
-    const expandButton = expandButtons.find(button => 
-      button.parentElement?.classList.contains('flex') && 
-      button.parentElement?.classList.contains('items-center')
+    const expandButton = expandButtons.find(
+      (button) =>
+        button.parentElement?.classList.contains('flex') &&
+        button.parentElement?.classList.contains('items-center')
     );
 
     if (expandButton) {
@@ -240,12 +241,15 @@ describe('OrderList Component', () => {
         status: 'pending',
         items: [],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(orderService.getOrders).mockResolvedValue(mockOrders);
-    vi.mocked(orderService.updateOrderStatus).mockResolvedValue({...mockOrders[0], status: 'completed'});
+    vi.mocked(orderService.updateOrderStatus).mockResolvedValue({
+      ...mockOrders[0],
+      status: 'completed',
+    });
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -264,7 +268,10 @@ describe('OrderList Component', () => {
 
     // Check if updateOrderStatus was called with correct arguments
     await waitFor(() => {
-      expect(orderService.updateOrderStatus).toHaveBeenCalledWith(1, 'completed');
+      expect(orderService.updateOrderStatus).toHaveBeenCalledWith(
+        1,
+        'completed'
+      );
     });
   });
 
@@ -279,8 +286,8 @@ describe('OrderList Component', () => {
         status: 'pending',
         items: [],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(orderService.getOrders).mockResolvedValue(mockOrders);
@@ -327,8 +334,8 @@ describe('OrderList Component', () => {
         status: 'pending',
         items: [],
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }
+        updated_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(orderService.getOrders).mockResolvedValue(mockOrders);

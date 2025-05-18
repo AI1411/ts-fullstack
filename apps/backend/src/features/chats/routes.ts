@@ -6,109 +6,119 @@ import {
   createChatMessage,
   getChatById,
   getChatMessages,
+  getUnreadMessageCount,
   getUserChats,
   markMessagesAsRead,
-  getUnreadMessageCount
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const chatRoutes = new OpenAPIHono();
 
 // OpenAPI用のチャットスキーマを定義
-const chatSchema = z.object({
-  creator_id: z.number().openapi({
-    description: 'チャット作成者ID',
-    example: 1
-  }),
-  recipient_id: z.number().openapi({
-    description: '受信者ID',
-    example: 2
+const chatSchema = z
+  .object({
+    creator_id: z.number().openapi({
+      description: 'チャット作成者ID',
+      example: 1,
+    }),
+    recipient_id: z.number().openapi({
+      description: '受信者ID',
+      example: 2,
+    }),
   })
-}).openapi('Chat');
+  .openapi('Chat');
 
 // レスポンス用のチャットスキーマ（IDを含む）
-const chatResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'チャットID',
-    example: 1
-  }),
-  creator_id: z.number().openapi({
-    description: 'チャット作成者ID',
-    example: 1
-  }),
-  recipient_id: z.number().openapi({
-    description: '受信者ID',
-    example: 2
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const chatResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'チャットID',
+      example: 1,
+    }),
+    creator_id: z.number().openapi({
+      description: 'チャット作成者ID',
+      example: 1,
+    }),
+    recipient_id: z.number().openapi({
+      description: '受信者ID',
+      example: 2,
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('ChatResponse');
+  .openapi('ChatResponse');
 
 // チャットメッセージスキーマ
-const chatMessageSchema = z.object({
-  chat_id: z.number().openapi({
-    description: 'チャットID',
-    example: 1
-  }),
-  sender_id: z.number().openapi({
-    description: '送信者ID',
-    example: 1
-  }),
-  content: z.string().min(1).openapi({
-    description: 'メッセージ内容',
-    example: 'こんにちは！'
-  }),
-  is_read: z.boolean().optional().default(false).openapi({
-    description: '既読状態',
-    example: false
+const chatMessageSchema = z
+  .object({
+    chat_id: z.number().openapi({
+      description: 'チャットID',
+      example: 1,
+    }),
+    sender_id: z.number().openapi({
+      description: '送信者ID',
+      example: 1,
+    }),
+    content: z.string().min(1).openapi({
+      description: 'メッセージ内容',
+      example: 'こんにちは！',
+    }),
+    is_read: z.boolean().optional().default(false).openapi({
+      description: '既読状態',
+      example: false,
+    }),
   })
-}).openapi('ChatMessage');
+  .openapi('ChatMessage');
 
 // レスポンス用のチャットメッセージスキーマ（IDを含む）
-const chatMessageResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'メッセージID',
-    example: 1
-  }),
-  chat_id: z.number().openapi({
-    description: 'チャットID',
-    example: 1
-  }),
-  sender_id: z.number().openapi({
-    description: '送信者ID',
-    example: 1
-  }),
-  content: z.string().openapi({
-    description: 'メッセージ内容',
-    example: 'こんにちは！'
-  }),
-  is_read: z.boolean().openapi({
-    description: '既読状態',
-    example: false
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const chatMessageResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'メッセージID',
+      example: 1,
+    }),
+    chat_id: z.number().openapi({
+      description: 'チャットID',
+      example: 1,
+    }),
+    sender_id: z.number().openapi({
+      description: '送信者ID',
+      example: 1,
+    }),
+    content: z.string().openapi({
+      description: 'メッセージ内容',
+      example: 'こんにちは！',
+    }),
+    is_read: z.boolean().openapi({
+      description: '既読状態',
+      example: false,
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('ChatMessageResponse');
+  .openapi('ChatMessageResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // チャット作成ルート
 const createChatRoute = createRoute({
@@ -121,10 +131,10 @@ const createChatRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: chatSchema
-        }
-      }
-    }
+          schema: chatSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -132,20 +142,20 @@ const createChatRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            chat: chatResponseSchema
-          })
-        }
-      }
+            chat: chatResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ユーザーのチャット一覧取得ルート
@@ -159,9 +169,9 @@ const getUserChatsRoute = createRoute({
     params: z.object({
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -169,26 +179,28 @@ const getUserChatsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            chats: z.array(z.object({
-              chat: chatResponseSchema,
-              otherUser: z.object({
-                id: z.number(),
-                name: z.string()
+            chats: z.array(
+              z.object({
+                chat: chatResponseSchema,
+                otherUser: z.object({
+                  id: z.number(),
+                  name: z.string(),
+                }),
               })
-            }))
-          })
-        }
-      }
+            ),
+          }),
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チャット取得ルート
@@ -202,9 +214,9 @@ const getChatByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'チャットID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -212,20 +224,20 @@ const getChatByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            chat: chatResponseSchema
-          })
-        }
-      }
+            chat: chatResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'チャットが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チャットメッセージ作成ルート
@@ -239,8 +251,8 @@ const createChatMessageRoute = createRoute({
     params: z.object({
       chatId: z.string().openapi({
         description: 'チャットID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
@@ -248,11 +260,11 @@ const createChatMessageRoute = createRoute({
           schema: z.object({
             sender_id: z.number(),
             content: z.string().min(1),
-            is_read: z.boolean().optional()
-          })
-        }
-      }
-    }
+            is_read: z.boolean().optional(),
+          }),
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -260,28 +272,28 @@ const createChatMessageRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            message: chatMessageResponseSchema
-          })
-        }
-      }
+            message: chatMessageResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'チャットが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チャットメッセージ一覧取得ルート
@@ -295,9 +307,9 @@ const getChatMessagesRoute = createRoute({
     params: z.object({
       chatId: z.string().openapi({
         description: 'チャットID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -305,26 +317,28 @@ const getChatMessagesRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            messages: z.array(z.object({
-              message: chatMessageResponseSchema,
-              sender: z.object({
-                id: z.number(),
-                name: z.string()
+            messages: z.array(
+              z.object({
+                message: chatMessageResponseSchema,
+                sender: z.object({
+                  id: z.number(),
+                  name: z.string(),
+                }),
               })
-            }))
-          })
-        }
-      }
+            ),
+          }),
+        },
+      },
     },
     404: {
       description: 'チャットが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // メッセージを既読にするルート
@@ -338,13 +352,13 @@ const markMessagesAsReadRoute = createRoute({
     params: z.object({
       chatId: z.string().openapi({
         description: 'チャットID',
-        example: '1'
+        example: '1',
       }),
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -354,20 +368,20 @@ const markMessagesAsReadRoute = createRoute({
           schema: z.object({
             success: z.boolean(),
             count: z.number(),
-            messages: z.array(chatMessageResponseSchema)
-          })
-        }
-      }
+            messages: z.array(chatMessageResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: 'チャットが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 未読メッセージ数取得ルート
@@ -381,9 +395,9 @@ const getUnreadMessageCountRoute = createRoute({
     params: z.object({
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -392,12 +406,12 @@ const getUnreadMessageCountRoute = createRoute({
         'application/json': {
           schema: z.object({
             unreadCount: z.number(),
-            chats: z.array(z.number())
-          })
-        }
-      }
-    }
-  }
+            chats: z.array(z.number()),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

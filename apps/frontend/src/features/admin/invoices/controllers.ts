@@ -1,5 +1,5 @@
 // Invoice controllers
-import {invoiceRepository} from './repositories';
+import { invoiceRepository } from './repositories';
 
 // Types
 export interface Invoice {
@@ -31,7 +31,7 @@ export interface CreateInvoiceInput {
 export const getInvoices = async (): Promise<Invoice[]> => {
   try {
     const response = await invoiceRepository.getInvoices();
-    const {invoices} = await response.json();
+    const { invoices } = await response.json();
     return invoices;
   } catch (error) {
     console.error('Error fetching invoices:', error);
@@ -40,14 +40,16 @@ export const getInvoices = async (): Promise<Invoice[]> => {
 };
 
 // Create a new invoice
-export const createInvoice = async (invoiceData: CreateInvoiceInput): Promise<Invoice> => {
+export const createInvoice = async (
+  invoiceData: CreateInvoiceInput
+): Promise<Invoice> => {
   try {
     const response = await invoiceRepository.createInvoice(invoiceData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {invoice} = await response.json();
+    const { invoice } = await response.json();
     return invoice;
   } catch (error) {
     console.error('Error creating invoice:', error);
@@ -62,7 +64,7 @@ export const getInvoiceById = async (id: number): Promise<Invoice> => {
     if (!response.ok) {
       throw new Error('Invoice not found');
     }
-    const {invoice} = await response.json();
+    const { invoice } = await response.json();
     return invoice;
   } catch (error) {
     console.error(`Error fetching invoice ${id}:`, error);
@@ -71,14 +73,17 @@ export const getInvoiceById = async (id: number): Promise<Invoice> => {
 };
 
 // Update an invoice
-export const updateInvoice = async (id: number, invoiceData: Partial<CreateInvoiceInput>): Promise<Invoice> => {
+export const updateInvoice = async (
+  id: number,
+  invoiceData: Partial<CreateInvoiceInput>
+): Promise<Invoice> => {
   try {
     const response = await invoiceRepository.updateInvoice(id, invoiceData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {invoice} = await response.json();
+    const { invoice } = await response.json();
     return invoice;
   } catch (error) {
     console.error(`Error updating invoice ${id}:`, error);

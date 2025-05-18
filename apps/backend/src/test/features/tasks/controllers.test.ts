@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  createTask, 
-  getTasks, 
-  getTaskById, 
-  getTasksByUserId, 
-  getTasksByTeamId, 
-  updateTask, 
-  deleteTask 
-} from '../../../features/tasks/controllers';
-import { tasksTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { tasksTable } from '../../../db/schema';
+import {
+  createTask,
+  deleteTask,
+  getTaskById,
+  getTasks,
+  getTasksByTeamId,
+  getTasksByUserId,
+  updateTask,
+} from '../../../features/tasks/controllers';
 
 // Mock task data
 const mockTask = {
@@ -21,7 +21,7 @@ const mockTask = {
   status: 'PENDING',
   due_date: new Date('2023-12-31'),
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Skip these tests for now since we're having issues with mocking
@@ -33,12 +33,12 @@ const mockTask = {
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -51,7 +51,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockTask])
+  returning: vi.fn().mockResolvedValue([mockTask]),
 };
 
 describe.skip('Task Controllers', () => {
@@ -68,7 +68,7 @@ describe.skip('Task Controllers', () => {
         title: 'テストタスク',
         description: 'テスト用のタスクです',
         status: 'PENDING',
-        due_date: '2023-12-31'
+        due_date: '2023-12-31',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -84,7 +84,7 @@ describe.skip('Task Controllers', () => {
         team_id: 1,
         title: 'テストタスク',
         description: 'テスト用のタスクです',
-        due_date: '2023-12-31'
+        due_date: '2023-12-31',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -99,7 +99,7 @@ describe.skip('Task Controllers', () => {
         team_id: 1,
         title: 'テストタスク',
         description: 'テスト用のタスクです',
-        status: 'PENDING'
+        status: 'PENDING',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -113,7 +113,7 @@ describe.skip('Task Controllers', () => {
         user_id: 1,
         team_id: 1,
         title: 'テストタスク',
-        description: 'テスト用のタスクです'
+        description: 'テスト用のタスクです',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -122,7 +122,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await createTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -145,7 +148,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await getTasks(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -170,7 +176,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await getTasksByUserId(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -195,7 +204,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await getTasksByTeamId(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -220,7 +232,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await getTaskById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Task not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Task not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -231,7 +246,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await getTaskById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -243,7 +261,7 @@ describe.skip('Task Controllers', () => {
         title: '更新されたタスク',
         description: '更新された説明',
         status: 'IN_PROGRESS',
-        due_date: '2024-01-31'
+        due_date: '2024-01-31',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -260,7 +278,7 @@ describe.skip('Task Controllers', () => {
         team_id: 2,
         title: '更新されたタスク',
         description: '更新された説明',
-        status: 'IN_PROGRESS'
+        status: 'IN_PROGRESS',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -272,7 +290,7 @@ describe.skip('Task Controllers', () => {
     it('should return 404 if task not found', async () => {
       const mockBody = {
         title: '更新されたタスク',
-        status: 'IN_PROGRESS'
+        status: 'IN_PROGRESS',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
 
@@ -281,13 +299,16 @@ describe.skip('Task Controllers', () => {
 
       const result = await updateTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Task not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Task not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         title: '更新されたタスク',
-        status: 'IN_PROGRESS'
+        status: 'IN_PROGRESS',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -296,7 +317,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await updateTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -307,7 +331,9 @@ describe.skip('Task Controllers', () => {
       const result = await deleteTask(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'Task deleted successfully' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        message: 'Task deleted successfully',
+      });
     });
 
     it('should return 404 if task not found', async () => {
@@ -318,7 +344,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await deleteTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Task not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Task not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -329,7 +358,10 @@ describe.skip('Task Controllers', () => {
 
       const result = await deleteTask(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { inquirySchema, inquiryResponseSchema } from '../../../features/inquiries/schemas';
+import { describe, expect, it } from 'vitest';
+import {
+  inquiryResponseSchema,
+  inquirySchema,
+} from '../../../features/inquiries/schemas';
 
 describe('Inquiry Schemas', () => {
   describe('inquirySchema', () => {
@@ -8,9 +11,9 @@ describe('Inquiry Schemas', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = inquirySchema.safeParse(validInquiry);
       expect(result.success).toBe(true);
     });
@@ -19,9 +22,9 @@ describe('Inquiry Schemas', () => {
       const invalidInquiry = {
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = inquirySchema.safeParse(invalidInquiry);
       expect(result.success).toBe(false);
     });
@@ -31,9 +34,9 @@ describe('Inquiry Schemas', () => {
         name: '',
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = inquirySchema.safeParse(invalidInquiry);
       expect(result.success).toBe(false);
     });
@@ -43,9 +46,9 @@ describe('Inquiry Schemas', () => {
         name: 'テストユーザー',
         email: 'invalid-email',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = inquirySchema.safeParse(invalidInquiry);
       expect(result.success).toBe(false);
     });
@@ -54,9 +57,9 @@ describe('Inquiry Schemas', () => {
       const invalidInquiry = {
         name: 'テストユーザー',
         email: 'test@example.com',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = inquirySchema.safeParse(invalidInquiry);
       expect(result.success).toBe(false);
     });
@@ -65,9 +68,9 @@ describe('Inquiry Schemas', () => {
       const invalidInquiry = {
         name: 'テストユーザー',
         email: 'test@example.com',
-        subject: 'お問い合わせテスト'
+        subject: 'お問い合わせテスト',
       };
-      
+
       const result = inquirySchema.safeParse(invalidInquiry);
       expect(result.success).toBe(false);
     });
@@ -83,9 +86,9 @@ describe('Inquiry Schemas', () => {
         message: 'これはテスト用のお問い合わせメッセージです。',
         status: 'PENDING',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       const result = inquiryResponseSchema.safeParse(validResponse);
       expect(result.success).toBe(true);
     });
@@ -94,10 +97,10 @@ describe('Inquiry Schemas', () => {
       const invalidResponse = {
         id: 1,
         name: 'テストユーザー',
-        email: 'test@example.com'
+        email: 'test@example.com',
         // Missing other required fields
       };
-      
+
       const result = inquiryResponseSchema.safeParse(invalidResponse);
       expect(result.success).toBe(false);
     });
@@ -111,9 +114,9 @@ describe('Inquiry Schemas', () => {
         message: 'これはテスト用のお問い合わせメッセージです。',
         status: 'PENDING',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       const result = inquiryResponseSchema.safeParse(invalidResponse);
       expect(result.success).toBe(false);
     });

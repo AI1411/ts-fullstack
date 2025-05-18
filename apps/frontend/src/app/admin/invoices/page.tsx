@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import InvoiceList from "@/features/admin/invoices/components/InvoiceList";
-import InvoiceForm from "@/features/admin/invoices/components/InvoiceForm";
+import InvoiceForm from '@/features/admin/invoices/components/InvoiceForm';
+import InvoiceList from '@/features/admin/invoices/components/InvoiceList';
 
 export default function InvoicesPage() {
   return (
@@ -10,14 +10,16 @@ export default function InvoicesPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">領収書一覧</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                領収書一覧
+              </h2>
             </div>
-            <InvoiceList/>
+            <InvoiceList />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <InvoiceForm/>
+          <InvoiceForm />
         </div>
       </div>
     </div>

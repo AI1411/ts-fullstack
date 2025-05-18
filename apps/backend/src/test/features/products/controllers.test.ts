@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getProducts, 
-  getProductById, 
-  createProduct, 
-  updateProduct, 
-  deleteProduct 
-} from '../../../features/products/controllers';
-import { productsTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { productsTable } from '../../../db/schema';
+import {
+  createProduct,
+  deleteProduct,
+  getProductById,
+  getProducts,
+  updateProduct,
+} from '../../../features/products/controllers';
 
 // Mock product data
 const mockProduct = {
@@ -19,7 +19,7 @@ const mockProduct = {
   image_url: 'https://example.com/image.jpg',
   category_id: 1,
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
@@ -32,12 +32,12 @@ const mockProduct = {
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -50,7 +50,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockProduct])
+  returning: vi.fn().mockResolvedValue([mockProduct]),
 };
 
 describe.skip('Product Controllers', () => {
@@ -68,7 +68,9 @@ describe.skip('Product Controllers', () => {
 
       const result = await getProducts(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ products: [mockProduct] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        products: [mockProduct],
+      });
     });
 
     it('should handle errors', async () => {
@@ -78,7 +80,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await getProducts(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -103,7 +108,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await getProductById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '商品が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -114,7 +122,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await getProductById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -126,14 +137,17 @@ describe.skip('Product Controllers', () => {
         price: 1000,
         stock: 10,
         image_url: 'https://example.com/image.jpg',
-        category_id: 1
+        category_id: 1,
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createProduct(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { product: mockProduct },
+        201
+      );
     });
 
     it('should create a product with default stock value', async () => {
@@ -142,14 +156,17 @@ describe.skip('Product Controllers', () => {
         description: 'テスト用の商品です',
         price: 1000,
         image_url: 'https://example.com/image.jpg',
-        category_id: 1
+        category_id: 1,
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createProduct(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ product: mockProduct }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { product: mockProduct },
+        201
+      );
     });
 
     it('should handle errors', async () => {
@@ -159,7 +176,7 @@ describe.skip('Product Controllers', () => {
         price: 1000,
         stock: 10,
         image_url: 'https://example.com/image.jpg',
-        category_id: 1
+        category_id: 1,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -168,7 +185,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await createProduct(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -177,7 +197,7 @@ describe.skip('Product Controllers', () => {
       const mockBody = {
         name: '更新された商品名',
         price: 2000,
-        stock: 20
+        stock: 20,
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -196,7 +216,7 @@ describe.skip('Product Controllers', () => {
     it('should return 404 if product not found', async () => {
       const mockBody = {
         name: '更新された商品名',
-        price: 2000
+        price: 2000,
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
 
@@ -207,13 +227,16 @@ describe.skip('Product Controllers', () => {
 
       const result = await updateProduct(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '商品が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: '更新された商品名',
-        price: 2000
+        price: 2000,
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -224,7 +247,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await updateProduct(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -240,7 +266,10 @@ describe.skip('Product Controllers', () => {
       const result = await deleteProduct(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: '商品が削除されました' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        success: true,
+        message: '商品が削除されました',
+      });
     });
 
     it('should return 404 if product not found', async () => {
@@ -253,7 +282,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await deleteProduct(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '商品が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '商品が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -266,7 +298,10 @@ describe.skip('Product Controllers', () => {
 
       const result = await deleteProduct(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

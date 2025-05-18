@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import todoRoutes from '../../../features/todos/routes';
 import * as controllers from '../../../features/todos/controllers';
+import todoRoutes from '../../../features/todos/routes';
 
 // Mock the controllers
 vi.mock('../../../features/todos/controllers', () => ({
@@ -9,7 +9,7 @@ vi.mock('../../../features/todos/controllers', () => ({
   getTodos: vi.fn().mockImplementation(() => ({ status: 200 })),
   getTodoById: vi.fn().mockImplementation(() => ({ status: 200 })),
   updateTodo: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteTodo: vi.fn().mockImplementation(() => ({ status: 200 }))
+  deleteTodo: vi.fn().mockImplementation(() => ({ status: 200 })),
 }));
 
 describe('Todo Routes', () => {
@@ -23,7 +23,7 @@ describe('Todo Routes', () => {
       vi.mocked(controllers.getTodos).mockResolvedValueOnce(mockResponse);
 
       const res = await todoRoutes.request('/todos', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -40,7 +40,7 @@ describe('Todo Routes', () => {
       vi.mocked(controllers.getTodoById).mockResolvedValueOnce(mockResponse);
 
       const res = await todoRoutes.request('/todos/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -59,13 +59,13 @@ describe('Todo Routes', () => {
       const res = await todoRoutes.request('/todos', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title: 'New Todo',
           description: 'New Todo Description',
-          user_id: 1
-        })
+          user_id: 1,
+        }),
       });
 
       // Set the status code manually for testing
@@ -84,14 +84,14 @@ describe('Todo Routes', () => {
       const res = await todoRoutes.request('/todos/1', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title: 'Updated Todo',
           description: 'Updated Todo Description',
           user_id: 1,
-          status: 'COMPLETED'
-        })
+          status: 'COMPLETED',
+        }),
       });
 
       // Set the status code manually for testing
@@ -108,7 +108,7 @@ describe('Todo Routes', () => {
       vi.mocked(controllers.deleteTodo).mockResolvedValueOnce(mockResponse);
 
       const res = await todoRoutes.request('/todos/1', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Set the status code manually for testing

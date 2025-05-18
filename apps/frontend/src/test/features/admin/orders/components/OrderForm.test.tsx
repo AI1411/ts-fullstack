@@ -1,21 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import OrderForm from '@/features/admin/orders/components/OrderForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { orderService } from '@/features/admin/orders/services';
-import { productService } from '@/features/admin/products/services';
+import {orderService} from '@/features/admin/orders/services';
+import {productService} from '@/features/admin/products/services';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/orders/services', () => ({
   orderService: {
-    createOrder: vi.fn()
-  }
+    createOrder: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/products/services', () => ({
   productService: {
-    getProducts: vi.fn()
-  }
+    getProducts: vi.fn(),
+  },
 }));
 
 describe('OrderForm Component', () => {
@@ -38,7 +38,7 @@ describe('OrderForm Component', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -57,15 +57,33 @@ describe('OrderForm Component', () => {
   it('should display product options when products are loaded', async () => {
     // Mock products data
     const mockProducts = [
-      { id: 1, name: 'Product 1', price: 1000, description: 'Description 1', category: 'Category 1', image_url: 'image1.jpg', created_at: '', updated_at: '' },
-      { id: 2, name: 'Product 2', price: 2000, description: 'Description 2', category: 'Category 2', image_url: 'image2.jpg', created_at: '', updated_at: '' }
+      {
+        id: 1,
+        name: 'Product 1',
+        price: 1000,
+        description: 'Description 1',
+        category: 'Category 1',
+        image_url: 'image1.jpg',
+        created_at: '',
+        updated_at: '',
+      },
+      {
+        id: 2,
+        name: 'Product 2',
+        price: 2000,
+        description: 'Description 2',
+        category: 'Category 2',
+        image_url: 'image2.jpg',
+        created_at: '',
+        updated_at: '',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -86,7 +104,7 @@ describe('OrderForm Component', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -105,13 +123,13 @@ describe('OrderForm Component', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
     // Fill customer name but leave email empty
     const nameInput = screen.getByLabelText(/顧客名/);
-    fireEvent.change(nameInput, { target: { value: 'Test Customer' } });
+    fireEvent.change(nameInput, {target: {value: 'Test Customer'}});
 
     // Submit the form
     const submitButton = screen.getByText('注文を作成');
@@ -128,16 +146,16 @@ describe('OrderForm Component', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
     // Fill customer name and invalid email
     const nameInput = screen.getByLabelText(/顧客名/);
-    fireEvent.change(nameInput, { target: { value: 'Test Customer' } });
+    fireEvent.change(nameInput, {target: {value: 'Test Customer'}});
 
     const emailInput = screen.getByLabelText(/メールアドレス/);
-    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    fireEvent.change(emailInput, {target: {value: 'invalid-email'}});
 
     // Submit the form
     const submitButton = screen.getByText('注文を作成');
@@ -152,23 +170,32 @@ describe('OrderForm Component', () => {
   it('should show validation error when no product is selected', async () => {
     // Mock products data
     const mockProducts = [
-      { id: 1, name: 'Product 1', price: 1000, description: 'Description 1', category: 'Category 1', image_url: 'image1.jpg', created_at: '', updated_at: '' },
+      {
+        id: 1,
+        name: 'Product 1',
+        price: 1000,
+        description: 'Description 1',
+        category: 'Category 1',
+        image_url: 'image1.jpg',
+        created_at: '',
+        updated_at: '',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
     // Fill customer name and email
     const nameInput = screen.getByLabelText(/顧客名/);
-    fireEvent.change(nameInput, { target: { value: 'Test Customer' } });
+    fireEvent.change(nameInput, {target: {value: 'Test Customer'}});
 
     const emailInput = screen.getByLabelText(/メールアドレス/);
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(emailInput, {target: {value: 'test@example.com'}});
 
     // Submit the form without selecting a product
     const submitButton = screen.getByText('注文を作成');
@@ -183,14 +210,23 @@ describe('OrderForm Component', () => {
   it('should add and remove order items', async () => {
     // Mock products data
     const mockProducts = [
-      { id: 1, name: 'Product 1', price: 1000, description: 'Description 1', category: 'Category 1', image_url: 'image1.jpg', created_at: '', updated_at: '' },
+      {
+        id: 1,
+        name: 'Product 1',
+        price: 1000,
+        description: 'Description 1',
+        category: 'Category 1',
+        image_url: 'image1.jpg',
+        created_at: '',
+        updated_at: '',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -225,7 +261,7 @@ describe('OrderForm Component', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -243,15 +279,26 @@ describe('OrderForm Component', () => {
   it('should show error message when order creation fails', async () => {
     // Mock products data
     const mockProducts = [
-      { id: 1, name: 'Product 1', price: 1000, description: 'Description 1', category: 'Category 1', image_url: 'image1.jpg', created_at: '', updated_at: '' },
+      {
+        id: 1,
+        name: 'Product 1',
+        price: 1000,
+        description: 'Description 1',
+        category: 'Category 1',
+        image_url: 'image1.jpg',
+        created_at: '',
+        updated_at: '',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
-    vi.mocked(orderService.createOrder).mockRejectedValue(new Error('API error'));
+    vi.mocked(orderService.createOrder).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -262,17 +309,17 @@ describe('OrderForm Component', () => {
 
     // Fill customer name and email
     const nameInput = screen.getByLabelText(/顧客名/);
-    fireEvent.change(nameInput, { target: { value: 'Test Customer' } });
+    fireEvent.change(nameInput, {target: {value: 'Test Customer'}});
 
     const emailInput = screen.getByLabelText(/メールアドレス/);
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(emailInput, {target: {value: 'test@example.com'}});
 
     // Select product and quantity
     const productSelect = screen.getByRole('combobox');
-    fireEvent.change(productSelect, { target: { value: '1' } });
+    fireEvent.change(productSelect, {target: {value: '1'}});
 
     const quantityInput = screen.getByRole('spinbutton');
-    fireEvent.change(quantityInput, { target: { value: '2' } });
+    fireEvent.change(quantityInput, {target: {value: '2'}});
 
     // Submit the form
     const submitButton = screen.getByText('注文を作成');
@@ -291,28 +338,44 @@ describe('OrderForm Component', () => {
   it('should disable submit button while submitting', async () => {
     // Mock products data
     const mockProducts = [
-      { id: 1, name: 'Product 1', price: 1000, description: 'Description 1', category: 'Category 1', image_url: 'image1.jpg', created_at: '', updated_at: '' },
+      {
+        id: 1,
+        name: 'Product 1',
+        price: 1000,
+        description: 'Description 1',
+        category: 'Category 1',
+        image_url: 'image1.jpg',
+        created_at: '',
+        updated_at: '',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
 
     // Mock a delayed response to ensure we see the submitting state
     vi.mocked(orderService.createOrder).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({
-        id: 1,
-        customer_name: 'Test Customer',
-        customer_email: 'test@example.com',
-        total_amount: 2000,
-        status: 'pending',
-        items: [],
-        created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }), 100))
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                id: 1,
+                customer_name: 'Test Customer',
+                customer_email: 'test@example.com',
+                total_amount: 2000,
+                status: 'pending',
+                items: [],
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z',
+              }),
+            100
+          )
+        )
     );
 
     render(
       <QueryClientProvider client={queryClient}>
-        <OrderForm />
+        <OrderForm/>
       </QueryClientProvider>
     );
 
@@ -323,14 +386,14 @@ describe('OrderForm Component', () => {
 
     // Fill customer name and email
     const nameInput = screen.getByLabelText(/顧客名/);
-    fireEvent.change(nameInput, { target: { value: 'Test Customer' } });
+    fireEvent.change(nameInput, {target: {value: 'Test Customer'}});
 
     const emailInput = screen.getByLabelText(/メールアドレス/);
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(emailInput, {target: {value: 'test@example.com'}});
 
     // Select product and quantity
     const productSelect = screen.getByRole('combobox');
-    fireEvent.change(productSelect, { target: { value: '1' } });
+    fireEvent.change(productSelect, {target: {value: '1'}});
 
     // Submit the form
     const submitButton = screen.getByText('注文を作成');

@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
+  type CreateSubTaskInput,
+  type SubTask,
+  createSubTask,
+  deleteSubTask,
+  getSubTaskById,
   getSubTasks,
   getSubTasksByTaskId,
-  createSubTask,
-  getSubTaskById,
   updateSubTask,
-  deleteSubTask,
-  SubTask,
-  CreateSubTaskInput
 } from '@/features/admin/sub-tasks/controllers';
 import { subTaskRepository } from '@/features/admin/sub-tasks/repositories';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the sub-task repository
 vi.mock('@/features/admin/sub-tasks/repositories', () => ({
@@ -19,8 +19,8 @@ vi.mock('@/features/admin/sub-tasks/repositories', () => ({
     createSubTask: vi.fn(),
     getSubTaskById: vi.fn(),
     updateSubTask: vi.fn(),
-    deleteSubTask: vi.fn()
-  }
+    deleteSubTask: vi.fn(),
+  },
 }));
 
 describe('Sub-Task Controllers', () => {
@@ -46,7 +46,7 @@ describe('Sub-Task Controllers', () => {
         status: 'PENDING',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -56,8 +56,8 @@ describe('Sub-Task Controllers', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     it('should return sub-tasks when API call is successful', async () => {
@@ -66,7 +66,7 @@ describe('Sub-Task Controllers', () => {
         ok: true,
         json: () => Promise.resolve({ subTasks: mockSubTasks }),
         text: () => Promise.resolve(JSON.stringify({ subTasks: mockSubTasks })),
-        headers: new Headers({ 'content-type': 'application/json' })
+        headers: new Headers({ 'content-type': 'application/json' }),
       } as unknown as Response);
 
       const result = await getSubTasks();
@@ -81,7 +81,7 @@ describe('Sub-Task Controllers', () => {
         status: 500,
         statusText: 'Internal Server Error',
         json: () => Promise.resolve({}),
-        text: () => Promise.resolve('Internal Server Error')
+        text: () => Promise.resolve('Internal Server Error'),
       } as unknown as Response);
 
       await expect(getSubTasks()).rejects.toThrow('Error fetching sub-tasks:');
@@ -101,7 +101,7 @@ describe('Sub-Task Controllers', () => {
         status: 'PENDING',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -111,8 +111,8 @@ describe('Sub-Task Controllers', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     it('should return sub-tasks when API call is successful', async () => {
@@ -121,12 +121,14 @@ describe('Sub-Task Controllers', () => {
         ok: true,
         json: () => Promise.resolve({ subTasks: mockSubTasks }),
         text: () => Promise.resolve(JSON.stringify({ subTasks: mockSubTasks })),
-        headers: new Headers({ 'content-type': 'application/json' })
+        headers: new Headers({ 'content-type': 'application/json' }),
       } as unknown as Response);
 
       const result = await getSubTasksByTaskId(taskId);
       expect(result).toEqual(mockSubTasks);
-      expect(subTaskRepository.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
+      expect(subTaskRepository.getSubTasksByTaskId).toHaveBeenCalledWith(
+        taskId
+      );
     });
 
     it('should throw an error when API call fails', async () => {
@@ -136,11 +138,15 @@ describe('Sub-Task Controllers', () => {
         status: 500,
         statusText: 'Internal Server Error',
         json: () => Promise.resolve({}),
-        text: () => Promise.resolve('Internal Server Error')
+        text: () => Promise.resolve('Internal Server Error'),
       } as unknown as Response);
 
-      await expect(getSubTasksByTaskId(taskId)).rejects.toThrow(`Error fetching sub-tasks for task ${taskId}:`);
-      expect(subTaskRepository.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
+      await expect(getSubTasksByTaskId(taskId)).rejects.toThrow(
+        `Error fetching sub-tasks for task ${taskId}:`
+      );
+      expect(subTaskRepository.getSubTasksByTaskId).toHaveBeenCalledWith(
+        taskId
+      );
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
   });
@@ -151,7 +157,7 @@ describe('Sub-Task Controllers', () => {
       title: 'New Sub-Task',
       description: 'New Description',
       status: 'PENDING',
-      due_date: '2023-01-01T00:00:00Z'
+      due_date: '2023-01-01T00:00:00Z',
     };
     const mockSubTask: SubTask = {
       id: 3,
@@ -161,14 +167,14 @@ describe('Sub-Task Controllers', () => {
       status: 'PENDING',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-03T00:00:00Z',
-      updated_at: '2023-01-03T00:00:00Z'
+      updated_at: '2023-01-03T00:00:00Z',
     };
 
     it('should return a sub-task when API call is successful', async () => {
       // Mock successful response
       vi.mocked(subTaskRepository.createSubTask).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ subTask: mockSubTask })
+        json: () => Promise.resolve({ subTask: mockSubTask }),
       } as unknown as Response);
 
       const result = await createSubTask(subTaskData);
@@ -181,7 +187,7 @@ describe('Sub-Task Controllers', () => {
       const errorMessage = 'Failed to create sub-task';
       vi.mocked(subTaskRepository.createSubTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(createSubTask(subTaskData)).rejects.toThrow(errorMessage);
@@ -200,14 +206,14 @@ describe('Sub-Task Controllers', () => {
       status: 'PENDING',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return a sub-task when API call is successful', async () => {
       // Mock successful response
       vi.mocked(subTaskRepository.getSubTaskById).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ subTask: mockSubTask })
+        json: () => Promise.resolve({ subTask: mockSubTask }),
       } as unknown as Response);
 
       const result = await getSubTaskById(subTaskId);
@@ -218,10 +224,12 @@ describe('Sub-Task Controllers', () => {
     it('should throw an error when API call fails', async () => {
       // Mock failed response
       vi.mocked(subTaskRepository.getSubTaskById).mockResolvedValue({
-        ok: false
+        ok: false,
       } as unknown as Response);
 
-      await expect(getSubTaskById(subTaskId)).rejects.toThrow('Sub-task not found');
+      await expect(getSubTaskById(subTaskId)).rejects.toThrow(
+        'Sub-task not found'
+      );
       expect(subTaskRepository.getSubTaskById).toHaveBeenCalledWith(subTaskId);
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
@@ -231,7 +239,7 @@ describe('Sub-Task Controllers', () => {
     const subTaskId = 1;
     const subTaskData: Partial<CreateSubTaskInput> = {
       title: 'Updated Sub-Task',
-      status: 'COMPLETED'
+      status: 'COMPLETED',
     };
     const mockSubTask: SubTask = {
       id: 1,
@@ -241,19 +249,22 @@ describe('Sub-Task Controllers', () => {
       status: 'COMPLETED',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-04T00:00:00Z'
+      updated_at: '2023-01-04T00:00:00Z',
     };
 
     it('should return an updated sub-task when API call is successful', async () => {
       // Mock successful response
       vi.mocked(subTaskRepository.updateSubTask).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ subTask: mockSubTask })
+        json: () => Promise.resolve({ subTask: mockSubTask }),
       } as unknown as Response);
 
       const result = await updateSubTask(subTaskId, subTaskData);
       expect(result).toEqual(mockSubTask);
-      expect(subTaskRepository.updateSubTask).toHaveBeenCalledWith(subTaskId, subTaskData);
+      expect(subTaskRepository.updateSubTask).toHaveBeenCalledWith(
+        subTaskId,
+        subTaskData
+      );
     });
 
     it('should throw an error when API call fails', async () => {
@@ -261,11 +272,16 @@ describe('Sub-Task Controllers', () => {
       const errorMessage = 'Failed to update sub-task';
       vi.mocked(subTaskRepository.updateSubTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
-      await expect(updateSubTask(subTaskId, subTaskData)).rejects.toThrow(errorMessage);
-      expect(subTaskRepository.updateSubTask).toHaveBeenCalledWith(subTaskId, subTaskData);
+      await expect(updateSubTask(subTaskId, subTaskData)).rejects.toThrow(
+        errorMessage
+      );
+      expect(subTaskRepository.updateSubTask).toHaveBeenCalledWith(
+        subTaskId,
+        subTaskData
+      );
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
   });
@@ -276,7 +292,7 @@ describe('Sub-Task Controllers', () => {
     it('should not throw an error when API call is successful', async () => {
       // Mock successful response
       vi.mocked(subTaskRepository.deleteSubTask).mockResolvedValue({
-        ok: true
+        ok: true,
       } as unknown as Response);
 
       await expect(deleteSubTask(subTaskId)).resolves.not.toThrow();
@@ -288,7 +304,7 @@ describe('Sub-Task Controllers', () => {
       const errorMessage = 'Failed to delete sub-task';
       vi.mocked(subTaskRepository.deleteSubTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(deleteSubTask(subTaskId)).rejects.toThrow(errorMessage);

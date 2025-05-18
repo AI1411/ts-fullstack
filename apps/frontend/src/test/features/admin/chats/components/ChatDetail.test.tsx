@@ -1,47 +1,57 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
 import ChatDetail from '@/features/admin/chats/components/ChatDetail';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type {
+  Chat,
+  ChatMessageWithSender,
+} from '@/features/admin/chats/controllers';
 import { chatService } from '@/features/admin/chats/services';
 import { userService } from '@/features/admin/users/services';
-import { Chat, ChatMessageWithSender } from '@/features/admin/chats/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/chats/services', () => ({
   chatService: {
     getChatById: vi.fn(),
     getChatMessages: vi.fn(),
-    markMessagesAsRead: vi.fn()
-  }
+    markMessagesAsRead: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUserById: vi.fn()
-  }
+    getUserById: vi.fn(),
+  },
 }));
 
 // Mock the MessageList and MessageForm components
 vi.mock('@/features/admin/chats/components/MessageList', () => ({
-  default: vi.fn(() => <div data-testid="message-list">MessageList Component</div>)
+  default: vi.fn(() => (
+    <div data-testid="message-list">MessageList Component</div>
+  )),
 }));
 
 vi.mock('@/features/admin/chats/components/MessageForm', () => ({
-  default: vi.fn(() => <div data-testid="message-form">MessageForm Component</div>)
+  default: vi.fn(() => (
+    <div data-testid="message-form">MessageForm Component</div>
+  )),
 }));
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode, href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="link">
       {children}
     </a>
-  )
+  ),
 }));
 
 // Mock date-fns to avoid locale issues in tests
 vi.mock('date-fns', () => ({
-  formatDistanceToNow: vi.fn(() => '3日前')
+  formatDistanceToNow: vi.fn(() => '3日前'),
 }));
 
 // Mock scrollIntoView
@@ -65,10 +75,10 @@ describe('ChatDetail Component', () => {
   it('should render loading state initially', () => {
     // Mock delayed responses
     vi.mocked(chatService.getChatById).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({} as Chat), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({} as Chat), 100))
     );
     vi.mocked(chatService.getChatMessages).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -82,7 +92,9 @@ describe('ChatDetail Component', () => {
 
   it('should show error state when chat is not found', async () => {
     // Mock failed chat response
-    vi.mocked(chatService.getChatById).mockResolvedValue(null as unknown as Chat);
+    vi.mocked(chatService.getChatById).mockResolvedValue(
+      null as unknown as Chat
+    );
     vi.mocked(chatService.getChatMessages).mockResolvedValue([]);
 
     render(
@@ -92,7 +104,9 @@ describe('ChatDetail Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('チャットが見つかりませんでした。')).toBeInTheDocument();
+      expect(
+        screen.getByText('チャットが見つかりませんでした。')
+      ).toBeInTheDocument();
     });
   });
 
@@ -103,14 +117,14 @@ describe('ChatDetail Component', () => {
       creator_id: 1,
       recipient_id: 2,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     const mockMessages: ChatMessageWithSender[] = [];
 
     const mockUser = {
       id: 2,
-      name: 'Test User'
+      name: 'Test User',
     };
 
     vi.mocked(chatService.getChatById).mockResolvedValue(mockChat);
@@ -119,7 +133,7 @@ describe('ChatDetail Component', () => {
     vi.mocked(chatService.markMessagesAsRead).mockResolvedValue({
       success: true,
       count: 0,
-      messages: []
+      messages: [],
     });
 
     render(
@@ -141,7 +155,10 @@ describe('ChatDetail Component', () => {
 
     // Verify markMessagesAsRead was called
     await waitFor(() => {
-      expect(chatService.markMessagesAsRead).toHaveBeenCalledWith(mockChatId, 1);
+      expect(chatService.markMessagesAsRead).toHaveBeenCalledWith(
+        mockChatId,
+        1
+      );
     });
   });
 
@@ -152,7 +169,7 @@ describe('ChatDetail Component', () => {
       creator_id: 1,
       recipient_id: 2,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     vi.mocked(chatService.getChatById).mockResolvedValue(mockChat);
@@ -161,7 +178,7 @@ describe('ChatDetail Component', () => {
     vi.mocked(chatService.markMessagesAsRead).mockResolvedValue({
       success: true,
       count: 0,
-      messages: []
+      messages: [],
     });
 
     render(
@@ -185,21 +202,25 @@ describe('ChatDetail Component', () => {
       creator_id: 1,
       recipient_id: 2,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     const mockUser = {
       id: 2,
-      name: 'Test User'
+      name: 'Test User',
     };
 
     vi.mocked(chatService.getChatById).mockResolvedValue(mockChat);
     vi.mocked(chatService.getChatMessages).mockResolvedValue([]);
     vi.mocked(userService.getUserById).mockResolvedValue(mockUser);
-    vi.mocked(chatService.markMessagesAsRead).mockRejectedValue(new Error('Failed to mark as read'));
+    vi.mocked(chatService.markMessagesAsRead).mockRejectedValue(
+      new Error('Failed to mark as read')
+    );
 
     // Spy on console.error
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -229,7 +250,7 @@ describe('ChatDetail Component', () => {
       creator_id: 1,
       recipient_id: 2,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     };
 
     const mockMessages: ChatMessageWithSender[] = [
@@ -241,18 +262,18 @@ describe('ChatDetail Component', () => {
           content: 'Hello',
           is_read: true,
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-01T00:00:00Z'
+          updated_at: '2023-01-01T00:00:00Z',
         },
         sender: {
           id: 1,
-          name: 'Current User'
-        }
-      }
+          name: 'Current User',
+        },
+      },
     ];
 
     const mockUser = {
       id: 2,
-      name: 'Test User'
+      name: 'Test User',
     };
 
     vi.mocked(chatService.getChatById).mockResolvedValue(mockChat);
@@ -261,7 +282,7 @@ describe('ChatDetail Component', () => {
     vi.mocked(chatService.markMessagesAsRead).mockResolvedValue({
       success: true,
       count: 0,
-      messages: []
+      messages: [],
     });
 
     render(
@@ -276,7 +297,9 @@ describe('ChatDetail Component', () => {
 
     // Verify scrollIntoView was called
     await waitFor(() => {
-      expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+      expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+      });
     });
 
     // Update messages to trigger the useEffect again
@@ -290,13 +313,13 @@ describe('ChatDetail Component', () => {
           content: 'Hi there',
           is_read: false,
           created_at: '2023-01-02T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
+          updated_at: '2023-01-02T00:00:00Z',
         },
         sender: {
           id: 2,
-          name: 'Test User'
-        }
-      }
+          name: 'Test User',
+        },
+      },
     ];
 
     // Update the mock to return the new messages

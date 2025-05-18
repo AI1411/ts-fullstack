@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import userRoutes from '../../../features/users/routes';
 import * as controllers from '../../../features/users/controllers';
+import userRoutes from '../../../features/users/routes';
 
 // Mock the controllers
 vi.mock('../../../features/users/controllers', () => ({
@@ -9,7 +9,7 @@ vi.mock('../../../features/users/controllers', () => ({
   getUsers: vi.fn().mockImplementation(() => ({ status: 200 })),
   getUserById: vi.fn().mockImplementation(() => ({ status: 200 })),
   updateUser: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteUser: vi.fn().mockImplementation(() => ({ status: 200 }))
+  deleteUser: vi.fn().mockImplementation(() => ({ status: 200 })),
 }));
 
 describe('User Routes', () => {
@@ -23,7 +23,7 @@ describe('User Routes', () => {
       vi.mocked(controllers.getUsers).mockResolvedValueOnce(mockResponse);
 
       const res = await userRoutes.request('/users', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -40,7 +40,7 @@ describe('User Routes', () => {
       vi.mocked(controllers.getUserById).mockResolvedValueOnce(mockResponse);
 
       const res = await userRoutes.request('/users/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -59,13 +59,13 @@ describe('User Routes', () => {
       const res = await userRoutes.request('/users', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: 'New User',
           email: 'new@example.com',
-          password: 'password123'
-        })
+          password: 'password123',
+        }),
       });
 
       // Set the status code manually for testing
@@ -84,13 +84,13 @@ describe('User Routes', () => {
       const res = await userRoutes.request('/users/1', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: 'Updated User',
           email: 'updated@example.com',
-          password: 'newpassword123'
-        })
+          password: 'newpassword123',
+        }),
       });
 
       // Set the status code manually for testing
@@ -107,7 +107,7 @@ describe('User Routes', () => {
       vi.mocked(controllers.deleteUser).mockResolvedValueOnce(mockResponse);
 
       const res = await userRoutes.request('/users/1', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Set the status code manually for testing

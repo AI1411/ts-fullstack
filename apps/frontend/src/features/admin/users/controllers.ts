@@ -1,5 +1,5 @@
 // User controllers
-import {userRepository} from './repositories';
+import { userRepository } from './repositories';
 
 // Types
 export interface User {
@@ -23,7 +23,9 @@ export const getUsers = async (): Promise<User[]> => {
     const response = await userRepository.getUsers();
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch users: ${response.status} ${response.statusText}`
+      );
     }
 
     try {
@@ -36,7 +38,10 @@ export const getUsers = async (): Promise<User[]> => {
 
       const text = await response.text();
       // Check if the response starts with HTML doctype or tags
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+      if (
+        text.trim().startsWith('<!DOCTYPE') ||
+        text.trim().startsWith('<html')
+      ) {
         console.error('Received HTML response instead of JSON');
         throw new Error('Invalid JSON response from server');
       }
@@ -61,7 +66,7 @@ export const createUser = async (userData: CreateUserInput): Promise<User> => {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {user} = await response.json();
+    const { user } = await response.json();
     return user;
   } catch (error) {
     console.error('Error creating user:', error);
@@ -76,7 +81,7 @@ export const getUserById = async (id: number): Promise<User> => {
     if (!response.ok) {
       throw new Error('User not found');
     }
-    const {user} = await response.json();
+    const { user } = await response.json();
     return user;
   } catch (error) {
     console.error(`Error fetching user ${id}:`, error);
@@ -85,14 +90,17 @@ export const getUserById = async (id: number): Promise<User> => {
 };
 
 // Update a user
-export const updateUser = async (id: number, userData: Partial<CreateUserInput>): Promise<User> => {
+export const updateUser = async (
+  id: number,
+  userData: Partial<CreateUserInput>
+): Promise<User> => {
   try {
     const response = await userRepository.updateUser(id, userData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {user} = await response.json();
+    const { user } = await response.json();
     return user;
   } catch (error) {
     console.error(`Error updating user ${id}:`, error);

@@ -1,6 +1,6 @@
 // Country repositories
-import {client} from '@/common/utils/client';
-import {CreateCountryInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateCountryInput } from './controllers';
 
 // Country repository
 export const countryRepository = {
@@ -19,22 +19,25 @@ export const countryRepository = {
   // Get a country by ID
   getCountryById: async (id: number) => {
     return client.countries[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a country
-  updateCountry: async (id: number, countryData: Partial<CreateCountryInput>) => {
+  updateCountry: async (
+    id: number,
+    countryData: Partial<CreateCountryInput>
+  ) => {
     return client.countries[':id'].$put({
-      param: {id: id.toString()},
-      json: countryData
+      param: { id: id.toString() },
+      json: countryData,
     });
   },
 
   // Delete a country
   deleteCountry: async (id: number) => {
     return client.countries[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

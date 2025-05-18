@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import TaskList from "@/features/admin/tasks/components/TaskList";
-import TaskForm from "@/features/admin/tasks/components/TaskForm";
+import TaskForm from '@/features/admin/tasks/components/TaskForm';
+import TaskList from '@/features/admin/tasks/components/TaskList';
 
 export default function TasksPage() {
   return (
@@ -10,14 +10,16 @@ export default function TasksPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">タスク一覧</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                タスク一覧
+              </h2>
             </div>
-            <TaskList/>
+            <TaskList />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <TaskForm/>
+          <TaskForm />
         </div>
       </div>
     </div>

@@ -1,7 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createTodo, getTodos, getTodoById, updateTodo, deleteTodo } from '../../../features/todos/controllers';
-import { todosTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { todosTable } from '../../../db/schema';
+import {
+  createTodo,
+  deleteTodo,
+  getTodoById,
+  getTodos,
+  updateTodo,
+} from '../../../features/todos/controllers';
 
 // Mock todo data
 const mockTodo = {
@@ -11,24 +17,24 @@ const mockTodo = {
   user_id: 1,
   status: 'PENDING',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -41,7 +47,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockTodo])
+  returning: vi.fn().mockResolvedValue([mockTodo]),
 };
 
 describe('Todo Controllers', () => {
@@ -54,7 +60,7 @@ describe('Todo Controllers', () => {
       const mockBody = {
         title: 'Test Todo',
         description: 'Test Description',
-        user_id: 1
+        user_id: 1,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -68,7 +74,7 @@ describe('Todo Controllers', () => {
       const mockBody = {
         title: 'Test Todo',
         description: 'Test Description',
-        user_id: 1
+        user_id: 1,
       };
       const mockContext = createMockContext(mockBody);
 
@@ -77,7 +83,10 @@ describe('Todo Controllers', () => {
 
       const result = await createTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -100,7 +109,10 @@ describe('Todo Controllers', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -127,7 +139,10 @@ describe('Todo Controllers', () => {
 
       const result = await getTodoById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Todo not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Todo not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -139,7 +154,10 @@ describe('Todo Controllers', () => {
 
       const result = await getTodoById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -149,7 +167,7 @@ describe('Todo Controllers', () => {
         title: 'Updated Todo',
         description: 'Updated Description',
         user_id: 1,
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
       mockDbClient.update.mockReturnThis();
@@ -169,7 +187,7 @@ describe('Todo Controllers', () => {
         title: 'Updated Todo',
         description: 'Updated Description',
         user_id: 1,
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
       mockDbClient.update.mockReturnThis();
@@ -179,7 +197,10 @@ describe('Todo Controllers', () => {
 
       const result = await updateTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Todo not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Todo not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -187,7 +208,7 @@ describe('Todo Controllers', () => {
         title: 'Updated Todo',
         description: 'Updated Description',
         user_id: 1,
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
       mockDbClient.update.mockReturnThis();
@@ -197,7 +218,10 @@ describe('Todo Controllers', () => {
 
       const result = await updateTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -211,7 +235,10 @@ describe('Todo Controllers', () => {
       const result = await deleteTodo(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'Todo deleted successfully' }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { message: 'Todo deleted successfully' },
+        200
+      );
     });
 
     it('should return 404 if todo not found', async () => {
@@ -222,7 +249,10 @@ describe('Todo Controllers', () => {
 
       const result = await deleteTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Todo not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Todo not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -233,7 +263,10 @@ describe('Todo Controllers', () => {
 
       const result = await deleteTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

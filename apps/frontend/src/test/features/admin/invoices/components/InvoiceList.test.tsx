@@ -1,24 +1,27 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import InvoiceList from '@/features/admin/invoices/components/InvoiceList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Invoice } from '@/features/admin/invoices/controllers';
 import { invoiceService } from '@/features/admin/invoices/services';
-import { Invoice } from '@/features/admin/invoices/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the invoice service
 vi.mock('@/features/admin/invoices/services', () => ({
   invoiceService: {
     getInvoices: vi.fn(),
     updateInvoice: vi.fn(),
-    deleteInvoice: vi.fn()
-  }
+    deleteInvoice: vi.fn(),
+  },
 }));
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode, href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
-  )
+  ),
 }));
 
 // Mock window.confirm
@@ -45,7 +48,7 @@ describe('InvoiceList Component', () => {
       payment_method: 'Credit Card',
       notes: 'Test notes',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     },
     {
       id: 2,
@@ -58,8 +61,8 @@ describe('InvoiceList Component', () => {
       payment_method: null,
       notes: null,
       created_at: '2023-01-02T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
-    }
+      updated_at: '2023-01-02T00:00:00Z',
+    },
   ];
 
   beforeEach(() => {
@@ -83,7 +86,7 @@ describe('InvoiceList Component', () => {
   it('should render loading state initially', () => {
     // Mock a delayed response
     vi.mocked(invoiceService.getInvoices).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -97,7 +100,9 @@ describe('InvoiceList Component', () => {
 
   it('should render error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(invoiceService.getInvoices).mockRejectedValue(new Error('API error'));
+    vi.mocked(invoiceService.getInvoices).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -171,7 +176,9 @@ describe('InvoiceList Component', () => {
 
     // Find and click the expand button for the first invoice
     const expandButtons = screen.getAllByRole('button');
-    const expandButton = expandButtons.find(button => button.textContent === '');
+    const expandButton = expandButtons.find(
+      (button) => button.textContent === ''
+    );
     fireEvent.click(expandButton!);
 
     // Check if details are now visible
@@ -218,7 +225,9 @@ describe('InvoiceList Component', () => {
     expect(totalAmountInput).toBeInTheDocument();
     expect(statusSelect).toBeInTheDocument();
     expect(screen.getByText('保存')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'キャンセル' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'キャンセル' })
+    ).toBeInTheDocument();
   });
 
   it('should update invoice when save button is clicked', async () => {
@@ -246,7 +255,9 @@ describe('InvoiceList Component', () => {
     const totalAmountInput = screen.getByDisplayValue('10000');
     const statusSelect = screen.getByRole('combobox', { name: 'ステータス' });
 
-    fireEvent.change(invoiceNumberInput, { target: { value: 'INV-001-UPDATED' } });
+    fireEvent.change(invoiceNumberInput, {
+      target: { value: 'INV-001-UPDATED' },
+    });
     fireEvent.change(totalAmountInput, { target: { value: '15000' } });
     fireEvent.change(statusSelect, { target: { value: 'PAID' } });
 
@@ -261,7 +272,7 @@ describe('InvoiceList Component', () => {
         total_amount: 15000,
         status: 'PAID',
         payment_method: 'Credit Card',
-        notes: 'Test notes'
+        notes: 'Test notes',
       });
     });
 
@@ -328,7 +339,9 @@ describe('InvoiceList Component', () => {
     fireEvent.click(deleteButtons[0]);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('本当にこの領収書を削除しますか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      '本当にこの領収書を削除しますか？'
+    );
 
     // Check if deleteInvoice was called
     await waitFor(() => {
@@ -362,7 +375,9 @@ describe('InvoiceList Component', () => {
     fireEvent.click(deleteButtons[0]);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('本当にこの領収書を削除しますか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      '本当にこの領収書を削除しますか？'
+    );
 
     // Check if deleteInvoice was NOT called
     expect(invoiceService.deleteInvoice).not.toHaveBeenCalled();
@@ -372,7 +387,9 @@ describe('InvoiceList Component', () => {
     // Mock successful response with data for initial load
     vi.mocked(invoiceService.getInvoices).mockResolvedValue(mockInvoices);
     // Mock error for update
-    vi.mocked(invoiceService.updateInvoice).mockRejectedValue(new Error('Update failed'));
+    vi.mocked(invoiceService.updateInvoice).mockRejectedValue(
+      new Error('Update failed')
+    );
 
     // Spy on window.alert
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
@@ -411,7 +428,9 @@ describe('InvoiceList Component', () => {
     // Mock confirmation
     vi.mocked(window.confirm).mockReturnValue(true);
     // Mock error for delete
-    vi.mocked(invoiceService.deleteInvoice).mockRejectedValue(new Error('Delete failed'));
+    vi.mocked(invoiceService.deleteInvoice).mockRejectedValue(
+      new Error('Delete failed')
+    );
 
     // Spy on window.alert
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { PRODUCT_ROUTES } from '@/features/admin/products/routes';
+import { describe, expect, it } from 'vitest';
 
 describe('Product Routes', () => {
   it('should have the correct route paths', () => {
