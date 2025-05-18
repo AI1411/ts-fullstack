@@ -211,7 +211,7 @@ describe('Todo Controllers', () => {
       const result = await deleteTodo(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'Todo deleted successfully' }, 204);
+      expect(mockContext.json).toHaveBeenCalledWith({ message: 'Todo deleted successfully' }, 200);
     });
 
     it('should return 404 if todo not found', async () => {

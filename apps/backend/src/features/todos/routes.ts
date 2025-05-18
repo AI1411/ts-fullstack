@@ -204,8 +204,18 @@ const deleteTodoRoute = createRoute({
     })
   },
   responses: {
-    204: {
-      description: '削除成功'
+    200: {
+      description: '削除成功',
+      content: {
+        'application/json': {
+          schema: z.object({
+            message: z.string().openapi({
+              description: '成功メッセージ',
+              example: 'Todo deleted successfully'
+            })
+          })
+        }
+      }
     },
     404: {
       description: 'Todoが見つかりません',

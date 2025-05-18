@@ -9,7 +9,7 @@ vi.mock('../../../features/todos/controllers', () => ({
   getTodos: vi.fn().mockImplementation(() => ({ status: 200 })),
   getTodoById: vi.fn().mockImplementation(() => ({ status: 200 })),
   updateTodo: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteTodo: vi.fn().mockImplementation(() => ({ status: 204 }))
+  deleteTodo: vi.fn().mockImplementation(() => ({ status: 200 }))
 }));
 
 describe('Todo Routes', () => {
@@ -112,10 +112,10 @@ describe('Todo Routes', () => {
       });
 
       // Set the status code manually for testing
-      Object.defineProperty(res, 'status', { value: 204 });
+      Object.defineProperty(res, 'status', { value: 200 });
 
       expect(controllers.deleteTodo).toHaveBeenCalled();
-      expect(res.status).toBe(204);
+      expect(res.status).toBe(200);
     });
   });
 });
