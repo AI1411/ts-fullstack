@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
-import { chatService } from "../services";
-import { userService } from "../../users/services";
-import MessageList from "./MessageList";
-import MessageForm from "./MessageForm";
-import { RiArrowLeftLine } from "react-icons/ri";
-import Link from "next/link";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useEffect, useRef } from 'react';
+import { RiArrowLeftLine } from 'react-icons/ri';
+import { userService } from '../../users/services';
+import { chatService } from '../services';
+import MessageForm from './MessageForm';
+import MessageList from './MessageList';
 
 // 仮のユーザーID（実際の認証システムができたら変更する）
 const CURRENT_USER_ID = 1;
@@ -23,33 +23,40 @@ const ChatDetail = ({ chatId }: ChatDetailProps) => {
   // チャット情報を取得
   const { data: chat, isLoading: chatLoading } = useQuery({
     queryKey: ['chat', chatId],
-    queryFn: () => chatService.getChatById(chatId)
+    queryFn: () => chatService.getChatById(chatId),
   });
 
   // チャットメッセージを取得
   const { data: messages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['chatMessages', chatId],
     queryFn: () => chatService.getChatMessages(chatId),
-    refetchInterval: 5000 // 5秒ごとに自動更新
+    refetchInterval: 5000, // 5秒ごとに自動更新
   });
 
   // 相手のユーザー情報を取得
-  const otherUserId = chat ? (chat.creator_id === CURRENT_USER_ID ? chat.recipient_id : chat.creator_id) : null;
+  const otherUserId = chat
+    ? chat.creator_id === CURRENT_USER_ID
+      ? chat.recipient_id
+      : chat.creator_id
+    : null;
   const { data: otherUser } = useQuery({
     queryKey: ['user', otherUserId],
-    queryFn: () => otherUserId ? userService.getUserById(otherUserId) : null,
-    enabled: !!otherUserId
+    queryFn: () => (otherUserId ? userService.getUserById(otherUserId) : null),
+    enabled: !!otherUserId,
   });
 
   // メッセージを既読にする
   useEffect(() => {
     if (chatId && !messagesLoading && chat) {
-      chatService.markMessagesAsRead(chatId, CURRENT_USER_ID)
+      chatService
+        .markMessagesAsRead(chatId, CURRENT_USER_ID)
         .then(() => {
           // 未読メッセージカウントを更新
-          queryClient.invalidateQueries({ queryKey: ['unreadMessageCount', CURRENT_USER_ID] });
+          queryClient.invalidateQueries({
+            queryKey: ['unreadMessageCount', CURRENT_USER_ID],
+          });
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Failed to mark messages as read:', error);
         });
     }
@@ -65,7 +72,10 @@ const ChatDetail = ({ chatId }: ChatDetailProps) => {
   if (chatLoading || messagesLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" role="status"></div>
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+          role="status"
+        ></div>
       </div>
     );
   }
@@ -82,7 +92,10 @@ const ChatDetail = ({ chatId }: ChatDetailProps) => {
     <div className="bg-white rounded-lg shadow flex flex-col h-[calc(100vh-12rem)]">
       {/* ヘッダー */}
       <div className="p-4 border-b border-gray-200 flex items-center">
-        <Link href="/admin/chats" className="mr-2 text-gray-500 hover:text-gray-700">
+        <Link
+          href="/admin/chats"
+          className="mr-2 text-gray-500 hover:text-gray-700"
+        >
           <RiArrowLeftLine className="h-5 w-5" />
         </Link>
         <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">

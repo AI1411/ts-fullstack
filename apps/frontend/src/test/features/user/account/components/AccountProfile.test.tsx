@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import AccountProfile from '@/features/user/account/components/AccountProfile';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('AccountProfile Component', () => {
   const mockUser = {
@@ -14,7 +14,7 @@ describe('AccountProfile Component', () => {
       prefecture: '東京都',
       city: '渋谷区',
       line1: '渋谷1-2-3',
-      line2: 'アパート101'
+      line2: 'アパート101',
     },
     memberSince: '2022年10月',
   };

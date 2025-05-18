@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import FeaturedProducts from '@/features/user/home/components/FeaturedProducts';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="link">
       {children}
     </a>
@@ -52,16 +55,24 @@ describe('FeaturedProducts Component', () => {
     expect(screen.getByTestId('product-card-4')).toBeInTheDocument();
 
     // Check if product details are passed correctly to ProductCard
-    expect(screen.getByTestId('product-name-1').textContent).toBe('プレミアムレザーウォレット');
+    expect(screen.getByTestId('product-name-1').textContent).toBe(
+      'プレミアムレザーウォレット'
+    );
     expect(screen.getByTestId('product-price-1').textContent).toBe('12800');
 
-    expect(screen.getByTestId('product-name-2').textContent).toBe('ワイヤレスノイズキャンセリングヘッドフォン');
+    expect(screen.getByTestId('product-name-2').textContent).toBe(
+      'ワイヤレスノイズキャンセリングヘッドフォン'
+    );
     expect(screen.getByTestId('product-price-2').textContent).toBe('32800');
 
-    expect(screen.getByTestId('product-name-3').textContent).toBe('オーガニックコットンTシャツ');
+    expect(screen.getByTestId('product-name-3').textContent).toBe(
+      'オーガニックコットンTシャツ'
+    );
     expect(screen.getByTestId('product-price-3').textContent).toBe('4900');
 
-    expect(screen.getByTestId('product-name-4').textContent).toBe('スマートウォッチ プロ');
+    expect(screen.getByTestId('product-name-4').textContent).toBe(
+      'スマートウォッチ プロ'
+    );
     expect(screen.getByTestId('product-price-4').textContent).toBe('42800');
   });
 

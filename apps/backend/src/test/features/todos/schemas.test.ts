@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { todoSchema } from '../../../features/todos/schemas';
 
 describe('Todo Schemas', () => {
@@ -7,10 +7,10 @@ describe('Todo Schemas', () => {
       const validTodo = {
         title: 'Test Todo',
       };
-      
+
       const result = todoSchema.safeParse(validTodo);
       expect(result.success).toBe(true);
-      
+
       // Check default values
       if (result.success) {
         expect(result.data.status).toBe('PENDING');
@@ -25,7 +25,7 @@ describe('Todo Schemas', () => {
         description: 'This is a test todo',
         status: 'COMPLETED',
       };
-      
+
       const result = todoSchema.safeParse(validTodo);
       expect(result.success).toBe(true);
     });
@@ -36,7 +36,7 @@ describe('Todo Schemas', () => {
         user_id: null,
         description: null,
       };
-      
+
       const result = todoSchema.safeParse(validTodo);
       expect(result.success).toBe(true);
     });
@@ -45,7 +45,7 @@ describe('Todo Schemas', () => {
       const invalidTodo = {
         title: 'A', // Too short
       };
-      
+
       const result = todoSchema.safeParse(invalidTodo);
       expect(result.success).toBe(false);
     });
@@ -54,7 +54,7 @@ describe('Todo Schemas', () => {
       const invalidTodo = {
         description: 'Missing title',
       };
-      
+
       const result = todoSchema.safeParse(invalidTodo);
       expect(result.success).toBe(false);
     });
@@ -63,7 +63,7 @@ describe('Todo Schemas', () => {
       const invalidTodo = {
         title: '',
       };
-      
+
       const result = todoSchema.safeParse(invalidTodo);
       expect(result.success).toBe(false);
     });
@@ -73,7 +73,7 @@ describe('Todo Schemas', () => {
         title: 'Test Todo',
         user_id: 'not-a-number',
       };
-      
+
       const result = todoSchema.safeParse(invalidTodo);
       expect(result.success).toBe(false);
     });

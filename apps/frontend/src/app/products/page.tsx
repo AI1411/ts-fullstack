@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react';
 import UserLayout from '@/features/user/layout/UserLayout';
 import ProductGrid from '@/features/user/products/components/ProductGrid';
+import React, { useState, useEffect } from 'react';
 
 interface Product {
   id: number;
@@ -41,7 +41,9 @@ export default function ProductsPage() {
 
         setProducts(formattedProducts);
       } catch (err) {
-        setError(err instanceof Error ? err.message : '商品データの取得に失敗しました');
+        setError(
+          err instanceof Error ? err.message : '商品データの取得に失敗しました'
+        );
         console.error('Error fetching products:', err);
       } finally {
         setLoading(false);
@@ -75,8 +77,8 @@ export default function ProductsPage() {
           {error && (
             <div className="text-center py-10">
               <p className="text-red-500">{error}</p>
-              <button 
-                onClick={() => window.location.reload()} 
+              <button
+                onClick={() => window.location.reload()}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 再読み込み

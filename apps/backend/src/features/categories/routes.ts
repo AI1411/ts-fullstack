@@ -2,112 +2,122 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
+  createCategory,
+  deleteCategory,
   getCategories,
   getCategoryById,
   getProductsByCategory,
-  createCategory,
   updateCategory,
-  deleteCategory
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const categoryRoutes = new OpenAPIHono();
 
 // OpenAPI用のカテゴリスキーマを定義
-const categorySchema = z.object({
-  name: z.string().min(1).openapi({
-    description: 'カテゴリ名',
-    example: '電子機器'
-  }),
-  description: z.string().optional().openapi({
-    description: 'カテゴリ説明',
-    example: '電子機器に関する商品カテゴリです。'
+const categorySchema = z
+  .object({
+    name: z.string().min(1).openapi({
+      description: 'カテゴリ名',
+      example: '電子機器',
+    }),
+    description: z.string().optional().openapi({
+      description: 'カテゴリ説明',
+      example: '電子機器に関する商品カテゴリです。',
+    }),
   })
-}).openapi('Category');
+  .openapi('Category');
 
 // レスポンス用のカテゴリスキーマ（IDを含む）
-const categoryResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'カテゴリID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: 'カテゴリ名',
-    example: '電子機器'
-  }),
-  description: z.string().nullable().openapi({
-    description: 'カテゴリ説明',
-    example: '電子機器に関する商品カテゴリです。'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const categoryResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'カテゴリID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: 'カテゴリ名',
+      example: '電子機器',
+    }),
+    description: z.string().nullable().openapi({
+      description: 'カテゴリ説明',
+      example: '電子機器に関する商品カテゴリです。',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('CategoryResponse');
+  .openapi('CategoryResponse');
 
 // 更新用のカテゴリスキーマ（すべてのフィールドがオプショナル）
-const categoryUpdateSchema = z.object({
-  name: z.string().min(1).optional().openapi({
-    description: 'カテゴリ名',
-    example: '電子機器'
-  }),
-  description: z.string().optional().openapi({
-    description: 'カテゴリ説明',
-    example: '電子機器に関する商品カテゴリです。'
+const categoryUpdateSchema = z
+  .object({
+    name: z.string().min(1).optional().openapi({
+      description: 'カテゴリ名',
+      example: '電子機器',
+    }),
+    description: z.string().optional().openapi({
+      description: 'カテゴリ説明',
+      example: '電子機器に関する商品カテゴリです。',
+    }),
   })
-}).openapi('CategoryUpdate');
+  .openapi('CategoryUpdate');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 商品レスポンススキーマ（カテゴリに属する商品を取得するため）
-const productResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '商品ID',
-    example: 1
-  }),
-  category_id: z.number().nullable().openapi({
-    description: 'カテゴリID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: '商品名',
-    example: 'スマートフォン'
-  }),
-  description: z.string().nullable().openapi({
-    description: '商品説明',
-    example: '最新モデルのスマートフォンです。'
-  }),
-  price: z.number().openapi({
-    description: '価格',
-    example: 50000
-  }),
-  stock: z.number().openapi({
-    description: '在庫数',
-    example: 100
-  }),
-  image_url: z.string().nullable().openapi({
-    description: '商品画像URL',
-    example: 'https://example.com/images/smartphone.jpg'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const productResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '商品ID',
+      example: 1,
+    }),
+    category_id: z.number().nullable().openapi({
+      description: 'カテゴリID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: '商品名',
+      example: 'スマートフォン',
+    }),
+    description: z.string().nullable().openapi({
+      description: '商品説明',
+      example: '最新モデルのスマートフォンです。',
+    }),
+    price: z.number().openapi({
+      description: '価格',
+      example: 50000,
+    }),
+    stock: z.number().openapi({
+      description: '在庫数',
+      example: 100,
+    }),
+    image_url: z.string().nullable().openapi({
+      description: '商品画像URL',
+      example: 'https://example.com/images/smartphone.jpg',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('ProductResponse');
+  .openapi('ProductResponse');
 
 // カテゴリ一覧取得ルート
 const getCategoriesRoute = createRoute({
@@ -122,12 +132,12 @@ const getCategoriesRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            categories: z.array(categoryResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            categories: z.array(categoryResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // カテゴリ取得ルート
@@ -141,9 +151,9 @@ const getCategoryByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'カテゴリID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -151,20 +161,20 @@ const getCategoryByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            category: categoryResponseSchema
-          })
-        }
-      }
+            category: categoryResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'カテゴリが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // カテゴリに属する商品取得ルート
@@ -178,9 +188,9 @@ const getProductsByCategoryRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'カテゴリID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -188,20 +198,20 @@ const getProductsByCategoryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            products: z.array(productResponseSchema)
-          })
-        }
-      }
+            products: z.array(productResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: 'カテゴリが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // カテゴリ作成ルート
@@ -215,10 +225,10 @@ const createCategoryRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: categorySchema
-        }
-      }
-    }
+          schema: categorySchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -226,20 +236,20 @@ const createCategoryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            category: categoryResponseSchema
-          })
-        }
-      }
+            category: categoryResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // カテゴリ更新ルート
@@ -253,16 +263,16 @@ const updateCategoryRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'カテゴリID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: categoryUpdateSchema
-        }
-      }
-    }
+          schema: categoryUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -270,28 +280,28 @@ const updateCategoryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            category: categoryResponseSchema
-          })
-        }
-      }
+            category: categoryResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'カテゴリが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // カテゴリ削除ルート
@@ -305,9 +315,9 @@ const deleteCategoryRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'カテゴリID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -316,20 +326,20 @@ const deleteCategoryRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: 'カテゴリが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

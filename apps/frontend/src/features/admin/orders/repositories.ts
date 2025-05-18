@@ -1,5 +1,5 @@
 // Order repositories
-import {CreateOrderInput} from './controllers';
+import type { CreateOrderInput } from './controllers';
 
 // Base API URL
 const API_URL = 'http://localhost:8080';
@@ -28,7 +28,10 @@ export const orderRepository = {
   },
 
   // Update an order
-  updateOrder: async (id: number, orderData: Partial<CreateOrderInput>): Promise<Response> => {
+  updateOrder: async (
+    id: number,
+    orderData: Partial<CreateOrderInput>
+  ): Promise<Response> => {
     return fetch(`${API_URL}/orders/${id}`, {
       method: 'PUT',
       headers: {

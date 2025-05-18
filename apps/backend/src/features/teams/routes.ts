@@ -1,54 +1,66 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
-import { createTeam, deleteTeam, getTeamById, getTeams, updateTeam } from './controllers';
+import {
+  createTeam,
+  deleteTeam,
+  getTeamById,
+  getTeams,
+  updateTeam,
+} from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const teamRoutes = new OpenAPIHono();
 
 // OpenAPI用のチームスキーマを定義
-const teamSchema = z.object({
-  name: z.string().min(2).openapi({
-    description: 'チーム名',
-    example: '開発チーム'
-  }),
-  description: z.string().nullable().optional().openapi({
-    description: 'チームの説明',
-    example: 'フロントエンド開発を担当するチーム'
+const teamSchema = z
+  .object({
+    name: z.string().min(2).openapi({
+      description: 'チーム名',
+      example: '開発チーム',
+    }),
+    description: z.string().nullable().optional().openapi({
+      description: 'チームの説明',
+      example: 'フロントエンド開発を担当するチーム',
+    }),
   })
-}).openapi('Team');
+  .openapi('Team');
 
 // レスポンス用のチームスキーマ（IDを含む）
-const teamResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'チームID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: 'チーム名',
-    example: '開発チーム'
-  }),
-  description: z.string().nullable().openapi({
-    description: 'チームの説明',
-    example: 'フロントエンド開発を担当するチーム'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const teamResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'チームID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: 'チーム名',
+      example: '開発チーム',
+    }),
+    description: z.string().nullable().openapi({
+      description: 'チームの説明',
+      example: 'フロントエンド開発を担当するチーム',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('TeamResponse');
+  .openapi('TeamResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // チーム一覧取得ルート
 const getTeamsRoute = createRoute({
@@ -63,12 +75,12 @@ const getTeamsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            teams: z.array(teamResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            teams: z.array(teamResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 単一のチーム取得ルート
@@ -82,9 +94,9 @@ const getTeamRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'チームID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -92,20 +104,20 @@ const getTeamRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: teamResponseSchema
-          })
-        }
-      }
+            team: teamResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チーム作成ルート
@@ -119,10 +131,10 @@ const createTeamRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: teamSchema
-        }
-      }
-    }
+          schema: teamSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -130,20 +142,20 @@ const createTeamRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: teamResponseSchema
-          })
-        }
-      }
+            team: teamResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チーム更新ルート
@@ -157,16 +169,16 @@ const updateTeamRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'チームID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: teamSchema
-        }
-      }
-    }
+          schema: teamSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -174,28 +186,28 @@ const updateTeamRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: teamResponseSchema
-          })
-        }
-      }
+            team: teamResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // チーム削除ルート
@@ -209,9 +221,9 @@ const deleteTeamRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'チームID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -221,21 +233,21 @@ const deleteTeamRoute = createRoute({
           schema: z.object({
             message: z.string().openapi({
               description: '成功メッセージ',
-              example: 'Team deleted successfully'
-            })
-          })
-        }
-      }
+              example: 'Team deleted successfully',
+            }),
+          }),
+        },
+      },
     },
     404: {
       description: 'チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

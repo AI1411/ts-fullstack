@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProductList from '@/features/admin/products/components/ProductList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Product } from '@/features/admin/products/controllers';
 import { productService } from '@/features/admin/products/services';
-import { Product } from '@/features/admin/products/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the product service
 vi.mock('@/features/admin/products/services', () => ({
   productService: {
     getProducts: vi.fn(),
     updateProduct: vi.fn(),
-    deleteProduct: vi.fn()
-  }
+    deleteProduct: vi.fn(),
+  },
 }));
 
 // Mock the confirm function
@@ -19,9 +19,14 @@ vi.spyOn(window, 'confirm').mockImplementation(() => true);
 
 // Mock the Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode, href: string }) => (
-    <a href={href} data-testid="next-link">{children}</a>
-  )
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
+    <a href={href} data-testid="next-link">
+      {children}
+    </a>
+  ),
 }));
 
 describe('ProductList Component', () => {
@@ -56,7 +61,7 @@ describe('ProductList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(productService.getProducts).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -70,7 +75,9 @@ describe('ProductList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(productService.getProducts).mockRejectedValue(new Error('API error'));
+    vi.mocked(productService.getProducts).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -113,7 +120,7 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 2,
@@ -123,8 +130,8 @@ describe('ProductList Component', () => {
         stock: 20,
         image_url: null,
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-04T00:00:00Z'
-      }
+        updated_at: '2023-01-04T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -159,8 +166,8 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -190,7 +197,9 @@ describe('ProductList Component', () => {
     expect(screen.getByText('説明:')).toBeInTheDocument();
     expect(screen.getByText('Description 1')).toBeInTheDocument();
     expect(screen.getByText('画像URL:')).toBeInTheDocument();
-    expect(screen.getByText('https://example.com/image1.jpg')).toBeInTheDocument();
+    expect(
+      screen.getByText('https://example.com/image1.jpg')
+    ).toBeInTheDocument();
 
     // Click again to collapse
     fireEvent.click(expandButton!);
@@ -210,8 +219,8 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -256,15 +265,15 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     const updatedProduct: Product = {
       ...mockProducts[0],
       name: 'Updated Product',
       price: 1500,
-      stock: 15
+      stock: 15,
     };
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -305,7 +314,7 @@ describe('ProductList Component', () => {
         description: 'Description 1',
         price: 1500,
         stock: 15,
-        image_url: 'https://example.com/image1.jpg'
+        image_url: 'https://example.com/image1.jpg',
       });
     });
   });
@@ -321,8 +330,8 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -352,7 +361,9 @@ describe('ProductList Component', () => {
 
     // Check if we're back to view mode
     expect(screen.getByText('Test Product 1')).toBeInTheDocument();
-    expect(screen.queryByDisplayValue('Updated Product')).not.toBeInTheDocument();
+    expect(
+      screen.queryByDisplayValue('Updated Product')
+    ).not.toBeInTheDocument();
     expect(screen.getByText('編集')).toBeInTheDocument();
   });
 
@@ -367,8 +378,8 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
@@ -406,15 +417,19 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
-    vi.mocked(productService.updateProduct).mockRejectedValue(new Error('Update failed'));
+    vi.mocked(productService.updateProduct).mockRejectedValue(
+      new Error('Update failed')
+    );
 
     // Mock console.error to prevent test output pollution
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     const alertMock = vi.fn();
     window.alert = alertMock;
 
@@ -457,15 +472,19 @@ describe('ProductList Component', () => {
         stock: 10,
         image_url: 'https://example.com/image1.jpg',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(productService.getProducts).mockResolvedValue(mockProducts);
-    vi.mocked(productService.deleteProduct).mockRejectedValue(new Error('Delete failed'));
+    vi.mocked(productService.deleteProduct).mockRejectedValue(
+      new Error('Delete failed')
+    );
 
     // Mock console.error to prevent test output pollution
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     const alertMock = vi.fn();
     window.alert = alertMock;
 

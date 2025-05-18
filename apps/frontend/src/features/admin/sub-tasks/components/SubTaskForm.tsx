@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { subTaskService } from "../services";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { subTaskService } from '../services';
 
 interface SubTaskFormProps {
   taskId: number;
@@ -12,22 +12,24 @@ interface SubTaskFormProps {
 const SubTaskForm = ({ taskId, onCancel }: SubTaskFormProps) => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    status: "PENDING",
-    due_date: ""
+    title: '',
+    description: '',
+    status: 'PENDING',
+    due_date: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -40,26 +42,28 @@ const SubTaskForm = ({ taskId, onCancel }: SubTaskFormProps) => {
     try {
       const subTaskData = {
         ...formData,
-        task_id: taskId
+        task_id: taskId,
       };
 
       await subTaskService.createSubTask(subTaskData);
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        title: "",
-        description: "",
-        status: "PENDING",
-        due_date: ""
+        title: '',
+        description: '',
+        status: 'PENDING',
+        due_date: '',
       });
       await queryClient.invalidateQueries({ queryKey: ['subTasks', taskId] });
-      
+
       // キャンセルコールバックがあれば呼び出す
       if (onCancel) {
         onCancel();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'サブタスクの追加に失敗しました');
+      setError(
+        err instanceof Error ? err.message : 'サブタスクの追加に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -68,7 +72,9 @@ const SubTaskForm = ({ taskId, onCancel }: SubTaskFormProps) => {
 
   return (
     <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
-      <h3 className="text-md font-medium text-gray-700 mb-3">サブタスクを追加</h3>
+      <h3 className="text-md font-medium text-gray-700 mb-3">
+        サブタスクを追加
+      </h3>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded mb-3 text-sm">

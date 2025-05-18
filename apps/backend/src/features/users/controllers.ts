@@ -1,18 +1,21 @@
-import { Context } from 'hono';
-import { usersTable } from '../../db/schema';
-import { getDB } from '../../common/utils/db';
 import { eq } from 'drizzle-orm';
+import type { Context } from 'hono';
+import { getDB } from '../../common/utils/db';
+import { usersTable } from '../../db/schema';
 
 // ユーザー作成
 export const createUser = async (c: Context) => {
   const { name, email, password } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const user = await db.insert(usersTable).values({
-      name,
-      email,
-      password, // 本番環境ではパスワードのハッシュ化が必要
-    }).returning();
+    const user = await db
+      .insert(usersTable)
+      .values({
+        name,
+        email,
+        password, // 本番環境ではパスワードのハッシュ化が必要
+      })
+      .returning();
     return c.json({ user: user[0] });
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
@@ -32,10 +35,13 @@ export const getUsers = async (c: Context) => {
 
 // ユーザー取得
 export const getUserById = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const user = await db.select().from(usersTable).where(eq(usersTable.id, id));
+    const user = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, id));
     if (!user.length) {
       return c.json({ error: 'User not found' }, 404);
     }
@@ -47,11 +53,12 @@ export const getUserById = async (c: Context) => {
 
 // ユーザー更新
 export const updateUser = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const { name, email, password } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const updatedUser = await db.update(usersTable)
+    const updatedUser = await db
+      .update(usersTable)
       .set({
         name,
         email,
@@ -71,10 +78,11 @@ export const updateUser = async (c: Context) => {
 
 // ユーザー削除
 export const deleteUser = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const deletedUser = await db.delete(usersTable)
+    const deletedUser = await db
+      .delete(usersTable)
       .where(eq(usersTable.id, id))
       .returning();
     if (!deletedUser.length) {

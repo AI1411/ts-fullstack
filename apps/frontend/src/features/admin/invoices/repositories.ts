@@ -1,6 +1,6 @@
 // Invoice repositories
-import {client} from '@/common/utils/client';
-import {CreateInvoiceInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateInvoiceInput } from './controllers';
 
 // Invoice repository
 export const invoiceRepository = {
@@ -19,22 +19,25 @@ export const invoiceRepository = {
   // Get an invoice by ID
   getInvoiceById: async (id: number) => {
     return client.invoices[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update an invoice
-  updateInvoice: async (id: number, invoiceData: Partial<CreateInvoiceInput>) => {
+  updateInvoice: async (
+    id: number,
+    invoiceData: Partial<CreateInvoiceInput>
+  ) => {
     return client.invoices[':id'].$put({
-      param: {id: id.toString()},
-      json: invoiceData
+      param: { id: id.toString() },
+      json: invoiceData,
     });
   },
 
   // Delete an invoice
   deleteInvoice: async (id: number) => {
     return client.invoices[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

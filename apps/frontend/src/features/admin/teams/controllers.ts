@@ -1,5 +1,5 @@
 // Team controllers
-import {teamRepository} from './repositories';
+import { teamRepository } from './repositories';
 
 // Types
 export interface Team {
@@ -18,7 +18,7 @@ export interface CreateTeamInput {
 export const getTeams = async (): Promise<Team[]> => {
   try {
     const response = await teamRepository.getTeams();
-    const {teams} = await response.json();
+    const { teams } = await response.json();
     return teams;
   } catch (error) {
     console.error('Error fetching teams:', error);
@@ -34,7 +34,7 @@ export const createTeam = async (teamData: CreateTeamInput): Promise<Team> => {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {team} = await response.json();
+    const { team } = await response.json();
     return team;
   } catch (error) {
     console.error('Error creating team:', error);
@@ -49,7 +49,7 @@ export const getTeamById = async (id: number): Promise<Team> => {
     if (!response.ok) {
       throw new Error('Team not found');
     }
-    const {team} = await response.json();
+    const { team } = await response.json();
     return team;
   } catch (error) {
     console.error(`Error fetching team ${id}:`, error);
@@ -58,14 +58,17 @@ export const getTeamById = async (id: number): Promise<Team> => {
 };
 
 // Update a team
-export const updateTeam = async (id: number, teamData: Partial<CreateTeamInput>): Promise<Team> => {
+export const updateTeam = async (
+  id: number,
+  teamData: Partial<CreateTeamInput>
+): Promise<Team> => {
   try {
     const response = await teamRepository.updateTeam(id, teamData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {team} = await response.json();
+    const { team } = await response.json();
     return team;
   } catch (error) {
     console.error(`Error updating team ${id}:`, error);

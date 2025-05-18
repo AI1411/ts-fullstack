@@ -3,102 +3,112 @@ import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
   createContact,
-  getContacts,
+  deleteContact,
   getContactById,
+  getContacts,
   updateContact,
-  deleteContact
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const contactRoutes = new OpenAPIHono();
 
 // OpenAPI用のお問い合わせスキーマを定義
-const contactSchema = z.object({
-  name: z.string().min(1).openapi({
-    description: 'お名前',
-    example: '山田太郎'
-  }),
-  email: z.string().email().openapi({
-    description: 'メールアドレス',
-    example: 'example@example.com'
-  }),
-  phone: z.string().optional().openapi({
-    description: '電話番号',
-    example: '090-1234-5678'
-  }),
-  subject: z.string().min(1).openapi({
-    description: '件名',
-    example: '商品について'
-  }),
-  message: z.string().min(1).openapi({
-    description: 'メッセージ',
-    example: '商品の詳細について質問があります。'
+const contactSchema = z
+  .object({
+    name: z.string().min(1).openapi({
+      description: 'お名前',
+      example: '山田太郎',
+    }),
+    email: z.string().email().openapi({
+      description: 'メールアドレス',
+      example: 'example@example.com',
+    }),
+    phone: z.string().optional().openapi({
+      description: '電話番号',
+      example: '090-1234-5678',
+    }),
+    subject: z.string().min(1).openapi({
+      description: '件名',
+      example: '商品について',
+    }),
+    message: z.string().min(1).openapi({
+      description: 'メッセージ',
+      example: '商品の詳細について質問があります。',
+    }),
   })
-}).openapi('Contact');
+  .openapi('Contact');
 
 // レスポンス用のお問い合わせスキーマ（IDを含む）
-const contactResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'お問い合わせID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: 'お名前',
-    example: '山田太郎'
-  }),
-  email: z.string().openapi({
-    description: 'メールアドレス',
-    example: 'example@example.com'
-  }),
-  phone: z.string().nullable().openapi({
-    description: '電話番号',
-    example: '090-1234-5678'
-  }),
-  subject: z.string().openapi({
-    description: '件名',
-    example: '商品について'
-  }),
-  message: z.string().openapi({
-    description: 'メッセージ',
-    example: '商品の詳細について質問があります。'
-  }),
-  status: z.string().openapi({
-    description: 'ステータス',
-    example: 'PENDING'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const contactResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'お問い合わせID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: 'お名前',
+      example: '山田太郎',
+    }),
+    email: z.string().openapi({
+      description: 'メールアドレス',
+      example: 'example@example.com',
+    }),
+    phone: z.string().nullable().openapi({
+      description: '電話番号',
+      example: '090-1234-5678',
+    }),
+    subject: z.string().openapi({
+      description: '件名',
+      example: '商品について',
+    }),
+    message: z.string().openapi({
+      description: 'メッセージ',
+      example: '商品の詳細について質問があります。',
+    }),
+    status: z.string().openapi({
+      description: 'ステータス',
+      example: 'PENDING',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('ContactResponse');
+  .openapi('ContactResponse');
 
 // 更新用スキーマ
-const updateContactSchema = z.object({
-  status: z.string().openapi({
-    description: 'ステータス',
-    example: 'COMPLETED'
+const updateContactSchema = z
+  .object({
+    status: z.string().openapi({
+      description: 'ステータス',
+      example: 'COMPLETED',
+    }),
   })
-}).openapi('UpdateContact');
+  .openapi('UpdateContact');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 成功レスポンススキーマ
-const successResponseSchema = z.object({
-  success: z.boolean().openapi({
-    description: '成功フラグ',
-    example: true
+const successResponseSchema = z
+  .object({
+    success: z.boolean().openapi({
+      description: '成功フラグ',
+      example: true,
+    }),
   })
-}).openapi('SuccessResponse');
+  .openapi('SuccessResponse');
 
 // お問い合わせ送信ルート
 const createContactRoute = createRoute({
@@ -111,10 +121,10 @@ const createContactRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: contactSchema
-        }
-      }
-    }
+          schema: contactSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -122,20 +132,20 @@ const createContactRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            contact: contactResponseSchema
-          })
-        }
-      }
+            contact: contactResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 管理者用: お問い合わせ一覧取得ルート
@@ -151,12 +161,12 @@ const getContactsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            contacts: z.array(contactResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            contacts: z.array(contactResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 管理者用: お問い合わせ詳細取得ルート
@@ -170,9 +180,9 @@ const getContactByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'お問い合わせID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -180,20 +190,20 @@ const getContactByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            contact: contactResponseSchema
-          })
-        }
-      }
+            contact: contactResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'お問い合わせが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 管理者用: お問い合わせ更新ルート
@@ -207,16 +217,16 @@ const updateContactRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'お問い合わせID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: updateContactSchema
-        }
-      }
-    }
+          schema: updateContactSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -224,20 +234,20 @@ const updateContactRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            contact: contactResponseSchema
-          })
-        }
-      }
+            contact: contactResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'お問い合わせが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 管理者用: お問い合わせ削除ルート
@@ -251,28 +261,28 @@ const deleteContactRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'お問い合わせID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
       description: '削除成功',
       content: {
         'application/json': {
-          schema: successResponseSchema
-        }
-      }
+          schema: successResponseSchema,
+        },
+      },
     },
     404: {
       description: 'お問い合わせが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

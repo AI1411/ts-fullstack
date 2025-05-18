@@ -2,119 +2,127 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
-  getProducts,
-  getProductById,
   createProduct,
+  deleteProduct,
+  getProductById,
+  getProducts,
   updateProduct,
-  deleteProduct
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const productRoutes = new OpenAPIHono();
 
 // OpenAPI用の商品スキーマを定義
-const productSchema = z.object({
-  name: z.string().min(1).openapi({
-    description: '商品名',
-    example: 'スマートフォン'
-  }),
-  description: z.string().optional().openapi({
-    description: '商品説明',
-    example: '最新モデルのスマートフォンです。'
-  }),
-  price: z.number().min(0).openapi({
-    description: '価格',
-    example: 50000
-  }),
-  stock: z.number().min(0).optional().openapi({
-    description: '在庫数',
-    example: 100
-  }),
-  image_url: z.string().url().optional().openapi({
-    description: '商品画像URL',
-    example: 'https://example.com/images/smartphone.jpg'
-  }),
-  category_id: z.number().optional().openapi({
-    description: 'カテゴリID',
-    example: 1
+const productSchema = z
+  .object({
+    name: z.string().min(1).openapi({
+      description: '商品名',
+      example: 'スマートフォン',
+    }),
+    description: z.string().optional().openapi({
+      description: '商品説明',
+      example: '最新モデルのスマートフォンです。',
+    }),
+    price: z.number().min(0).openapi({
+      description: '価格',
+      example: 50000,
+    }),
+    stock: z.number().min(0).optional().openapi({
+      description: '在庫数',
+      example: 100,
+    }),
+    image_url: z.string().url().optional().openapi({
+      description: '商品画像URL',
+      example: 'https://example.com/images/smartphone.jpg',
+    }),
+    category_id: z.number().optional().openapi({
+      description: 'カテゴリID',
+      example: 1,
+    }),
   })
-}).openapi('Product');
+  .openapi('Product');
 
 // レスポンス用の商品スキーマ（IDを含む）
-const productResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '商品ID',
-    example: 1
-  }),
-  category_id: z.number().nullable().openapi({
-    description: 'カテゴリID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: '商品名',
-    example: 'スマートフォン'
-  }),
-  description: z.string().nullable().openapi({
-    description: '商品説明',
-    example: '最新モデルのスマートフォンです。'
-  }),
-  price: z.number().openapi({
-    description: '価格',
-    example: 50000
-  }),
-  stock: z.number().openapi({
-    description: '在庫数',
-    example: 100
-  }),
-  image_url: z.string().nullable().openapi({
-    description: '商品画像URL',
-    example: 'https://example.com/images/smartphone.jpg'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const productResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '商品ID',
+      example: 1,
+    }),
+    category_id: z.number().nullable().openapi({
+      description: 'カテゴリID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: '商品名',
+      example: 'スマートフォン',
+    }),
+    description: z.string().nullable().openapi({
+      description: '商品説明',
+      example: '最新モデルのスマートフォンです。',
+    }),
+    price: z.number().openapi({
+      description: '価格',
+      example: 50000,
+    }),
+    stock: z.number().openapi({
+      description: '在庫数',
+      example: 100,
+    }),
+    image_url: z.string().nullable().openapi({
+      description: '商品画像URL',
+      example: 'https://example.com/images/smartphone.jpg',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('ProductResponse');
+  .openapi('ProductResponse');
 
 // 更新用の商品スキーマ（すべてのフィールドがオプショナル）
-const productUpdateSchema = z.object({
-  name: z.string().min(1).optional().openapi({
-    description: '商品名',
-    example: 'スマートフォン'
-  }),
-  description: z.string().optional().openapi({
-    description: '商品説明',
-    example: '最新モデルのスマートフォンです。'
-  }),
-  price: z.number().min(0).optional().openapi({
-    description: '価格',
-    example: 50000
-  }),
-  stock: z.number().min(0).optional().openapi({
-    description: '在庫数',
-    example: 100
-  }),
-  image_url: z.string().url().optional().openapi({
-    description: '商品画像URL',
-    example: 'https://example.com/images/smartphone.jpg'
-  }),
-  category_id: z.number().optional().openapi({
-    description: 'カテゴリID',
-    example: 1
+const productUpdateSchema = z
+  .object({
+    name: z.string().min(1).optional().openapi({
+      description: '商品名',
+      example: 'スマートフォン',
+    }),
+    description: z.string().optional().openapi({
+      description: '商品説明',
+      example: '最新モデルのスマートフォンです。',
+    }),
+    price: z.number().min(0).optional().openapi({
+      description: '価格',
+      example: 50000,
+    }),
+    stock: z.number().min(0).optional().openapi({
+      description: '在庫数',
+      example: 100,
+    }),
+    image_url: z.string().url().optional().openapi({
+      description: '商品画像URL',
+      example: 'https://example.com/images/smartphone.jpg',
+    }),
+    category_id: z.number().optional().openapi({
+      description: 'カテゴリID',
+      example: 1,
+    }),
   })
-}).openapi('ProductUpdate');
+  .openapi('ProductUpdate');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 商品一覧取得ルート
 const getProductsRoute = createRoute({
@@ -129,12 +137,12 @@ const getProductsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            products: z.array(productResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            products: z.array(productResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 商品取得ルート
@@ -148,9 +156,9 @@ const getProductByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '商品ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -158,20 +166,20 @@ const getProductByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            product: productResponseSchema
-          })
-        }
-      }
+            product: productResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '商品が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 商品作成ルート
@@ -185,10 +193,10 @@ const createProductRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: productSchema
-        }
-      }
-    }
+          schema: productSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -196,20 +204,20 @@ const createProductRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            product: productResponseSchema
-          })
-        }
-      }
+            product: productResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 商品更新ルート
@@ -223,16 +231,16 @@ const updateProductRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '商品ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: productUpdateSchema
-        }
-      }
-    }
+          schema: productUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -240,28 +248,28 @@ const updateProductRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            product: productResponseSchema
-          })
-        }
-      }
+            product: productResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '商品が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 商品削除ルート
@@ -275,9 +283,9 @@ const deleteProductRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '商品ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -286,20 +294,20 @@ const deleteProductRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '商品が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

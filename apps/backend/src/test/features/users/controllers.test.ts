@@ -1,7 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createUser, getUsers, getUserById, updateUser, deleteUser } from '../../../features/users/controllers';
-import { usersTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { usersTable } from '../../../db/schema';
+import {
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser,
+} from '../../../features/users/controllers';
 
 // Mock user data
 const mockUser = {
@@ -10,24 +16,24 @@ const mockUser = {
   email: 'test@example.com',
   password: 'password123',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -40,7 +46,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockUser])
+  returning: vi.fn().mockResolvedValue([mockUser]),
 };
 
 describe('User Controllers', () => {
@@ -54,7 +60,7 @@ describe('User Controllers', () => {
       const mockBody = {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -68,7 +74,7 @@ describe('User Controllers', () => {
       const mockBody = {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -77,7 +83,10 @@ describe('User Controllers', () => {
 
       const result = await createUser(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -100,7 +109,10 @@ describe('User Controllers', () => {
 
       const result = await getUsers(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -127,7 +139,10 @@ describe('User Controllers', () => {
 
       const result = await getUserById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'User not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'User not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -139,7 +154,10 @@ describe('User Controllers', () => {
 
       const result = await getUserById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -148,7 +166,7 @@ describe('User Controllers', () => {
       const mockBody = {
         name: 'Updated User',
         email: 'updated@example.com',
-        password: 'newpassword123'
+        password: 'newpassword123',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
       mockDbClient.update.mockReturnThis();
@@ -167,7 +185,7 @@ describe('User Controllers', () => {
       const mockBody = {
         name: 'Updated User',
         email: 'updated@example.com',
-        password: 'newpassword123'
+        password: 'newpassword123',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
       mockDbClient.update.mockReturnThis();
@@ -177,14 +195,17 @@ describe('User Controllers', () => {
 
       const result = await updateUser(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'User not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'User not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: 'Updated User',
         email: 'updated@example.com',
-        password: 'newpassword123'
+        password: 'newpassword123',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
       mockDbClient.update.mockReturnThis();
@@ -194,7 +215,10 @@ describe('User Controllers', () => {
 
       const result = await updateUser(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -208,7 +232,9 @@ describe('User Controllers', () => {
       const result = await deleteUser(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'User deleted successfully' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        message: 'User deleted successfully',
+      });
     });
 
     it('should return 404 if user not found', async () => {
@@ -219,7 +245,10 @@ describe('User Controllers', () => {
 
       const result = await deleteUser(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'User not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'User not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -230,7 +259,10 @@ describe('User Controllers', () => {
 
       const result = await deleteUser(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

@@ -1,35 +1,45 @@
-'use client'
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import Link from "next/link";
-import { chatService } from "../services";
-import { ChatWithUser } from "../controllers";
-import { formatDistanceToNow } from "date-fns";
-import { ja } from "date-fns/locale";
-import { RiMessage2Line } from "react-icons/ri";
+import { useQuery } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { ja } from 'date-fns/locale';
+import Link from 'next/link';
+import { useState } from 'react';
+import { RiMessage2Line } from 'react-icons/ri';
+import type { ChatWithUser } from '../controllers';
+import { chatService } from '../services';
 
 // 仮のユーザーID（実際の認証システムができたら変更する）
 const CURRENT_USER_ID = 1;
 
 const ChatList = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   // チャット一覧を取得
-  const { data: chats = [], isLoading, error } = useQuery({
+  const {
+    data: chats = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['userChats', CURRENT_USER_ID],
-    queryFn: () => chatService.getUserChats(CURRENT_USER_ID)
+    queryFn: () => chatService.getUserChats(CURRENT_USER_ID),
   });
 
   // 検索フィルター
-  const filteredChats = chats.filter((chatWithUser: ChatWithUser) => 
+  const filteredChats = chats.filter((chatWithUser: ChatWithUser) =>
     chatWithUser.otherUser.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center p-8" data-testid="loading">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" role="status"></div>
+      <div
+        className="flex justify-center items-center p-8"
+        data-testid="loading"
+      >
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+          role="status"
+        ></div>
       </div>
     );
   }
@@ -43,7 +53,10 @@ const ChatList = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden" data-testid="chat-list">
+    <div
+      className="bg-white rounded-lg shadow overflow-hidden"
+      data-testid="chat-list"
+    >
       {/* 検索バー */}
       <div className="p-4 border-b border-gray-200">
         <input
@@ -74,10 +87,13 @@ const ChatList = () => {
                     {chatWithUser.otherUser.name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {formatDistanceToNow(new Date(chatWithUser.chat.updated_at), { 
-                      addSuffix: true,
-                      locale: ja
-                    })}
+                    {formatDistanceToNow(
+                      new Date(chatWithUser.chat.updated_at),
+                      {
+                        addSuffix: true,
+                        locale: ja,
+                      }
+                    )}
                   </p>
                 </div>
                 <div className="ml-4">
@@ -88,7 +104,7 @@ const ChatList = () => {
           ))
         ) : (
           <div className="p-6 text-center text-gray-500">
-            {searchTerm ? "検索結果がありません" : "チャットがありません"}
+            {searchTerm ? '検索結果がありません' : 'チャットがありません'}
           </div>
         )}
       </div>

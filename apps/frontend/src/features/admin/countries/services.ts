@@ -1,12 +1,12 @@
 // Country services
 import {
+  type Country,
+  type CreateCountryInput,
   createCountry as createCountryController,
-  CreateCountryInput,
   deleteCountry as deleteCountryController,
-  getCountryById as getCountryByIdController,
   getCountries as getCountriesController,
-  Country,
-  updateCountry as updateCountryController
+  getCountryById as getCountryByIdController,
+  updateCountry as updateCountryController,
 } from './controllers';
 
 // Country service
@@ -27,12 +27,15 @@ export const countryService = {
   },
 
   // Update a country
-  updateCountry: async (id: number, countryData: Partial<CreateCountryInput>): Promise<Country> => {
+  updateCountry: async (
+    id: number,
+    countryData: Partial<CreateCountryInput>
+  ): Promise<Country> => {
     return updateCountryController(id, countryData);
   },
 
   // Delete a country
   deleteCountry: async (id: number): Promise<void> => {
     return deleteCountryController(id);
-  }
+  },
 };

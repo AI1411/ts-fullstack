@@ -7,71 +7,77 @@ import {
   getNotificationById,
   getNotifications,
   getNotificationsByUserId,
-  updateNotification
+  updateNotification,
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const notificationRoutes = new OpenAPIHono();
 
 // OpenAPI用の通知スキーマを定義
-const notificationSchema = z.object({
-  user_id: z.number().nullable().optional().openapi({
-    description: '対象ユーザーID',
-    example: 1
-  }),
-  title: z.string().min(2).openapi({
-    description: '通知タイトル',
-    example: '新しいタスクが割り当てられました'
-  }),
-  message: z.string().min(1).openapi({
-    description: '通知メッセージ',
-    example: 'フロントエンド実装のタスクが割り当てられました'
-  }),
-  is_read: z.boolean().optional().default(false).openapi({
-    description: '既読状態',
-    example: false
+const notificationSchema = z
+  .object({
+    user_id: z.number().nullable().optional().openapi({
+      description: '対象ユーザーID',
+      example: 1,
+    }),
+    title: z.string().min(2).openapi({
+      description: '通知タイトル',
+      example: '新しいタスクが割り当てられました',
+    }),
+    message: z.string().min(1).openapi({
+      description: '通知メッセージ',
+      example: 'フロントエンド実装のタスクが割り当てられました',
+    }),
+    is_read: z.boolean().optional().default(false).openapi({
+      description: '既読状態',
+      example: false,
+    }),
   })
-}).openapi('Notification');
+  .openapi('Notification');
 
 // レスポンス用の通知スキーマ（IDを含む）
-const notificationResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '通知ID',
-    example: 1
-  }),
-  user_id: z.number().nullable().openapi({
-    description: '対象ユーザーID',
-    example: 1
-  }),
-  title: z.string().openapi({
-    description: '通知タイトル',
-    example: '新しいタスクが割り当てられました'
-  }),
-  message: z.string().openapi({
-    description: '通知メッセージ',
-    example: 'フロントエンド実装のタスクが割り当てられました'
-  }),
-  is_read: z.boolean().openapi({
-    description: '既読状態',
-    example: false
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const notificationResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '通知ID',
+      example: 1,
+    }),
+    user_id: z.number().nullable().openapi({
+      description: '対象ユーザーID',
+      example: 1,
+    }),
+    title: z.string().openapi({
+      description: '通知タイトル',
+      example: '新しいタスクが割り当てられました',
+    }),
+    message: z.string().openapi({
+      description: '通知メッセージ',
+      example: 'フロントエンド実装のタスクが割り当てられました',
+    }),
+    is_read: z.boolean().openapi({
+      description: '既読状態',
+      example: false,
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('NotificationResponse');
+  .openapi('NotificationResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 通知一覧取得ルート
 const getNotificationsRoute = createRoute({
@@ -86,12 +92,12 @@ const getNotificationsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            notifications: z.array(notificationResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            notifications: z.array(notificationResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // ユーザーIDによる通知取得ルート
@@ -105,9 +111,9 @@ const getNotificationsByUserIdRoute = createRoute({
     params: z.object({
       userId: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -115,20 +121,20 @@ const getNotificationsByUserIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            notifications: z.array(notificationResponseSchema)
-          })
-        }
-      }
+            notifications: z.array(notificationResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 単一の通知取得ルート
@@ -142,9 +148,9 @@ const getNotificationRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '通知ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -152,20 +158,20 @@ const getNotificationRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            notification: notificationResponseSchema
-          })
-        }
-      }
+            notification: notificationResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '通知が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 通知作成ルート
@@ -179,10 +185,10 @@ const createNotificationRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: notificationSchema
-        }
-      }
-    }
+          schema: notificationSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -190,20 +196,20 @@ const createNotificationRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            notification: notificationResponseSchema
-          })
-        }
-      }
+            notification: notificationResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 通知更新ルート
@@ -217,16 +223,16 @@ const updateNotificationRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '通知ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: notificationSchema
-        }
-      }
-    }
+          schema: notificationSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -234,28 +240,28 @@ const updateNotificationRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            notification: notificationResponseSchema
-          })
-        }
-      }
+            notification: notificationResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '通知が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 通知削除ルート
@@ -269,9 +275,9 @@ const deleteNotificationRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '通知ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -281,26 +287,29 @@ const deleteNotificationRoute = createRoute({
           schema: z.object({
             message: z.string().openapi({
               description: '成功メッセージ',
-              example: 'Notification deleted successfully'
-            })
-          })
-        }
-      }
+              example: 'Notification deleted successfully',
+            }),
+          }),
+        },
+      },
     },
     404: {
       description: '通知が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装
 notificationRoutes.openapi(getNotificationsRoute, getNotifications);
-notificationRoutes.openapi(getNotificationsByUserIdRoute, getNotificationsByUserId);
+notificationRoutes.openapi(
+  getNotificationsByUserIdRoute,
+  getNotificationsByUserId
+);
 notificationRoutes.openapi(getNotificationRoute, getNotificationById);
 notificationRoutes.openapi(createNotificationRoute, createNotification);
 notificationRoutes.openapi(updateNotificationRoute, updateNotification);

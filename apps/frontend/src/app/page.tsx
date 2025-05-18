@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import UserLayout from "@/features/user/layout/UserLayout";
-import Hero from "@/features/user/home/components/Hero";
-import SalePromotion from "@/features/user/home/components/SalePromotion";
-import FeaturedProducts from "@/features/user/home/components/FeaturedProducts";
-import Categories from "@/features/user/home/components/Categories";
-import Link from "next/link";
+import Categories from '@/features/user/home/components/Categories';
+import FeaturedProducts from '@/features/user/home/components/FeaturedProducts';
+import Hero from '@/features/user/home/components/Hero';
+import SalePromotion from '@/features/user/home/components/SalePromotion';
+import UserLayout from '@/features/user/layout/UserLayout';
+import Link from 'next/link';
 
 export default function Home() {
   return (

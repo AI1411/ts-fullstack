@@ -1,10 +1,19 @@
 {
   "name": "ts-fullstack",
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --apply .",
+    "format": "biome format .",
+    "format:fix": "biome format --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --apply ."
+  },
   "dependencies": {
     "@hono/zod-openapi": "^0.19.6"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
   }
 }

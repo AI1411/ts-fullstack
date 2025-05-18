@@ -1,45 +1,46 @@
-'use client'
+'use client';
 
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
-import {taskService} from "../services";
-import {userService} from "@/features/admin/users/services";
-import {teamService} from "@/features/admin/teams/services";
-
+import { teamService } from '@/features/admin/teams/services';
+import { userService } from '@/features/admin/users/services';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { taskService } from '../services';
 
 const TaskForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    user_id: "",
-    team_id: "",
-    status: "PENDING",
-    due_date: ""
+    title: '',
+    description: '',
+    user_id: '',
+    team_id: '',
+    status: 'PENDING',
+    due_date: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ユーザー一覧を取得
-  const {data: users} = useQuery({
+  const { data: users } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getUsers
+    queryFn: userService.getUsers,
   });
 
   // チーム一覧を取得
-  const {data: teams} = useQuery({
+  const { data: teams } = useQuery({
     queryKey: ['teams'],
-    queryFn: teamService.getTeams
+    queryFn: teamService.getTeams,
   });
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const {name, value} = e.target;
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -53,22 +54,22 @@ const TaskForm = () => {
       // user_idとteam_idを数値に変換
       const taskData = {
         ...formData,
-        user_id: formData.user_id ? parseInt(formData.user_id) : null,
-        team_id: formData.team_id ? parseInt(formData.team_id) : null
+        user_id: formData.user_id ? Number.parseInt(formData.user_id) : null,
+        team_id: formData.team_id ? Number.parseInt(formData.team_id) : null,
       };
 
       await taskService.createTask(taskData);
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        title: "",
-        description: "",
-        user_id: "",
-        team_id: "",
-        status: "PENDING",
-        due_date: ""
+        title: '',
+        description: '',
+        user_id: '',
+        team_id: '',
+        status: 'PENDING',
+        due_date: '',
       });
-      await queryClient.invalidateQueries({queryKey: ['tasks']});
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
     } catch (err) {
       setError('タスクの追加に失敗しました');
       console.error(err);
@@ -89,7 +90,10 @@ const TaskForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             タイトル
           </label>
           <input
@@ -104,7 +108,10 @@ const TaskForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             説明
           </label>
           <textarea
@@ -118,7 +125,10 @@ const TaskForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="user_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             担当ユーザー
           </label>
           <select
@@ -129,7 +139,7 @@ const TaskForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">担当者なし</option>
-            {users?.map(user => (
+            {users?.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name} ({user.email})
               </option>
@@ -138,7 +148,10 @@ const TaskForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="team_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="team_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             チーム
           </label>
           <select
@@ -149,7 +162,7 @@ const TaskForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">チームなし</option>
-            {teams?.map(team => (
+            {teams?.map((team) => (
               <option key={team.id} value={team.id}>
                 {team.name}
               </option>
@@ -158,7 +171,10 @@ const TaskForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="due_date"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             期限日
           </label>
           <input
@@ -172,7 +188,10 @@ const TaskForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ステータス
           </label>
           <select

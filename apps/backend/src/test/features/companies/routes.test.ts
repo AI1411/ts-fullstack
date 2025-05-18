@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import companyRoutes from '../../../features/companies/routes';
 import * as controllers from '../../../features/companies/controllers';
+import companyRoutes from '../../../features/companies/routes';
 
 // Mock the controllers
 vi.mock('../../../features/companies/controllers', () => ({
@@ -9,7 +9,7 @@ vi.mock('../../../features/companies/controllers', () => ({
   getCompanyById: vi.fn().mockImplementation(() => ({ status: 200 })),
   createCompany: vi.fn().mockImplementation(() => ({ status: 201 })),
   updateCompany: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteCompany: vi.fn().mockImplementation(() => ({ status: 200 }))
+  deleteCompany: vi.fn().mockImplementation(() => ({ status: 200 })),
 }));
 
 describe('Company Routes', () => {
@@ -23,7 +23,7 @@ describe('Company Routes', () => {
       vi.mocked(controllers.getCompanies).mockResolvedValueOnce(mockResponse);
 
       const res = await companyRoutes.request('/companies', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -40,7 +40,7 @@ describe('Company Routes', () => {
       vi.mocked(controllers.getCompanyById).mockResolvedValueOnce(mockResponse);
 
       const res = await companyRoutes.request('/companies/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -59,7 +59,7 @@ describe('Company Routes', () => {
       const res = await companyRoutes.request('/companies', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: '新しい会社',
@@ -67,8 +67,8 @@ describe('Company Routes', () => {
           address: '東京都渋谷区',
           phone: '03-1234-5678',
           email: 'new@example.com',
-          website: 'https://example.com'
-        })
+          website: 'https://example.com',
+        }),
       });
 
       // Set the status code manually for testing
@@ -87,7 +87,7 @@ describe('Company Routes', () => {
       const res = await companyRoutes.request('/companies/1', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: '更新された会社',
@@ -95,8 +95,8 @@ describe('Company Routes', () => {
           address: '更新された住所',
           phone: '更新された電話番号',
           email: 'updated@example.com',
-          website: 'https://updated-example.com'
-        })
+          website: 'https://updated-example.com',
+        }),
       });
 
       // Set the status code manually for testing
@@ -113,7 +113,7 @@ describe('Company Routes', () => {
       vi.mocked(controllers.deleteCompany).mockResolvedValueOnce(mockResponse);
 
       const res = await companyRoutes.request('/companies/1', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Set the status code manually for testing

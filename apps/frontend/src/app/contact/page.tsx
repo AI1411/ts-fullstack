@@ -1,7 +1,8 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
 import UserLayout from '@/features/user/layout/UserLayout';
+import type React from 'react';
+import { useState } from 'react';
 
 interface FormData {
   name: string;
@@ -15,7 +16,7 @@ export default function ContactPage() {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -23,12 +24,14 @@ export default function ContactPage() {
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -58,11 +61,15 @@ export default function ContactPage() {
         name: '',
         email: '',
         subject: '',
-        message: ''
+        message: '',
       });
-      setSuccess('お問い合わせを送信しました。担当者からの返信をお待ちください。');
+      setSuccess(
+        'お問い合わせを送信しました。担当者からの返信をお待ちください。'
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'お問い合わせの送信に失敗しました');
+      setError(
+        err instanceof Error ? err.message : 'お問い合わせの送信に失敗しました'
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -97,7 +104,10 @@ export default function ContactPage() {
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   お名前 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -112,7 +122,10 @@ export default function ContactPage() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   メールアドレス <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -127,7 +140,10 @@ export default function ContactPage() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   件名 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -142,7 +158,10 @@ export default function ContactPage() {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   メッセージ <span className="text-red-500">*</span>
                 </label>
                 <textarea

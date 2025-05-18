@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { SUB_TASK_ROUTES } from '@/features/admin/sub-tasks/routes';
+import { describe, expect, it } from 'vitest';
 
 describe('Sub-Task Routes', () => {
   it('should define the list route', () => {
@@ -18,13 +18,17 @@ describe('Sub-Task Routes', () => {
 
   it('should define the edit route with a parameter', () => {
     const subTaskId = 456;
-    expect(SUB_TASK_ROUTES.edit(subTaskId)).toBe(`/sub-tasks/${subTaskId}/edit`);
+    expect(SUB_TASK_ROUTES.edit(subTaskId)).toBe(
+      `/sub-tasks/${subTaskId}/edit`
+    );
     expect(SUB_TASK_ROUTES.edit('def')).toBe('/sub-tasks/def/edit');
   });
 
   it('should define the taskSubTasks route with a parameter', () => {
     const taskId = 789;
-    expect(SUB_TASK_ROUTES.taskSubTasks(taskId)).toBe(`/tasks/${taskId}/sub-tasks`);
+    expect(SUB_TASK_ROUTES.taskSubTasks(taskId)).toBe(
+      `/tasks/${taskId}/sub-tasks`
+    );
     expect(SUB_TASK_ROUTES.taskSubTasks('ghi')).toBe('/tasks/ghi/sub-tasks');
   });
 });

@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TeamList from '@/features/admin/teams/components/TeamList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Team } from '@/features/admin/teams/controllers';
 import { teamService } from '@/features/admin/teams/services';
-import { Team } from '@/features/admin/teams/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/teams/services', () => ({
   teamService: {
     getTeams: vi.fn(),
     updateTeam: vi.fn(),
-    deleteTeam: vi.fn()
-  }
+    deleteTeam: vi.fn(),
+  },
 }));
 
 // Mock window.confirm
@@ -31,14 +31,14 @@ describe('TeamList Component', () => {
       id: 1,
       name: 'Team 1',
       description: 'Description 1',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     },
     {
       id: 2,
       name: 'Team 2',
       description: null,
-      created_at: '2023-01-02T00:00:00Z'
-    }
+      created_at: '2023-01-02T00:00:00Z',
+    },
   ];
 
   beforeEach(() => {
@@ -69,7 +69,9 @@ describe('TeamList Component', () => {
   });
 
   it('should render error state', async () => {
-    vi.mocked(teamService.getTeams).mockRejectedValue(new Error('Failed to fetch'));
+    vi.mocked(teamService.getTeams).mockRejectedValue(
+      new Error('Failed to fetch')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -154,7 +156,9 @@ describe('TeamList Component', () => {
 
     // Change input values
     fireEvent.change(nameInput, { target: { value: 'Updated Team 1' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Updated Description 1' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Updated Description 1' },
+    });
 
     // Check if input values are updated
     expect(nameInput).toHaveValue('Updated Team 1');
@@ -201,7 +205,7 @@ describe('TeamList Component', () => {
       id: 1,
       name: 'Updated Team 1',
       description: 'Updated Description 1',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -222,7 +226,9 @@ describe('TeamList Component', () => {
     const nameInput = screen.getByDisplayValue('Team 1');
     const descriptionInput = screen.getByDisplayValue('Description 1');
     fireEvent.change(nameInput, { target: { value: 'Updated Team 1' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Updated Description 1' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Updated Description 1' },
+    });
 
     // Click save button
     const saveButton = screen.getByText('保存');
@@ -232,19 +238,23 @@ describe('TeamList Component', () => {
     await waitFor(() => {
       expect(teamService.updateTeam).toHaveBeenCalledWith(1, {
         name: 'Updated Team 1',
-        description: 'Updated Description 1'
+        description: 'Updated Description 1',
       });
     });
 
     // Check if invalidateQueries was called
     await waitFor(() => {
-      expect(queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['teams'] });
+      expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['teams'],
+      });
     });
   });
 
   it('should handle update team error', async () => {
     vi.mocked(teamService.getTeams).mockResolvedValue(mockTeams);
-    vi.mocked(teamService.updateTeam).mockRejectedValue(new Error('Update failed'));
+    vi.mocked(teamService.updateTeam).mockRejectedValue(
+      new Error('Update failed')
+    );
 
     // Mock console.error to prevent test output pollution
     const originalConsoleError = console.error;
@@ -270,7 +280,10 @@ describe('TeamList Component', () => {
 
     // Check if console.error was called
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith('Error updating team:', expect.any(Error));
+      expect(console.error).toHaveBeenCalledWith(
+        'Error updating team:',
+        expect.any(Error)
+      );
     });
 
     // Restore console.error
@@ -297,7 +310,9 @@ describe('TeamList Component', () => {
     fireEvent.click(deleteButtons[0]);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('このチームを削除してもよろしいですか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      'このチームを削除してもよろしいですか？'
+    );
 
     // Check if deleteTeam was called with correct id
     await waitFor(() => {
@@ -306,7 +321,9 @@ describe('TeamList Component', () => {
 
     // Check if invalidateQueries was called
     await waitFor(() => {
-      expect(queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['teams'] });
+      expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['teams'],
+      });
     });
   });
 
@@ -329,7 +346,9 @@ describe('TeamList Component', () => {
     fireEvent.click(deleteButtons[0]);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('このチームを削除してもよろしいですか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      'このチームを削除してもよろしいですか？'
+    );
 
     // Check if deleteTeam was not called
     expect(teamService.deleteTeam).not.toHaveBeenCalled();
@@ -337,7 +356,9 @@ describe('TeamList Component', () => {
 
   it('should handle delete team error', async () => {
     vi.mocked(teamService.getTeams).mockResolvedValue(mockTeams);
-    vi.mocked(teamService.deleteTeam).mockRejectedValue(new Error('Delete failed'));
+    vi.mocked(teamService.deleteTeam).mockRejectedValue(
+      new Error('Delete failed')
+    );
     vi.mocked(window.confirm).mockReturnValue(true);
 
     // Mock console.error to prevent test output pollution
@@ -360,7 +381,10 @@ describe('TeamList Component', () => {
 
     // Check if console.error was called
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith('Error deleting team:', expect.any(Error));
+      expect(console.error).toHaveBeenCalledWith(
+        'Error deleting team:',
+        expect.any(Error)
+      );
     });
 
     // Restore console.error

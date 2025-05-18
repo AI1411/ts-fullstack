@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React from 'react';
+import type React from 'react';
 import { RiEyeLine, RiFileDownloadLine } from 'react-icons/ri';
 
 // Mock orders data for demonstration
@@ -31,28 +31,48 @@ const mockOrders = [
 const AccountOrders: React.FC = () => {
   return (
     <div className="p-6">
-      <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">注文履歴</h2>
-      
+      <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
+        注文履歴
+      </h2>
+
       <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 注文番号
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 注文日
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 ステータス
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 商品数
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 合計
               </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <th
+                scope="col"
+                className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+              >
                 アクション
               </th>
             </tr>
@@ -92,10 +112,12 @@ const AccountOrders: React.FC = () => {
           </tbody>
         </table>
       </div>
-      
+
       {mockOrders.length === 0 && (
         <div className="mt-4 rounded-lg bg-gray-50 p-6 text-center dark:bg-gray-800">
-          <p className="text-gray-500 dark:text-gray-400">注文履歴がありません。</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            注文履歴がありません。
+          </p>
         </div>
       )}
     </div>

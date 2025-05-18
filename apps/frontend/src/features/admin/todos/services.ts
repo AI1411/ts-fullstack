@@ -1,12 +1,12 @@
 // Todo services
 import {
+  type CreateTodoInput,
+  type Todo,
   createTodo as createTodoController,
-  CreateTodoInput,
   deleteTodo as deleteTodoController,
   getTodoById as getTodoByIdController,
   getTodos as getTodosController,
-  Todo,
-  updateTodo as updateTodoController
+  updateTodo as updateTodoController,
 } from './controllers';
 
 // Todo service
@@ -27,7 +27,10 @@ export const todoService = {
   },
 
   // Update a todo
-  updateTodo: async (id: number, todoData: Partial<CreateTodoInput>): Promise<Todo> => {
+  updateTodo: async (
+    id: number,
+    todoData: Partial<CreateTodoInput>
+  ): Promise<Todo> => {
     return updateTodoController(id, todoData);
   },
 
@@ -39,18 +42,18 @@ export const todoService = {
   // Get completed todos
   getCompletedTodos: async (): Promise<Todo[]> => {
     const todos = await getTodosController();
-    return todos.filter(todo => todo.status === 'COMPLETED');
+    return todos.filter((todo) => todo.status === 'COMPLETED');
   },
 
   // Get pending todos
   getPendingTodos: async (): Promise<Todo[]> => {
     const todos = await getTodosController();
-    return todos.filter(todo => todo.status === 'PENDING');
+    return todos.filter((todo) => todo.status === 'PENDING');
   },
 
   // Get in-progress todos
   getInProgressTodos: async (): Promise<Todo[]> => {
     const todos = await getTodosController();
-    return todos.filter(todo => todo.status === 'IN_PROGRESS');
-  }
+    return todos.filter((todo) => todo.status === 'IN_PROGRESS');
+  },
 };

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { taskService } from '@/features/admin/tasks/services';
 import * as controllers from '@/features/admin/tasks/controllers';
-import { Task, CreateTaskInput } from '@/features/admin/tasks/controllers';
+import type { CreateTaskInput, Task } from '@/features/admin/tasks/controllers';
+import { taskService } from '@/features/admin/tasks/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/tasks/controllers', () => ({
@@ -12,7 +12,7 @@ vi.mock('@/features/admin/tasks/controllers', () => ({
   deleteTask: vi.fn(),
   // Re-export types
   Task: {},
-  CreateTaskInput: {}
+  CreateTaskInput: {},
 }));
 
 describe('Task Service', () => {
@@ -30,8 +30,8 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should call the controller method and return tasks', async () => {
@@ -39,7 +39,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.getTasks).mockResolvedValue(mockTasks);
 
       const result = await taskService.getTasks();
-      
+
       expect(controllers.getTasks).toHaveBeenCalled();
       expect(result).toEqual(mockTasks);
     });
@@ -52,7 +52,7 @@ describe('Task Service', () => {
       status: 'PENDING',
       user_id: 1,
       team_id: 1,
-      due_date: '2023-12-31'
+      due_date: '2023-12-31',
     };
     const mockTask: Task = {
       id: 1,
@@ -62,7 +62,7 @@ describe('Task Service', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -70,7 +70,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.createTask).mockResolvedValue(mockTask);
 
       const result = await taskService.createTask(taskData);
-      
+
       expect(controllers.createTask).toHaveBeenCalledWith(taskData);
       expect(result).toEqual(mockTask);
     });
@@ -86,7 +86,7 @@ describe('Task Service', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -94,7 +94,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.getTaskById).mockResolvedValue(mockTask);
 
       const result = await taskService.getTaskById(taskId);
-      
+
       expect(controllers.getTaskById).toHaveBeenCalledWith(taskId);
       expect(result).toEqual(mockTask);
     });
@@ -104,7 +104,7 @@ describe('Task Service', () => {
     const taskId = 1;
     const taskData: Partial<CreateTaskInput> = {
       title: 'Updated Task',
-      status: 'IN_PROGRESS'
+      status: 'IN_PROGRESS',
     };
     const mockTask: Task = {
       id: 1,
@@ -114,7 +114,7 @@ describe('Task Service', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -122,7 +122,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.updateTask).mockResolvedValue(mockTask);
 
       const result = await taskService.updateTask(taskId, taskData);
-      
+
       expect(controllers.updateTask).toHaveBeenCalledWith(taskId, taskData);
       expect(result).toEqual(mockTask);
     });
@@ -136,7 +136,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.deleteTask).mockResolvedValue(undefined);
 
       await taskService.deleteTask(taskId);
-      
+
       expect(controllers.deleteTask).toHaveBeenCalledWith(taskId);
     });
   });
@@ -151,7 +151,7 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -161,8 +161,8 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should filter completed tasks', async () => {
@@ -170,7 +170,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.getTasks).mockResolvedValue(mockTasks);
 
       const result = await taskService.getCompletedTasks();
-      
+
       expect(controllers.getTasks).toHaveBeenCalled();
       expect(result).toHaveLength(1);
       expect(result[0].status).toBe('COMPLETED');
@@ -187,7 +187,7 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -197,8 +197,8 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should filter pending tasks', async () => {
@@ -206,7 +206,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.getTasks).mockResolvedValue(mockTasks);
 
       const result = await taskService.getPendingTasks();
-      
+
       expect(controllers.getTasks).toHaveBeenCalled();
       expect(result).toHaveLength(1);
       expect(result[0].status).toBe('PENDING');
@@ -223,7 +223,7 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -233,8 +233,8 @@ describe('Task Service', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should filter in-progress tasks', async () => {
@@ -242,7 +242,7 @@ describe('Task Service', () => {
       vi.mocked(controllers.getTasks).mockResolvedValue(mockTasks);
 
       const result = await taskService.getInProgressTasks();
-      
+
       expect(controllers.getTasks).toHaveBeenCalled();
       expect(result).toHaveLength(1);
       expect(result[0].status).toBe('IN_PROGRESS');

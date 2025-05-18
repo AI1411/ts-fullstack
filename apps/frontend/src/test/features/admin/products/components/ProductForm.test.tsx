@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProductForm from '@/features/admin/products/components/ProductForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Product } from '@/features/admin/products/controllers';
 import { productService } from '@/features/admin/products/services';
-import { Product } from '@/features/admin/products/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the product service
 vi.mock('@/features/admin/products/services', () => ({
   productService: {
-    createProduct: vi.fn()
-  }
+    createProduct: vi.fn(),
+  },
 }));
 
 describe('ProductForm Component', () => {
@@ -38,13 +38,17 @@ describe('ProductForm Component', () => {
     expect(typeof ProductForm).toBe('function');
 
     // Check if form elements are rendered
-    expect(screen.getByRole('heading', { name: '商品を追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: '商品を追加' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('商品名')).toBeInTheDocument();
     expect(screen.getByLabelText('説明')).toBeInTheDocument();
     expect(screen.getByLabelText('価格')).toBeInTheDocument();
     expect(screen.getByLabelText('在庫数')).toBeInTheDocument();
     expect(screen.getByLabelText('画像URL')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '商品を追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '商品を追加' })
+    ).toBeInTheDocument();
   });
 
   it('should update form values when inputs change', () => {
@@ -63,10 +67,14 @@ describe('ProductForm Component', () => {
 
     // Change input values
     fireEvent.change(nameInput, { target: { value: 'Test Product' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(priceInput, { target: { value: '1000' } });
     fireEvent.change(stockInput, { target: { value: '10' } });
-    fireEvent.change(imageUrlInput, { target: { value: 'https://example.com/image.jpg' } });
+    fireEvent.change(imageUrlInput, {
+      target: { value: 'https://example.com/image.jpg' },
+    });
 
     // Check if input values are updated
     expect(nameInput).toHaveValue('Test Product');
@@ -86,7 +94,7 @@ describe('ProductForm Component', () => {
       stock: 10,
       image_url: 'https://example.com/image.jpg',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     vi.mocked(productService.createProduct).mockResolvedValue(createdProduct);
@@ -107,10 +115,14 @@ describe('ProductForm Component', () => {
 
     // Fill the form
     fireEvent.change(nameInput, { target: { value: 'Test Product' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(priceInput, { target: { value: '1000' } });
     fireEvent.change(stockInput, { target: { value: '10' } });
-    fireEvent.change(imageUrlInput, { target: { value: 'https://example.com/image.jpg' } });
+    fireEvent.change(imageUrlInput, {
+      target: { value: 'https://example.com/image.jpg' },
+    });
 
     // Submit the form
     fireEvent.click(submitButton);
@@ -122,7 +134,7 @@ describe('ProductForm Component', () => {
         description: 'Test Description',
         price: 1000,
         stock: 10,
-        image_url: 'https://example.com/image.jpg'
+        image_url: 'https://example.com/image.jpg',
       });
     });
 
@@ -138,10 +150,14 @@ describe('ProductForm Component', () => {
 
   it('should show error message when product creation fails', async () => {
     // Mock failed product creation
-    vi.mocked(productService.createProduct).mockRejectedValue(new Error('Failed to create product'));
+    vi.mocked(productService.createProduct).mockRejectedValue(
+      new Error('Failed to create product')
+    );
 
     // Mock console.error to prevent test output pollution
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -180,7 +196,8 @@ describe('ProductForm Component', () => {
   it('should show submitting state during form submission', async () => {
     // Mock delayed product creation to show loading state
     vi.mocked(productService.createProduct).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({} as Product), 100))
+      () =>
+        new Promise((resolve) => setTimeout(() => resolve({} as Product), 100))
     );
 
     render(
@@ -209,7 +226,9 @@ describe('ProductForm Component', () => {
 
     // Wait for submission to complete
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: '商品を追加' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: '商品を追加' })
+      ).toBeInTheDocument();
       expect(submitButton).not.toBeDisabled();
     });
   });
@@ -260,7 +279,7 @@ describe('ProductForm Component', () => {
       expect(productService.createProduct).toHaveBeenCalledWith(
         expect.objectContaining({
           price: 1000.5, // Should be converted to a float
-          stock: 10      // Should be converted to an integer
+          stock: 10, // Should be converted to an integer
         })
       );
     });

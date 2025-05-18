@@ -1,5 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { contactSchema, contactResponseSchema, updateContactSchema } from '../../../features/contacts/schemas';
+import { describe, expect, it } from 'vitest';
+import {
+  contactResponseSchema,
+  contactSchema,
+  updateContactSchema,
+} from '../../../features/contacts/schemas';
 
 describe('Contact Schemas', () => {
   describe('contactSchema', () => {
@@ -9,9 +13,9 @@ describe('Contact Schemas', () => {
         email: 'test@example.com',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(validContact);
       expect(result.success).toBe(true);
     });
@@ -21,9 +25,9 @@ describe('Contact Schemas', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(validContact);
       expect(result.success).toBe(true);
     });
@@ -33,9 +37,9 @@ describe('Contact Schemas', () => {
         email: 'test@example.com',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(invalidContact);
       expect(result.success).toBe(false);
     });
@@ -46,9 +50,9 @@ describe('Contact Schemas', () => {
         email: 'test@example.com',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(invalidContact);
       expect(result.success).toBe(false);
     });
@@ -59,9 +63,9 @@ describe('Contact Schemas', () => {
         email: 'invalid-email',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(invalidContact);
       expect(result.success).toBe(false);
     });
@@ -71,9 +75,9 @@ describe('Contact Schemas', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         phone: '03-1234-5678',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
-      
+
       const result = contactSchema.safeParse(invalidContact);
       expect(result.success).toBe(false);
     });
@@ -83,9 +87,9 @@ describe('Contact Schemas', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         phone: '03-1234-5678',
-        subject: 'お問い合わせテスト'
+        subject: 'お問い合わせテスト',
       };
-      
+
       const result = contactSchema.safeParse(invalidContact);
       expect(result.success).toBe(false);
     });
@@ -102,9 +106,9 @@ describe('Contact Schemas', () => {
         message: 'これはテスト用のお問い合わせメッセージです。',
         status: 'PENDING',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       const result = contactResponseSchema.safeParse(validResponse);
       expect(result.success).toBe(true);
     });
@@ -119,9 +123,9 @@ describe('Contact Schemas', () => {
         message: 'これはテスト用のお問い合わせメッセージです。',
         status: 'PENDING',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       const result = contactResponseSchema.safeParse(validResponse);
       expect(result.success).toBe(true);
     });
@@ -130,10 +134,10 @@ describe('Contact Schemas', () => {
       const invalidResponse = {
         id: 1,
         name: 'テストユーザー',
-        email: 'test@example.com'
+        email: 'test@example.com',
         // Missing other required fields
       };
-      
+
       const result = contactResponseSchema.safeParse(invalidResponse);
       expect(result.success).toBe(false);
     });
@@ -148,9 +152,9 @@ describe('Contact Schemas', () => {
         message: 'これはテスト用のお問い合わせメッセージです。',
         status: 'PENDING',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       const result = contactResponseSchema.safeParse(invalidResponse);
       expect(result.success).toBe(false);
     });
@@ -159,9 +163,9 @@ describe('Contact Schemas', () => {
   describe('updateContactSchema', () => {
     it('should validate a valid status update', () => {
       const validUpdate = {
-        status: 'RESOLVED'
+        status: 'RESOLVED',
       };
-      
+
       const result = updateContactSchema.safeParse(validUpdate);
       expect(result.success).toBe(true);
     });
@@ -170,16 +174,16 @@ describe('Contact Schemas', () => {
       const invalidUpdate = {
         // Missing status field
       };
-      
+
       const result = updateContactSchema.safeParse(invalidUpdate);
       expect(result.success).toBe(false);
     });
 
     it('should reject an update with invalid status type', () => {
       const invalidUpdate = {
-        status: 123 // Should be a string
+        status: 123, // Should be a string
       };
-      
+
       const result = updateContactSchema.safeParse(invalidUpdate);
       expect(result.success).toBe(false);
     });

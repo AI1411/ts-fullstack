@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { INVOICE_ROUTES } from '@/features/admin/invoices/routes';
+import { describe, expect, it } from 'vitest';
 
 describe('Invoice Routes', () => {
   it('should have the correct list route', () => {

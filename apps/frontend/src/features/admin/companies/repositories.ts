@@ -1,6 +1,6 @@
 // Company repositories
-import {client} from '@/common/utils/client';
-import {CreateCompanyInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateCompanyInput } from './controllers';
 
 // Company repository
 export const companyRepository = {
@@ -19,22 +19,25 @@ export const companyRepository = {
   // Get a company by ID
   getCompanyById: async (id: number) => {
     return client.companies[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a company
-  updateCompany: async (id: number, companyData: Partial<CreateCompanyInput>) => {
+  updateCompany: async (
+    id: number,
+    companyData: Partial<CreateCompanyInput>
+  ) => {
     return client.companies[':id'].$put({
-      param: {id: id.toString()},
-      json: companyData
+      param: { id: id.toString() },
+      json: companyData,
     });
   },
 
   // Delete a company
   deleteCompany: async (id: number) => {
     return client.companies[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

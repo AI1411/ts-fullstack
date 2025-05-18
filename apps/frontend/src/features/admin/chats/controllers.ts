@@ -58,7 +58,9 @@ export const getUserChats = async (userId: number): Promise<ChatWithUser[]> => {
   try {
     const response = await chatRepository.getUserChats(userId);
     if (!response.ok) {
-      throw new Error(`Failed to fetch user chats: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch user chats: ${response.status} ${response.statusText}`
+      );
     }
     try {
       // Check if response is text/html instead of application/json
@@ -70,7 +72,10 @@ export const getUserChats = async (userId: number): Promise<ChatWithUser[]> => {
 
       const text = await response.text();
       // Check if the response starts with HTML doctype or tags
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+      if (
+        text.trim().startsWith('<!DOCTYPE') ||
+        text.trim().startsWith('<html')
+      ) {
         console.error('Received HTML response instead of JSON');
         throw new Error('Invalid JSON response from server');
       }
@@ -84,7 +89,10 @@ export const getUserChats = async (userId: number): Promise<ChatWithUser[]> => {
   } catch (error) {
     console.error(`Error fetching chats for user ${userId}:`, error);
     // If the error is from JSON parsing, rethrow it
-    if (error instanceof Error && error.message === 'Invalid JSON response from server') {
+    if (
+      error instanceof Error &&
+      error.message === 'Invalid JSON response from server'
+    ) {
       throw error;
     }
     // Otherwise, throw a new error
@@ -124,7 +132,9 @@ export const getChatById = async (id: number): Promise<Chat> => {
 };
 
 // Get messages for a chat
-export const getChatMessages = async (chatId: number): Promise<ChatMessageWithSender[]> => {
+export const getChatMessages = async (
+  chatId: number
+): Promise<ChatMessageWithSender[]> => {
   try {
     const response = await chatRepository.getChatMessages(chatId);
     if (!response.ok) {
@@ -139,12 +149,15 @@ export const getChatMessages = async (chatId: number): Promise<ChatMessageWithSe
 };
 
 // Create a new chat message
-export const createChatMessage = async (chatId: number, messageData: CreateChatMessageInput): Promise<ChatMessage> => {
+export const createChatMessage = async (
+  chatId: number,
+  messageData: CreateChatMessageInput
+): Promise<ChatMessage> => {
   try {
     // Ensure chat_id is set
     const data = {
       ...messageData,
-      chat_id: chatId
+      chat_id: chatId,
     };
 
     const response = await chatRepository.createChatMessage(chatId, data);
@@ -161,7 +174,10 @@ export const createChatMessage = async (chatId: number, messageData: CreateChatM
 };
 
 // Mark messages as read
-export const markMessagesAsRead = async (chatId: number, userId: number): Promise<{ success: boolean; count: number; messages: ChatMessage[] }> => {
+export const markMessagesAsRead = async (
+  chatId: number,
+  userId: number
+): Promise<{ success: boolean; count: number; messages: ChatMessage[] }> => {
   try {
     const response = await chatRepository.markMessagesAsRead(chatId, userId);
     if (!response.ok) {
@@ -175,7 +191,9 @@ export const markMessagesAsRead = async (chatId: number, userId: number): Promis
 };
 
 // Get unread message count for a user
-export const getUnreadMessageCount = async (userId: number): Promise<UnreadMessageCount> => {
+export const getUnreadMessageCount = async (
+  userId: number
+): Promise<UnreadMessageCount> => {
   try {
     const response = await chatRepository.getUnreadMessageCount(userId);
     if (!response.ok) {
@@ -183,7 +201,10 @@ export const getUnreadMessageCount = async (userId: number): Promise<UnreadMessa
     }
     return await response.json();
   } catch (error) {
-    console.error(`Error fetching unread message count for user ${userId}:`, error);
+    console.error(
+      `Error fetching unread message count for user ${userId}:`,
+      error
+    );
     throw error;
   }
 };

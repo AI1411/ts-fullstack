@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { CHAT_ROUTES } from '@/features/admin/chats/routes';
+import { describe, expect, it } from 'vitest';
 
 describe('Chat Routes', () => {
   it('should define the list route', () => {
@@ -31,13 +31,21 @@ describe('Chat Routes', () => {
   it('should define the markAsRead route with parameters', () => {
     const chatId = 101;
     const userId = 202;
-    expect(CHAT_ROUTES.markAsRead(chatId, userId)).toBe(`/chats/${chatId}/users/${userId}/read`);
-    expect(CHAT_ROUTES.markAsRead('jkl', 'mno')).toBe('/chats/jkl/users/mno/read');
+    expect(CHAT_ROUTES.markAsRead(chatId, userId)).toBe(
+      `/chats/${chatId}/users/${userId}/read`
+    );
+    expect(CHAT_ROUTES.markAsRead('jkl', 'mno')).toBe(
+      '/chats/jkl/users/mno/read'
+    );
   });
 
   it('should define the unreadMessages route with a parameter', () => {
     const userId = 303;
-    expect(CHAT_ROUTES.unreadMessages(userId)).toBe(`/users/${userId}/unread-messages`);
-    expect(CHAT_ROUTES.unreadMessages('pqr')).toBe('/users/pqr/unread-messages');
+    expect(CHAT_ROUTES.unreadMessages(userId)).toBe(
+      `/users/${userId}/unread-messages`
+    );
+    expect(CHAT_ROUTES.unreadMessages('pqr')).toBe(
+      '/users/pqr/unread-messages'
+    );
   });
 });

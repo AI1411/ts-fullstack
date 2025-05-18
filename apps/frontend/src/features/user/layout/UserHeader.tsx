@@ -1,9 +1,18 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { RiShoppingCartLine, RiUser3Line, RiSearchLine, RiMenuLine, RiCloseLine, RiMoonLine, RiSunLine } from 'react-icons/ri';
+import type React from 'react';
+import { useState } from 'react';
+import {
+  RiCloseLine,
+  RiMenuLine,
+  RiMoonLine,
+  RiSearchLine,
+  RiShoppingCartLine,
+  RiSunLine,
+  RiUser3Line,
+} from 'react-icons/ri';
 
 const UserHeader: React.FC = () => {
   const pathname = usePathname();
@@ -40,7 +49,9 @@ const UserHeader: React.FC = () => {
           {/* ロゴ */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">ECサイト</span>
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                ECサイト
+              </span>
             </Link>
           </div>
 
@@ -74,7 +85,11 @@ const UserHeader: React.FC = () => {
               data-testid="dark-mode-button"
               className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             >
-              {darkMode ? <RiSunLine className="h-6 w-6" /> : <RiMoonLine className="h-6 w-6" />}
+              {darkMode ? (
+                <RiSunLine className="h-6 w-6" />
+              ) : (
+                <RiMoonLine className="h-6 w-6" />
+              )}
             </button>
 
             {/* カートボタン */}

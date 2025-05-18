@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getCountries, 
-  createCountry, 
-  getCountryById, 
-  updateCountry, 
+import {
+  type Country,
+  type CreateCountryInput,
+  createCountry,
   deleteCountry,
-  Country,
-  CreateCountryInput
+  getCountries,
+  getCountryById,
+  updateCountry,
 } from '@/features/admin/countries/controllers';
 import { countryRepository } from '@/features/admin/countries/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the repository
 vi.mock('@/features/admin/countries/repositories', () => ({
@@ -17,8 +17,8 @@ vi.mock('@/features/admin/countries/repositories', () => ({
     createCountry: vi.fn(),
     getCountryById: vi.fn(),
     updateCountry: vi.fn(),
-    deleteCountry: vi.fn()
-  }
+    deleteCountry: vi.fn(),
+  },
 }));
 
 describe('Country Controllers', () => {
@@ -28,7 +28,7 @@ describe('Country Controllers', () => {
     code: 'JP',
     flag_url: 'https://example.com/japan.png',
     created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-02T00:00:00Z'
+    updated_at: '2023-01-02T00:00:00Z',
   };
 
   const mockCountries = [mockCountry];
@@ -37,7 +37,7 @@ describe('Country Controllers', () => {
   const createMockResponse = (data: Record<string, unknown>, ok = true) => ({
     ok,
     json: vi.fn().mockResolvedValue(data),
-    text: vi.fn().mockResolvedValue('Error message')
+    text: vi.fn().mockResolvedValue('Error message'),
   });
 
   beforeEach(() => {
@@ -60,10 +60,12 @@ describe('Country Controllers', () => {
       vi.mocked(countryRepository.getCountries).mockResolvedValue({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: 'Internal Server Error',
       } as Response);
 
-      await expect(getCountries()).rejects.toThrowError('Failed to fetch countries');
+      await expect(getCountries()).rejects.toThrowError(
+        'Failed to fetch countries'
+      );
       expect(countryRepository.getCountries).toHaveBeenCalledTimes(1);
     });
   });
@@ -72,12 +74,14 @@ describe('Country Controllers', () => {
     const countryData: CreateCountryInput = {
       name: 'Japan',
       code: 'JP',
-      flag_url: 'https://example.com/japan.png'
+      flag_url: 'https://example.com/japan.png',
     };
 
     it('should call the repository and return the created country', async () => {
       const mockResponse = createMockResponse({ country: mockCountry });
-      vi.mocked(countryRepository.createCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.createCountry).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await createCountry(countryData);
 
@@ -88,7 +92,9 @@ describe('Country Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(countryRepository.createCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.createCountry).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(createCountry(countryData)).rejects.toThrow();
       expect(countryRepository.createCountry).toHaveBeenCalledTimes(1);
@@ -108,7 +114,9 @@ describe('Country Controllers', () => {
   describe('getCountryById', () => {
     it('should call the repository and return the country', async () => {
       const mockResponse = createMockResponse({ country: mockCountry });
-      vi.mocked(countryRepository.getCountryById).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.getCountryById).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await getCountryById(1);
 
@@ -119,7 +127,9 @@ describe('Country Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(countryRepository.getCountryById).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.getCountryById).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(getCountryById(1)).rejects.toThrow('Country not found');
       expect(countryRepository.getCountryById).toHaveBeenCalledTimes(1);
@@ -139,28 +149,38 @@ describe('Country Controllers', () => {
   describe('updateCountry', () => {
     const countryData: Partial<CreateCountryInput> = {
       name: 'Japan Updated',
-      code: 'JP'
+      code: 'JP',
     };
 
     it('should call the repository and return the updated country', async () => {
       const updatedCountry = { ...mockCountry, name: 'Japan Updated' };
       const mockResponse = createMockResponse({ country: updatedCountry });
-      vi.mocked(countryRepository.updateCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.updateCountry).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await updateCountry(1, countryData);
 
       expect(countryRepository.updateCountry).toHaveBeenCalledTimes(1);
-      expect(countryRepository.updateCountry).toHaveBeenCalledWith(1, countryData);
+      expect(countryRepository.updateCountry).toHaveBeenCalledWith(
+        1,
+        countryData
+      );
       expect(result).toEqual(updatedCountry);
     });
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(countryRepository.updateCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.updateCountry).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(updateCountry(1, countryData)).rejects.toThrow();
       expect(countryRepository.updateCountry).toHaveBeenCalledTimes(1);
-      expect(countryRepository.updateCountry).toHaveBeenCalledWith(1, countryData);
+      expect(countryRepository.updateCountry).toHaveBeenCalledWith(
+        1,
+        countryData
+      );
     });
 
     it('should handle repository errors', async () => {
@@ -169,14 +189,19 @@ describe('Country Controllers', () => {
 
       await expect(updateCountry(1, countryData)).rejects.toThrow(error);
       expect(countryRepository.updateCountry).toHaveBeenCalledTimes(1);
-      expect(countryRepository.updateCountry).toHaveBeenCalledWith(1, countryData);
+      expect(countryRepository.updateCountry).toHaveBeenCalledWith(
+        1,
+        countryData
+      );
     });
   });
 
   describe('deleteCountry', () => {
     it('should call the repository', async () => {
       const mockResponse = createMockResponse({});
-      vi.mocked(countryRepository.deleteCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.deleteCountry).mockResolvedValue(
+        mockResponse
+      );
 
       await deleteCountry(1);
 
@@ -186,7 +211,9 @@ describe('Country Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(countryRepository.deleteCountry).mockResolvedValue(mockResponse);
+      vi.mocked(countryRepository.deleteCountry).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(deleteCountry(1)).rejects.toThrow();
       expect(countryRepository.deleteCountry).toHaveBeenCalledTimes(1);

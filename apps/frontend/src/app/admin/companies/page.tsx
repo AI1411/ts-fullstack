@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import CompanyList from "@/features/admin/companies/components/CompanyList";
-import CompanyForm from "@/features/admin/companies/components/CompanyForm";
+import CompanyForm from '@/features/admin/companies/components/CompanyForm';
+import CompanyList from '@/features/admin/companies/components/CompanyList';
 
 export default function CompaniesPage() {
   return (
@@ -12,12 +12,12 @@ export default function CompaniesPage() {
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">会社一覧</h2>
             </div>
-            <CompanyList/>
+            <CompanyList />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <CompanyForm/>
+          <CompanyForm />
         </div>
       </div>
     </div>

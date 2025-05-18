@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import React from 'react';
+import { categories } from '@/features/user/categories/data/categories';
 import UserLayout from '@/features/user/layout/UserLayout';
 import Link from 'next/link';
-import { categories } from '@/features/user/categories/data/categories';
+import React from 'react';
 
 export default function CategoriesPage() {
   return (

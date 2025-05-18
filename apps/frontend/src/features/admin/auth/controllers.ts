@@ -10,7 +10,7 @@ export const login = async (email: string, password: string) => {
     // return response.json();
 
     // Mock implementation
-    return {success: true, user: {email}};
+    return { success: true, user: { email } };
   } catch (error) {
     console.error('Login error:', error);
     throw error;
@@ -18,7 +18,11 @@ export const login = async (email: string, password: string) => {
 };
 
 // Register controller
-export const register = async (name: string, email: string, password: string) => {
+export const register = async (
+  name: string,
+  email: string,
+  password: string
+) => {
   try {
     // This is a placeholder for the actual register API call
     // const response = await client.auth.register.$post({
@@ -27,7 +31,7 @@ export const register = async (name: string, email: string, password: string) =>
     // return response.json();
 
     // Mock implementation
-    return {success: true, user: {name, email}};
+    return { success: true, user: { name, email } };
   } catch (error) {
     console.error('Register error:', error);
     throw error;

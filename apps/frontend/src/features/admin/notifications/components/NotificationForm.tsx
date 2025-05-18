@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
-import {notificationService} from "../services";
-import {userService} from "@/features/admin/users/services";
+import { userService } from '@/features/admin/users/services';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { notificationService } from '../services';
 
 // ユーザー型定義
 type User = {
@@ -15,28 +15,31 @@ type User = {
 const NotificationForm = () => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    title: "",
-    message: "",
-    user_id: "",
-    is_read: false
+    title: '',
+    message: '',
+    user_id: '',
+    is_read: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ユーザー一覧を取得
-  const {data: users} = useQuery({
+  const { data: users } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getUsers
+    queryFn: userService.getUsers,
   });
 
   // フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const {name, value, type} = e.target as HTMLInputElement;
-    setFormData(prev => ({
+    const { name, value, type } = e.target as HTMLInputElement;
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      [name]:
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
   };
 
@@ -50,19 +53,19 @@ const NotificationForm = () => {
       // user_idを数値に変換
       const notificationData = {
         ...formData,
-        user_id: formData.user_id ? parseInt(formData.user_id) : null
+        user_id: formData.user_id ? Number.parseInt(formData.user_id) : null,
       };
 
       await notificationService.createNotification(notificationData);
 
       // 成功したらフォームをリセットしてキャッシュを更新
       setFormData({
-        title: "",
-        message: "",
-        user_id: "",
-        is_read: false
+        title: '',
+        message: '',
+        user_id: '',
+        is_read: false,
       });
-      await queryClient.invalidateQueries({queryKey: ['notifications']});
+      await queryClient.invalidateQueries({ queryKey: ['notifications'] });
     } catch (err) {
       setError(err instanceof Error ? err.message : '通知の追加に失敗しました');
       console.error(err);
@@ -83,7 +86,10 @@ const NotificationForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             タイトル
           </label>
           <input
@@ -98,7 +104,10 @@ const NotificationForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="message"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             メッセージ
           </label>
           <textarea
@@ -113,7 +122,10 @@ const NotificationForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="user_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ユーザー
           </label>
           <select
@@ -124,7 +136,7 @@ const NotificationForm = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">全ユーザー</option>
-            {users?.map(user => (
+            {users?.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name} ({user.email})
               </option>

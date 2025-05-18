@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import UserList from '@/features/admin/users/components/UserList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { User } from '@/features/admin/users/controllers';
 import { userService } from '@/features/admin/users/services';
-import { User } from '@/features/admin/users/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
     getUsers: vi.fn(),
     updateUser: vi.fn(),
-    deleteUser: vi.fn()
-  }
+    deleteUser: vi.fn(),
+  },
 }));
 
 describe('UserList Component', () => {
@@ -22,22 +22,22 @@ describe('UserList Component', () => {
       name: 'Test User 1',
       email: 'user1@example.com',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     },
     {
       id: 2,
       name: 'Test User 2',
       email: 'user2@example.com',
       created_at: '2023-01-02T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     },
     {
       id: 3,
       name: 'Test User 3',
       email: 'user3@example.com',
       created_at: '2023-01-03T00:00:00Z',
-      updated_at: '2023-01-03T00:00:00Z'
-    }
+      updated_at: '2023-01-03T00:00:00Z',
+    },
   ];
 
   beforeEach(() => {
@@ -67,13 +67,18 @@ describe('UserList Component', () => {
 
     // Check if the component renders without crashing
     // The component might be in a loading state or showing the table
-    const component = screen.queryByTestId('loading') || screen.queryByTestId('user-list') || screen.queryByTestId('user-table');
+    const component =
+      screen.queryByTestId('loading') ||
+      screen.queryByTestId('user-list') ||
+      screen.queryByTestId('user-table');
     expect(component).toBeInTheDocument();
   });
 
   it('should show loading state initially', () => {
     // Mock getUsers to return a promise that never resolves
-    vi.mocked(userService.getUsers).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(userService.getUsers).mockImplementation(
+      () => new Promise(() => {})
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -88,7 +93,9 @@ describe('UserList Component', () => {
 
   it('should show error state when fetching users fails', async () => {
     // Mock getUsers to reject with an error
-    vi.mocked(userService.getUsers).mockRejectedValue(new Error('Failed to fetch users'));
+    vi.mocked(userService.getUsers).mockRejectedValue(
+      new Error('Failed to fetch users')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -157,7 +164,9 @@ describe('UserList Component', () => {
     // Check if edit form is displayed
     const nameInput = screen.getByDisplayValue('Test User 1');
     const emailInput = screen.getByDisplayValue('user1@example.com');
-    const passwordInput = screen.getByPlaceholderText('新しいパスワード（変更する場合）');
+    const passwordInput = screen.getByPlaceholderText(
+      '新しいパスワード（変更する場合）'
+    );
 
     expect(nameInput).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
@@ -191,7 +200,9 @@ describe('UserList Component', () => {
     fireEvent.click(editButtons[0]);
 
     // Get password input and toggle button
-    const passwordInput = screen.getByPlaceholderText('新しいパスワード（変更する場合）');
+    const passwordInput = screen.getByPlaceholderText(
+      '新しいパスワード（変更する場合）'
+    );
     const toggleButton = screen.getByText('表示');
 
     // Initially password should be hidden
@@ -253,7 +264,7 @@ describe('UserList Component', () => {
     const updatedUser = {
       ...mockUsers[0],
       name: 'Updated User',
-      email: 'updated@example.com'
+      email: 'updated@example.com',
     };
     vi.mocked(userService.updateUser).mockResolvedValue(updatedUser);
 
@@ -287,7 +298,7 @@ describe('UserList Component', () => {
     await waitFor(() => {
       expect(userService.updateUser).toHaveBeenCalledWith(1, {
         name: 'Updated User',
-        email: 'updated@example.com'
+        email: 'updated@example.com',
       });
     });
   });
@@ -300,7 +311,7 @@ describe('UserList Component', () => {
     const updatedUser = {
       ...mockUsers[0],
       name: 'Updated User',
-      email: 'updated@example.com'
+      email: 'updated@example.com',
     };
     vi.mocked(userService.updateUser).mockResolvedValue(updatedUser);
 
@@ -326,7 +337,9 @@ describe('UserList Component', () => {
     const emailInput = screen.getByDisplayValue('user1@example.com');
     fireEvent.change(emailInput, { target: { value: 'updated@example.com' } });
 
-    const passwordInput = screen.getByPlaceholderText('新しいパスワード（変更する場合）');
+    const passwordInput = screen.getByPlaceholderText(
+      '新しいパスワード（変更する場合）'
+    );
     fireEvent.change(passwordInput, { target: { value: 'newpassword' } });
 
     // Click save button
@@ -338,7 +351,7 @@ describe('UserList Component', () => {
       expect(userService.updateUser).toHaveBeenCalledWith(1, {
         name: 'Updated User',
         email: 'updated@example.com',
-        password: 'newpassword'
+        password: 'newpassword',
       });
     });
   });

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import notificationRoutes from '../../../features/notifications/routes';
 import * as controllers from '../../../features/notifications/controllers';
+import notificationRoutes from '../../../features/notifications/routes';
 
 // Mock the controllers
 vi.mock('../../../features/notifications/controllers', () => ({
@@ -10,7 +10,7 @@ vi.mock('../../../features/notifications/controllers', () => ({
   getNotificationsByUserId: vi.fn().mockImplementation(() => ({ status: 200 })),
   getNotificationById: vi.fn().mockImplementation(() => ({ status: 200 })),
   updateNotification: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteNotification: vi.fn().mockImplementation(() => ({ status: 200 }))
+  deleteNotification: vi.fn().mockImplementation(() => ({ status: 200 })),
 }));
 
 describe('Notification Routes', () => {
@@ -21,10 +21,12 @@ describe('Notification Routes', () => {
   describe('GET /notifications', () => {
     it('should call getNotifications controller', async () => {
       const mockResponse = { notifications: [] };
-      vi.mocked(controllers.getNotifications).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.getNotifications).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/notifications', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -38,10 +40,12 @@ describe('Notification Routes', () => {
   describe('GET /users/:userId/notifications', () => {
     it('should call getNotificationsByUserId controller', async () => {
       const mockResponse = { notifications: [] };
-      vi.mocked(controllers.getNotificationsByUserId).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.getNotificationsByUserId).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/users/1/notifications', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -54,11 +58,15 @@ describe('Notification Routes', () => {
 
   describe('GET /notifications/:id', () => {
     it('should call getNotificationById controller', async () => {
-      const mockResponse = { notification: { id: 1, title: 'Test Notification' } };
-      vi.mocked(controllers.getNotificationById).mockResolvedValueOnce(mockResponse);
+      const mockResponse = {
+        notification: { id: 1, title: 'Test Notification' },
+      };
+      vi.mocked(controllers.getNotificationById).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/notifications/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -71,20 +79,24 @@ describe('Notification Routes', () => {
 
   describe('POST /notifications', () => {
     it('should call createNotification controller', async () => {
-      const mockResponse = { notification: { id: 1, title: 'New Notification' } };
-      vi.mocked(controllers.createNotification).mockResolvedValueOnce(mockResponse);
+      const mockResponse = {
+        notification: { id: 1, title: 'New Notification' },
+      };
+      vi.mocked(controllers.createNotification).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/notifications', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           user_id: 1,
           title: 'New Notification',
           message: 'New Notification Message',
-          is_read: false
-        })
+          is_read: false,
+        }),
       });
 
       // Set the status code manually for testing
@@ -97,20 +109,24 @@ describe('Notification Routes', () => {
 
   describe('PUT /notifications/:id', () => {
     it('should call updateNotification controller', async () => {
-      const mockResponse = { notification: { id: 1, title: 'Updated Notification' } };
-      vi.mocked(controllers.updateNotification).mockResolvedValueOnce(mockResponse);
+      const mockResponse = {
+        notification: { id: 1, title: 'Updated Notification' },
+      };
+      vi.mocked(controllers.updateNotification).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/notifications/1', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           user_id: 1,
           title: 'Updated Notification',
           message: 'Updated Notification Message',
-          is_read: true
-        })
+          is_read: true,
+        }),
       });
 
       // Set the status code manually for testing
@@ -124,10 +140,12 @@ describe('Notification Routes', () => {
   describe('DELETE /notifications/:id', () => {
     it('should call deleteNotification controller', async () => {
       const mockResponse = { message: 'Notification deleted successfully' };
-      vi.mocked(controllers.deleteNotification).mockResolvedValueOnce(mockResponse);
+      vi.mocked(controllers.deleteNotification).mockResolvedValueOnce(
+        mockResponse
+      );
 
       const res = await notificationRoutes.request('/notifications/1', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Set the status code manually for testing

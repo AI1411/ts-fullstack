@@ -1,18 +1,23 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { companyService } from '@/features/admin/companies/services';
 import * as controllers from '@/features/admin/companies/controllers';
-import { Company, CreateCompanyInput } from '@/features/admin/companies/controllers';
+import type {
+  Company,
+  CreateCompanyInput,
+} from '@/features/admin/companies/controllers';
+import { companyService } from '@/features/admin/companies/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/companies/controllers', async () => {
-  const actual = await vi.importActual('@/features/admin/companies/controllers');
+  const actual = await vi.importActual(
+    '@/features/admin/companies/controllers'
+  );
   return {
     ...actual,
     getCompanies: vi.fn(),
     createCompany: vi.fn(),
     getCompanyById: vi.fn(),
     updateCompany: vi.fn(),
-    deleteCompany: vi.fn()
+    deleteCompany: vi.fn(),
   };
 });
 
@@ -33,14 +38,14 @@ describe('Company Service', () => {
           email: 'test@example.com',
           website: 'https://example.com',
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-01T00:00:00Z'
-        }
+          updated_at: '2023-01-01T00:00:00Z',
+        },
       ];
-      
+
       vi.mocked(controllers.getCompanies).mockResolvedValue(mockCompanies);
 
       const result = await companyService.getCompanies();
-      
+
       expect(controllers.getCompanies).toHaveBeenCalled();
       expect(result).toBe(mockCompanies);
     });
@@ -54,9 +59,9 @@ describe('Company Service', () => {
         address: 'Test Address',
         phone: '123-456-7890',
         email: 'test@example.com',
-        website: 'https://example.com'
+        website: 'https://example.com',
       };
-      
+
       const mockCompany: Company = {
         id: 1,
         name: 'Test Company',
@@ -66,13 +71,13 @@ describe('Company Service', () => {
         email: 'test@example.com',
         website: 'https://example.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       vi.mocked(controllers.createCompany).mockResolvedValue(mockCompany);
 
       const result = await companyService.createCompany(mockCompanyData);
-      
+
       expect(controllers.createCompany).toHaveBeenCalledWith(mockCompanyData);
       expect(result).toBe(mockCompany);
     });
@@ -81,7 +86,7 @@ describe('Company Service', () => {
   describe('getCompanyById', () => {
     it('should call the controller getCompanyById function with correct parameters', async () => {
       const mockId = 123;
-      
+
       const mockCompany: Company = {
         id: mockId,
         name: 'Test Company',
@@ -91,13 +96,13 @@ describe('Company Service', () => {
         email: 'test@example.com',
         website: 'https://example.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       };
-      
+
       vi.mocked(controllers.getCompanyById).mockResolvedValue(mockCompany);
 
       const result = await companyService.getCompanyById(mockId);
-      
+
       expect(controllers.getCompanyById).toHaveBeenCalledWith(mockId);
       expect(result).toBe(mockCompany);
     });
@@ -108,9 +113,9 @@ describe('Company Service', () => {
       const mockId = 123;
       const mockCompanyData: Partial<CreateCompanyInput> = {
         name: 'Updated Company',
-        description: 'Updated Description'
+        description: 'Updated Description',
       };
-      
+
       const mockCompany: Company = {
         id: mockId,
         name: 'Updated Company',
@@ -120,14 +125,20 @@ describe('Company Service', () => {
         email: 'test@example.com',
         website: 'https://example.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       };
-      
+
       vi.mocked(controllers.updateCompany).mockResolvedValue(mockCompany);
 
-      const result = await companyService.updateCompany(mockId, mockCompanyData);
-      
-      expect(controllers.updateCompany).toHaveBeenCalledWith(mockId, mockCompanyData);
+      const result = await companyService.updateCompany(
+        mockId,
+        mockCompanyData
+      );
+
+      expect(controllers.updateCompany).toHaveBeenCalledWith(
+        mockId,
+        mockCompanyData
+      );
       expect(result).toBe(mockCompany);
     });
   });
@@ -135,11 +146,11 @@ describe('Company Service', () => {
   describe('deleteCompany', () => {
     it('should call the controller deleteCompany function with correct parameters', async () => {
       const mockId = 123;
-      
+
       vi.mocked(controllers.deleteCompany).mockResolvedValue(undefined);
 
       await companyService.deleteCompany(mockId);
-      
+
       expect(controllers.deleteCompany).toHaveBeenCalledWith(mockId);
     });
   });

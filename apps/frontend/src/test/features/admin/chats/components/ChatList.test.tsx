@@ -1,20 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChatList from '@/features/admin/chats/components/ChatList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ChatWithUser } from '@/features/admin/chats/controllers';
 import { chatService } from '@/features/admin/chats/services';
-import { ChatWithUser } from '@/features/admin/chats/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the chat service
 vi.mock('@/features/admin/chats/services', () => ({
   chatService: {
-    getUserChats: vi.fn()
-  }
+    getUserChats: vi.fn(),
+  },
 }));
 
 // Mock date-fns to avoid locale issues in tests
 vi.mock('date-fns', () => ({
-  formatDistanceToNow: vi.fn(() => '3日前')
+  formatDistanceToNow: vi.fn(() => '3日前'),
 }));
 
 describe('ChatList Component', () => {
@@ -49,7 +49,7 @@ describe('ChatList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(chatService.getUserChats).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -64,7 +64,9 @@ describe('ChatList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(chatService.getUserChats).mockRejectedValue(new Error('API error'));
+    vi.mocked(chatService.getUserChats).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -78,7 +80,9 @@ describe('ChatList Component', () => {
     });
 
     expect(screen.queryByTestId('chat-list')).not.toBeInTheDocument();
-    expect(screen.getByText('エラーが発生しました。再度お試しください。')).toBeInTheDocument();
+    expect(
+      screen.getByText('エラーが発生しました。再度お試しください。')
+    ).toBeInTheDocument();
   });
 
   it('should show empty state when no chats are available', async () => {
@@ -109,12 +113,12 @@ describe('ChatList Component', () => {
           creator_id: 1,
           recipient_id: 2,
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
+          updated_at: '2023-01-02T00:00:00Z',
         },
         otherUser: {
           id: 2,
-          name: 'Test User 1'
-        }
+          name: 'Test User 1',
+        },
       },
       {
         chat: {
@@ -122,13 +126,13 @@ describe('ChatList Component', () => {
           creator_id: 1,
           recipient_id: 3,
           created_at: '2023-01-03T00:00:00Z',
-          updated_at: '2023-01-04T00:00:00Z'
+          updated_at: '2023-01-04T00:00:00Z',
         },
         otherUser: {
           id: 3,
-          name: 'Test User 2'
-        }
-      }
+          name: 'Test User 2',
+        },
+      },
     ];
 
     vi.mocked(chatService.getUserChats).mockResolvedValue(mockChats);
@@ -159,12 +163,12 @@ describe('ChatList Component', () => {
           creator_id: 1,
           recipient_id: 2,
           created_at: '2023-01-01T00:00:00Z',
-          updated_at: '2023-01-02T00:00:00Z'
+          updated_at: '2023-01-02T00:00:00Z',
         },
         otherUser: {
           id: 2,
-          name: 'Alice'
-        }
+          name: 'Alice',
+        },
       },
       {
         chat: {
@@ -172,13 +176,13 @@ describe('ChatList Component', () => {
           creator_id: 1,
           recipient_id: 3,
           created_at: '2023-01-03T00:00:00Z',
-          updated_at: '2023-01-04T00:00:00Z'
+          updated_at: '2023-01-04T00:00:00Z',
         },
         otherUser: {
           id: 3,
-          name: 'Bob'
-        }
-      }
+          name: 'Bob',
+        },
+      },
     ];
 
     vi.mocked(chatService.getUserChats).mockResolvedValue(mockChats);

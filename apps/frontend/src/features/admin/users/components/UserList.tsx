@@ -1,24 +1,28 @@
-'use client'
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { userService } from "../services";
-import { User } from "../controllers";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import type { User } from '../controllers';
+import { userService } from '../services';
 
 const UserList = () => {
   const queryClient = useQueryClient();
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
   const [editFormData, setEditFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
+    name: '',
+    email: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
 
   // User一覧を取得
-  const { data: users, isLoading, error } = useQuery({
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getUsers
+    queryFn: userService.getUsers,
   });
 
   // 編集モードを開始
@@ -27,7 +31,7 @@ const UserList = () => {
     setEditFormData({
       name: user.name,
       email: user.email,
-      password: ""
+      password: '',
     });
   };
 
@@ -37,13 +41,11 @@ const UserList = () => {
   };
 
   // 編集フォームの入力値を更新
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -54,7 +56,7 @@ const UserList = () => {
       const updateData = {
         name: editFormData.name,
         email: editFormData.email,
-        ...(editFormData.password ? { password: editFormData.password } : {})
+        ...(editFormData.password ? { password: editFormData.password } : {}),
       };
 
       await userService.updateUser(userId, updateData);
@@ -81,25 +83,53 @@ const UserList = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-4" data-testid="loading">読み込み中...</div>;
-  if (error) return <div className="text-center py-4 text-red-500" data-testid="error">エラーが発生しました</div>;
+  if (isLoading)
+    return (
+      <div className="text-center py-4" data-testid="loading">
+        読み込み中...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-center py-4 text-red-500" data-testid="error">
+        エラーが発生しました
+      </div>
+    );
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden" data-testid="user-list">
-      <table className="min-w-full divide-y divide-gray-200" data-testid="user-table">
+    <div
+      className="bg-white shadow-md rounded-lg overflow-hidden"
+      data-testid="user-list"
+    >
+      <table
+        className="min-w-full divide-y divide-gray-200"
+        data-testid="user-table"
+      >
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名前</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メールアドレス</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作成日</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ID
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              名前
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              メールアドレス
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              作成日
+            </th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              アクション
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {users?.map(user => (
+          {users?.map((user) => (
             <tr key={user.id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.id}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {user.id}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {editingUserId === user.id ? (
                   <input
@@ -110,7 +140,9 @@ const UserList = () => {
                     className="border rounded px-2 py-1 w-full"
                   />
                 ) : (
-                  <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {user.name}
+                  </div>
                 )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
@@ -134,7 +166,7 @@ const UserList = () => {
                   <>
                     <div className="mb-2 flex items-center">
                       <input
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={editFormData.password}
                         onChange={handleChange}
@@ -146,7 +178,7 @@ const UserList = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        {showPassword ? "隠す" : "表示"}
+                        {showPassword ? '隠す' : '表示'}
                       </button>
                     </div>
                     <button

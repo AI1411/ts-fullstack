@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { notificationRepository } from '@/features/admin/notifications/repositories';
 import { client } from '@/common/utils/client';
+import { notificationRepository } from '@/features/admin/notifications/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the client
 vi.mock('@/common/utils/client', () => ({
@@ -11,10 +11,10 @@ vi.mock('@/common/utils/client', () => ({
       ':id': {
         $get: vi.fn(),
         $put: vi.fn(),
-        $delete: vi.fn()
-      }
-    }
-  }
+        $delete: vi.fn(),
+      },
+    },
+  },
 }));
 
 describe('Notification Repository', () => {
@@ -40,16 +40,17 @@ describe('Notification Repository', () => {
         title: 'Test Notification',
         message: 'This is a test notification',
         user_id: 1,
-        is_read: false
+        is_read: false,
       };
 
       const mockResponse = { status: 201 };
       vi.mocked(client.notifications.$post).mockResolvedValue(mockResponse);
 
-      const result = await notificationRepository.createNotification(notificationData);
+      const result =
+        await notificationRepository.createNotification(notificationData);
 
       expect(client.notifications.$post).toHaveBeenCalledWith({
-        json: notificationData
+        json: notificationData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -58,12 +59,14 @@ describe('Notification Repository', () => {
   describe('getNotificationById', () => {
     it('should call the client to get a notification by id', async () => {
       const mockResponse = { status: 200 };
-      vi.mocked(client.notifications[':id'].$get).mockResolvedValue(mockResponse);
+      vi.mocked(client.notifications[':id'].$get).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await notificationRepository.getNotificationById(1);
 
       expect(client.notifications[':id'].$get).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });
@@ -73,17 +76,22 @@ describe('Notification Repository', () => {
     it('should call the client to update a notification', async () => {
       const notificationData = {
         title: 'Updated Notification',
-        message: 'This is an updated notification'
+        message: 'This is an updated notification',
       };
 
       const mockResponse = { status: 200 };
-      vi.mocked(client.notifications[':id'].$put).mockResolvedValue(mockResponse);
+      vi.mocked(client.notifications[':id'].$put).mockResolvedValue(
+        mockResponse
+      );
 
-      const result = await notificationRepository.updateNotification(1, notificationData);
+      const result = await notificationRepository.updateNotification(
+        1,
+        notificationData
+      );
 
       expect(client.notifications[':id'].$put).toHaveBeenCalledWith({
         param: { id: '1' },
-        json: notificationData
+        json: notificationData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -92,12 +100,14 @@ describe('Notification Repository', () => {
   describe('deleteNotification', () => {
     it('should call the client to delete a notification', async () => {
       const mockResponse = { status: 204 };
-      vi.mocked(client.notifications[':id'].$delete).mockResolvedValue(mockResponse);
+      vi.mocked(client.notifications[':id'].$delete).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await notificationRepository.deleteNotification(1);
 
       expect(client.notifications[':id'].$delete).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });

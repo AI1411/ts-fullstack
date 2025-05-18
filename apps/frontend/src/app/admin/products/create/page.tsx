@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import ProductForm from "@/features/admin/products/components/ProductForm";
+import ProductForm from '@/features/admin/products/components/ProductForm';
 
 export default function CreateProductPage() {
   return (
@@ -9,7 +9,9 @@ export default function CreateProductPage() {
         <div>
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">新規商品を追加</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                新規商品を追加
+              </h2>
             </div>
             <div className="p-6">
               <ProductForm />

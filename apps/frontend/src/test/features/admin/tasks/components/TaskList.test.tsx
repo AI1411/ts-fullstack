@@ -1,39 +1,43 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TaskList from '@/features/admin/tasks/components/TaskList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { taskService } from '@/features/admin/tasks/services';
-import { userService } from '@/features/admin/users/services';
 import { teamService } from '@/features/admin/teams/services';
+import { userService } from '@/features/admin/users/services';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/tasks/services', () => ({
   taskService: {
     getTasks: vi.fn(),
     updateTask: vi.fn(),
-    deleteTask: vi.fn()
-  }
+    deleteTask: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUsers: vi.fn()
-  }
+    getUsers: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/teams/services', () => ({
   teamService: {
-    getTeams: vi.fn()
-  }
+    getTeams: vi.fn(),
+  },
 }));
 
 // Mock the SubTaskList and SubTaskForm components
 vi.mock('@/features/admin/sub-tasks/components/SubTaskList', () => ({
-  default: vi.fn(() => <div data-testid="mock-subtask-list">Mock SubTaskList</div>)
+  default: vi.fn(() => (
+    <div data-testid="mock-subtask-list">Mock SubTaskList</div>
+  )),
 }));
 
 vi.mock('@/features/admin/sub-tasks/components/SubTaskForm', () => ({
-  default: vi.fn(() => <div data-testid="mock-subtask-form">Mock SubTaskForm</div>)
+  default: vi.fn(() => (
+    <div data-testid="mock-subtask-form">Mock SubTaskForm</div>
+  )),
 }));
 
 // Mock window.confirm
@@ -61,7 +65,9 @@ describe('TaskList Component', () => {
 
   it('should render loading state', () => {
     // Mock loading state
-    vi.mocked(taskService.getTasks).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(taskService.getTasks).mockImplementation(
+      () => new Promise(() => {})
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
     vi.mocked(teamService.getTeams).mockResolvedValue([]);
 
@@ -102,7 +108,7 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -112,18 +118,18 @@ describe('TaskList Component', () => {
         user_id: 2,
         team_id: 2,
         due_date: '2023-01-02',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     const mockUsers = [
       { id: 1, name: 'User 1' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     const mockTeams = [
       { id: 1, name: 'Team 1' },
-      { id: 2, name: 'Team 2' }
+      { id: 2, name: 'Team 2' },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -146,13 +152,13 @@ describe('TaskList Component', () => {
     expect(screen.getByText('Task 2')).toBeInTheDocument();
     expect(screen.getByText('Description 1')).toBeInTheDocument();
     expect(screen.getByText('Description 2')).toBeInTheDocument();
-    
+
     // Check if status badges are displayed with correct colors
     const pendingBadge = screen.getByText('未着手');
     const inProgressBadge = screen.getByText('進行中');
     expect(pendingBadge).toBeInTheDocument();
     expect(inProgressBadge).toBeInTheDocument();
-    
+
     // Check if user and team names are displayed
     expect(screen.getByText('User 1')).toBeInTheDocument();
     expect(screen.getByText('User 2')).toBeInTheDocument();
@@ -171,18 +177,18 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     const mockUsers = [
       { id: 1, name: 'User 1' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     const mockTeams = [
       { id: 1, name: 'Team 1' },
-      { id: 2, name: 'Team 2' }
+      { id: 2, name: 'Team 2' },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -207,7 +213,7 @@ describe('TaskList Component', () => {
     // Check if edit mode is active
     expect(screen.getByText('保存')).toBeInTheDocument();
     expect(screen.getByText('キャンセル')).toBeInTheDocument();
-    
+
     // Check if form inputs are populated with task data
     const titleInput = screen.getByDisplayValue('Task 1');
     const descriptionInput = screen.getByDisplayValue('Description 1');
@@ -226,18 +232,18 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     const mockUsers = [
       { id: 1, name: 'User 1' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     const mockTeams = [
       { id: 1, name: 'Team 1' },
-      { id: 2, name: 'Team 2' }
+      { id: 2, name: 'Team 2' },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -246,7 +252,7 @@ describe('TaskList Component', () => {
     vi.mocked(taskService.updateTask).mockResolvedValue({
       ...mockTasks[0],
       title: 'Updated Task',
-      description: 'Updated Description'
+      description: 'Updated Description',
     });
 
     render(
@@ -267,9 +273,11 @@ describe('TaskList Component', () => {
     // Update form inputs
     const titleInput = screen.getByDisplayValue('Task 1');
     const descriptionInput = screen.getByDisplayValue('Description 1');
-    
+
     fireEvent.change(titleInput, { target: { value: 'Updated Task' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Updated Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Updated Description' },
+    });
 
     // Click save button
     const saveButton = screen.getByText('保存');
@@ -283,7 +291,7 @@ describe('TaskList Component', () => {
         status: 'PENDING',
         user_id: 1,
         team_id: 1,
-        due_date: '2023-01-01'
+        due_date: '2023-01-01',
       });
     });
   });
@@ -299,8 +307,8 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -347,8 +355,8 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -375,7 +383,9 @@ describe('TaskList Component', () => {
     fireEvent.click(deleteButton);
 
     // Verify confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('このタスクを削除してもよろしいですか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      'このタスクを削除してもよろしいですか？'
+    );
 
     // Verify deleteTask was called with correct ID
     await waitFor(() => {
@@ -394,8 +404,8 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -422,7 +432,9 @@ describe('TaskList Component', () => {
     fireEvent.click(deleteButton);
 
     // Verify confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('このタスクを削除してもよろしいですか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      'このタスクを削除してもよろしいですか？'
+    );
 
     // Verify deleteTask was not called
     expect(taskService.deleteTask).not.toHaveBeenCalled();
@@ -439,8 +451,8 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);
@@ -481,8 +493,8 @@ describe('TaskList Component', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-01-01',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     vi.mocked(taskService.getTasks).mockResolvedValue(mockTasks);

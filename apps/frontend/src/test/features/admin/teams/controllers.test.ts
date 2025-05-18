@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  getTeams,
+  type CreateTeamInput,
+  type Team,
   createTeam,
-  getTeamById,
-  updateTeam,
   deleteTeam,
-  Team,
-  CreateTeamInput
+  getTeamById,
+  getTeams,
+  updateTeam,
 } from '@/features/admin/teams/controllers';
 import { teamRepository } from '@/features/admin/teams/repositories';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the team repository
 vi.mock('@/features/admin/teams/repositories', () => ({
@@ -17,8 +17,8 @@ vi.mock('@/features/admin/teams/repositories', () => ({
     createTeam: vi.fn(),
     getTeamById: vi.fn(),
     updateTeam: vi.fn(),
-    deleteTeam: vi.fn()
-  }
+    deleteTeam: vi.fn(),
+  },
 }));
 
 describe('Team Controllers', () => {
@@ -40,8 +40,8 @@ describe('Team Controllers', () => {
         id: 1,
         name: 'Test Team',
         description: 'Test Description',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should return teams when API call is successful', async () => {
@@ -50,7 +50,7 @@ describe('Team Controllers', () => {
         ok: true,
         json: () => Promise.resolve({ teams: mockTeams }),
         text: () => Promise.resolve(JSON.stringify({ teams: mockTeams })),
-        headers: new Headers({ 'content-type': 'application/json' })
+        headers: new Headers({ 'content-type': 'application/json' }),
       } as unknown as Response);
 
       const result = await getTeams();
@@ -64,7 +64,9 @@ describe('Team Controllers', () => {
         ok: false,
         status: 500,
         statusText: 'Internal Server Error',
-        json: () => { throw new Error('Error fetching teams'); }
+        json: () => {
+          throw new Error('Error fetching teams');
+        },
       } as unknown as Response);
 
       await expect(getTeams()).rejects.toThrow('Error fetching teams');
@@ -77,7 +79,8 @@ describe('Team Controllers', () => {
       vi.mocked(teamRepository.getTeams).mockResolvedValue({
         ok: true,
         headers: new Headers({ 'content-type': 'text/html' }),
-        text: () => Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>')
+        text: () =>
+          Promise.resolve('<!DOCTYPE html><html><body>Error</body></html>'),
       } as unknown as Response);
 
       await expect(getTeams()).rejects.toThrow();
@@ -90,7 +93,7 @@ describe('Team Controllers', () => {
       vi.mocked(teamRepository.getTeams).mockResolvedValue({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        text: () => Promise.resolve('Not valid JSON')
+        text: () => Promise.resolve('Not valid JSON'),
       } as unknown as Response);
 
       await expect(getTeams()).rejects.toThrow();
@@ -102,20 +105,20 @@ describe('Team Controllers', () => {
   describe('createTeam', () => {
     const teamData: CreateTeamInput = {
       name: 'Test Team',
-      description: 'Test Description'
+      description: 'Test Description',
     };
     const mockTeam: Team = {
       id: 1,
       name: 'Test Team',
       description: 'Test Description',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return a team when API call is successful', async () => {
       // Mock successful response
       vi.mocked(teamRepository.createTeam).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ team: mockTeam })
+        json: () => Promise.resolve({ team: mockTeam }),
       } as unknown as Response);
 
       const result = await createTeam(teamData);
@@ -128,7 +131,7 @@ describe('Team Controllers', () => {
       const errorMessage = 'Failed to create team';
       vi.mocked(teamRepository.createTeam).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(createTeam(teamData)).rejects.toThrow(errorMessage);
@@ -143,14 +146,14 @@ describe('Team Controllers', () => {
       id: 1,
       name: 'Test Team',
       description: 'Test Description',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return a team when API call is successful', async () => {
       // Mock successful response
       vi.mocked(teamRepository.getTeamById).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ team: mockTeam })
+        json: () => Promise.resolve({ team: mockTeam }),
       } as unknown as Response);
 
       const result = await getTeamById(teamId);
@@ -161,7 +164,7 @@ describe('Team Controllers', () => {
     it('should throw an error when API call fails', async () => {
       // Mock failed response
       vi.mocked(teamRepository.getTeamById).mockResolvedValue({
-        ok: false
+        ok: false,
       } as unknown as Response);
 
       await expect(getTeamById(teamId)).rejects.toThrow('Team not found');
@@ -173,20 +176,20 @@ describe('Team Controllers', () => {
   describe('updateTeam', () => {
     const teamId = 1;
     const teamData: Partial<CreateTeamInput> = {
-      name: 'Updated Team'
+      name: 'Updated Team',
     };
     const mockTeam: Team = {
       id: 1,
       name: 'Updated Team',
       description: 'Test Description',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return an updated team when API call is successful', async () => {
       // Mock successful response
       vi.mocked(teamRepository.updateTeam).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ team: mockTeam })
+        json: () => Promise.resolve({ team: mockTeam }),
       } as unknown as Response);
 
       const result = await updateTeam(teamId, teamData);
@@ -199,7 +202,7 @@ describe('Team Controllers', () => {
       const errorMessage = 'Failed to update team';
       vi.mocked(teamRepository.updateTeam).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(updateTeam(teamId, teamData)).rejects.toThrow(errorMessage);
@@ -214,7 +217,7 @@ describe('Team Controllers', () => {
     it('should complete successfully when API call is successful', async () => {
       // Mock successful response
       vi.mocked(teamRepository.deleteTeam).mockResolvedValue({
-        ok: true
+        ok: true,
       } as unknown as Response);
 
       await expect(deleteTeam(teamId)).resolves.not.toThrow();
@@ -226,7 +229,7 @@ describe('Team Controllers', () => {
       const errorMessage = 'Failed to delete team';
       vi.mocked(teamRepository.deleteTeam).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve(errorMessage)
+        text: () => Promise.resolve(errorMessage),
       } as unknown as Response);
 
       await expect(deleteTeam(teamId)).rejects.toThrow(errorMessage);

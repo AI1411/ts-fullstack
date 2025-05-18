@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
+import Link from 'next/link';
+import type React from 'react';
 
 interface ProductCardProps {
   id: number;

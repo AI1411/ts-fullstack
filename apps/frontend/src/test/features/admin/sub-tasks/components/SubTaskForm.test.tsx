@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SubTaskForm from '@/features/admin/sub-tasks/components/SubTaskForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { subTaskService } from '@/features/admin/sub-tasks/services';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the sub-task service
 vi.mock('@/features/admin/sub-tasks/services', () => ({
   subTaskService: {
-    createSubTask: vi.fn()
-  }
+    createSubTask: vi.fn(),
+  },
 }));
 
 describe('SubTaskForm Component', () => {
@@ -79,7 +79,9 @@ describe('SubTaskForm Component', () => {
 
     // Change input values
     fireEvent.change(titleInput, { target: { value: 'Test Title' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(statusSelect, { target: { value: 'IN_PROGRESS' } });
     fireEvent.change(dueDateInput, { target: { value: '2023-01-01' } });
 
@@ -100,7 +102,7 @@ describe('SubTaskForm Component', () => {
       status: 'IN_PROGRESS',
       due_date: '2023-01-01',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -118,7 +120,9 @@ describe('SubTaskForm Component', () => {
 
     // Change input values
     fireEvent.change(titleInput, { target: { value: 'Test Title' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(statusSelect, { target: { value: 'IN_PROGRESS' } });
     fireEvent.change(dueDateInput, { target: { value: '2023-01-01' } });
 
@@ -132,7 +136,7 @@ describe('SubTaskForm Component', () => {
         description: 'Test Description',
         status: 'IN_PROGRESS',
         due_date: '2023-01-01',
-        task_id: taskId
+        task_id: taskId,
       });
     });
 
@@ -170,7 +174,7 @@ describe('SubTaskForm Component', () => {
       status: 'IN_PROGRESS',
       due_date: '2023-01-01',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -197,7 +201,9 @@ describe('SubTaskForm Component', () => {
 
   it('should show error message when API call fails', async () => {
     // Mock failed response
-    vi.mocked(subTaskService.createSubTask).mockRejectedValue(new Error('API error'));
+    vi.mocked(subTaskService.createSubTask).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -217,7 +223,7 @@ describe('SubTaskForm Component', () => {
 
     // Verify error message is displayed
     await waitFor(() => {
-      const errorElement = screen.getByText((content) => 
+      const errorElement = screen.getByText((content) =>
         content.includes('API error')
       );
       expect(errorElement).toBeInTheDocument();
@@ -246,7 +252,7 @@ describe('SubTaskForm Component', () => {
 
     // Verify error message is displayed
     await waitFor(() => {
-      const errorElement = screen.getByText((content) => 
+      const errorElement = screen.getByText((content) =>
         content.includes('サブタスクの追加に失敗しました')
       );
       expect(errorElement).toBeInTheDocument();
@@ -256,16 +262,23 @@ describe('SubTaskForm Component', () => {
   it('should show loading state during submission', async () => {
     // Mock delayed response to ensure we see the loading state
     vi.mocked(subTaskService.createSubTask).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({
-        id: 1,
-        task_id: taskId,
-        title: 'Test Title',
-        description: '',
-        status: 'PENDING',
-        due_date: null,
-        created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
-      }), 100))
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                id: 1,
+                task_id: taskId,
+                title: 'Test Title',
+                description: '',
+                status: 'PENDING',
+                due_date: null,
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z',
+              }),
+            100
+          )
+        )
     );
 
     render(

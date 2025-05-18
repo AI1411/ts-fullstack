@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
-  getTasks,
+  type CreateTaskInput,
+  type Task,
   createTask,
-  getTaskById,
-  updateTask,
   deleteTask,
-  Task,
-  CreateTaskInput
+  getTaskById,
+  getTasks,
+  updateTask,
 } from '@/features/admin/tasks/controllers';
 import { taskRepository } from '@/features/admin/tasks/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Define a type for mocked responses
 type MockResponse<T> = {
@@ -24,8 +24,8 @@ vi.mock('@/features/admin/tasks/repositories', () => ({
     createTask: vi.fn(),
     getTaskById: vi.fn(),
     updateTask: vi.fn(),
-    deleteTask: vi.fn()
-  }
+    deleteTask: vi.fn(),
+  },
 }));
 
 describe('Task Controllers', () => {
@@ -43,26 +43,28 @@ describe('Task Controllers', () => {
         user_id: 1,
         team_id: 1,
         due_date: '2023-12-31',
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     it('should return tasks when the API call is successful', async () => {
       // Mock successful response
       vi.mocked(taskRepository.getTasks).mockResolvedValue({
         json: () => Promise.resolve({ tasks: mockTasks }),
-        ok: true
+        ok: true,
       } as MockResponse<{ tasks: Task[] }>);
 
       const result = await getTasks();
-      
+
       expect(taskRepository.getTasks).toHaveBeenCalled();
       expect(result).toEqual(mockTasks);
     });
 
     it('should throw an error when the API call fails', async () => {
       // Mock failed response
-      vi.mocked(taskRepository.getTasks).mockRejectedValue(new Error('API error'));
+      vi.mocked(taskRepository.getTasks).mockRejectedValue(
+        new Error('API error')
+      );
 
       await expect(getTasks()).rejects.toThrow('API error');
       expect(taskRepository.getTasks).toHaveBeenCalled();
@@ -76,7 +78,7 @@ describe('Task Controllers', () => {
       status: 'PENDING',
       user_id: 1,
       team_id: 1,
-      due_date: '2023-12-31'
+      due_date: '2023-12-31',
     };
     const mockTask: Task = {
       id: 1,
@@ -86,18 +88,18 @@ describe('Task Controllers', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should create a task when the API call is successful', async () => {
       // Mock successful response
       vi.mocked(taskRepository.createTask).mockResolvedValue({
         json: () => Promise.resolve({ task: mockTask }),
-        ok: true
+        ok: true,
       } as MockResponse<{ task: Task }>);
 
       const result = await createTask(taskData);
-      
+
       expect(taskRepository.createTask).toHaveBeenCalledWith(taskData);
       expect(result).toEqual(mockTask);
     });
@@ -106,7 +108,7 @@ describe('Task Controllers', () => {
       // Mock failed response
       vi.mocked(taskRepository.createTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve('Invalid task data')
+        text: () => Promise.resolve('Invalid task data'),
       } as MockResponse<never>);
 
       await expect(createTask(taskData)).rejects.toThrow('Invalid task data');
@@ -124,18 +126,18 @@ describe('Task Controllers', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should return a task when the API call is successful', async () => {
       // Mock successful response
       vi.mocked(taskRepository.getTaskById).mockResolvedValue({
         json: () => Promise.resolve({ task: mockTask }),
-        ok: true
+        ok: true,
       } as MockResponse<{ task: Task }>);
 
       const result = await getTaskById(taskId);
-      
+
       expect(taskRepository.getTaskById).toHaveBeenCalledWith(taskId);
       expect(result).toEqual(mockTask);
     });
@@ -143,7 +145,7 @@ describe('Task Controllers', () => {
     it('should throw an error when the API call fails', async () => {
       // Mock failed response
       vi.mocked(taskRepository.getTaskById).mockResolvedValue({
-        ok: false
+        ok: false,
       } as MockResponse<never>);
 
       await expect(getTaskById(taskId)).rejects.toThrow('Task not found');
@@ -155,7 +157,7 @@ describe('Task Controllers', () => {
     const taskId = 1;
     const taskData: Partial<CreateTaskInput> = {
       title: 'Updated Task',
-      status: 'IN_PROGRESS'
+      status: 'IN_PROGRESS',
     };
     const mockTask: Task = {
       id: 1,
@@ -165,18 +167,18 @@ describe('Task Controllers', () => {
       user_id: 1,
       team_id: 1,
       due_date: '2023-12-31',
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     };
 
     it('should update a task when the API call is successful', async () => {
       // Mock successful response
       vi.mocked(taskRepository.updateTask).mockResolvedValue({
         json: () => Promise.resolve({ task: mockTask }),
-        ok: true
+        ok: true,
       } as MockResponse<{ task: Task }>);
 
       const result = await updateTask(taskId, taskData);
-      
+
       expect(taskRepository.updateTask).toHaveBeenCalledWith(taskId, taskData);
       expect(result).toEqual(mockTask);
     });
@@ -185,10 +187,12 @@ describe('Task Controllers', () => {
       // Mock failed response
       vi.mocked(taskRepository.updateTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve('Task not found')
+        text: () => Promise.resolve('Task not found'),
       } as MockResponse<never>);
 
-      await expect(updateTask(taskId, taskData)).rejects.toThrow('Task not found');
+      await expect(updateTask(taskId, taskData)).rejects.toThrow(
+        'Task not found'
+      );
       expect(taskRepository.updateTask).toHaveBeenCalledWith(taskId, taskData);
     });
   });
@@ -199,11 +203,11 @@ describe('Task Controllers', () => {
     it('should delete a task when the API call is successful', async () => {
       // Mock successful response
       vi.mocked(taskRepository.deleteTask).mockResolvedValue({
-        ok: true
+        ok: true,
       } as MockResponse<never>);
 
       await deleteTask(taskId);
-      
+
       expect(taskRepository.deleteTask).toHaveBeenCalledWith(taskId);
     });
 
@@ -211,7 +215,7 @@ describe('Task Controllers', () => {
       // Mock failed response
       vi.mocked(taskRepository.deleteTask).mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve('Task not found')
+        text: () => Promise.resolve('Task not found'),
       } as MockResponse<never>);
 
       await expect(deleteTask(taskId)).rejects.toThrow('Task not found');

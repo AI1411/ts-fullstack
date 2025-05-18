@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { chatService } from "../services";
-import { RiSendPlaneFill } from "react-icons/ri";
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { RiSendPlaneFill } from 'react-icons/ri';
+import { chatService } from '../services';
 
 // 仮のユーザーID（実際の認証システムができたら変更する）
 const CURRENT_USER_ID = 1;
@@ -14,7 +14,7 @@ interface MessageFormProps {
 
 const MessageForm = ({ chatId }: MessageFormProps) => {
   const queryClient = useQueryClient();
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,12 +27,14 @@ const MessageForm = ({ chatId }: MessageFormProps) => {
     try {
       await chatService.createChatMessage(chatId, {
         sender_id: CURRENT_USER_ID,
-        content: message.trim()
+        content: message.trim(),
       });
 
       // 成功したらフォームをリセットしてキャッシュを更新
-      setMessage("");
-      await queryClient.invalidateQueries({ queryKey: ['chatMessages', chatId] });
+      setMessage('');
+      await queryClient.invalidateQueries({
+        queryKey: ['chatMessages', chatId],
+      });
     } catch (error) {
       console.error('Failed to send message:', error);
       // エラー処理（必要に応じて）
@@ -57,7 +59,10 @@ const MessageForm = ({ chatId }: MessageFormProps) => {
         disabled={!message.trim() || isSubmitting}
       >
         {isSubmitting ? (
-          <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" role="status"></div>
+          <div
+            className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"
+            role="status"
+          ></div>
         ) : (
           <RiSendPlaneFill className="h-5 w-5" />
         )}

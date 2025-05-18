@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getInvoices, 
-  createInvoice, 
-  getInvoiceById, 
-  updateInvoice, 
+import {
+  type CreateInvoiceInput,
+  type Invoice,
+  createInvoice,
   deleteInvoice,
-  Invoice,
-  CreateInvoiceInput
+  getInvoiceById,
+  getInvoices,
+  updateInvoice,
 } from '@/features/admin/invoices/controllers';
 import { invoiceRepository } from '@/features/admin/invoices/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the repository
 vi.mock('@/features/admin/invoices/repositories', () => ({
@@ -17,8 +17,8 @@ vi.mock('@/features/admin/invoices/repositories', () => ({
     createInvoice: vi.fn(),
     getInvoiceById: vi.fn(),
     updateInvoice: vi.fn(),
-    deleteInvoice: vi.fn()
-  }
+    deleteInvoice: vi.fn(),
+  },
 }));
 
 describe('Invoice Controllers', () => {
@@ -33,7 +33,7 @@ describe('Invoice Controllers', () => {
     payment_method: 'Credit Card',
     notes: 'Test notes',
     created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-01T00:00:00Z'
+    updated_at: '2023-01-01T00:00:00Z',
   };
 
   const mockInvoices = [mockInvoice];
@@ -42,7 +42,7 @@ describe('Invoice Controllers', () => {
   const createMockResponse = (data: Record<string, unknown>, ok = true) => ({
     ok,
     json: vi.fn().mockResolvedValue(data),
-    text: vi.fn().mockResolvedValue('Error message')
+    text: vi.fn().mockResolvedValue('Error message'),
   });
 
   beforeEach(() => {
@@ -78,12 +78,14 @@ describe('Invoice Controllers', () => {
       total_amount: 10000,
       status: 'PENDING',
       payment_method: 'Credit Card',
-      notes: 'Test notes'
+      notes: 'Test notes',
     };
 
     it('should call the repository and return the created invoice', async () => {
       const mockResponse = createMockResponse({ invoice: mockInvoice });
-      vi.mocked(invoiceRepository.createInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.createInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await createInvoice(invoiceData);
 
@@ -94,7 +96,9 @@ describe('Invoice Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(invoiceRepository.createInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.createInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(createInvoice(invoiceData)).rejects.toThrow();
       expect(invoiceRepository.createInvoice).toHaveBeenCalledTimes(1);
@@ -114,7 +118,9 @@ describe('Invoice Controllers', () => {
   describe('getInvoiceById', () => {
     it('should call the repository and return the invoice', async () => {
       const mockResponse = createMockResponse({ invoice: mockInvoice });
-      vi.mocked(invoiceRepository.getInvoiceById).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.getInvoiceById).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await getInvoiceById(1);
 
@@ -125,7 +131,9 @@ describe('Invoice Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(invoiceRepository.getInvoiceById).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.getInvoiceById).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(getInvoiceById(1)).rejects.toThrow('Invoice not found');
       expect(invoiceRepository.getInvoiceById).toHaveBeenCalledTimes(1);
@@ -146,28 +154,38 @@ describe('Invoice Controllers', () => {
     const invoiceData: Partial<CreateInvoiceInput> = {
       invoice_number: 'INV-001-UPDATED',
       total_amount: 15000,
-      status: 'PAID'
+      status: 'PAID',
     };
 
     it('should call the repository and return the updated invoice', async () => {
       const updatedInvoice = { ...mockInvoice, ...invoiceData };
       const mockResponse = createMockResponse({ invoice: updatedInvoice });
-      vi.mocked(invoiceRepository.updateInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.updateInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       const result = await updateInvoice(1, invoiceData);
 
       expect(invoiceRepository.updateInvoice).toHaveBeenCalledTimes(1);
-      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(1, invoiceData);
+      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(
+        1,
+        invoiceData
+      );
       expect(result).toEqual(updatedInvoice);
     });
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(invoiceRepository.updateInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.updateInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(updateInvoice(1, invoiceData)).rejects.toThrow();
       expect(invoiceRepository.updateInvoice).toHaveBeenCalledTimes(1);
-      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(1, invoiceData);
+      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(
+        1,
+        invoiceData
+      );
     });
 
     it('should handle repository errors', async () => {
@@ -176,14 +194,19 @@ describe('Invoice Controllers', () => {
 
       await expect(updateInvoice(1, invoiceData)).rejects.toThrow(error);
       expect(invoiceRepository.updateInvoice).toHaveBeenCalledTimes(1);
-      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(1, invoiceData);
+      expect(invoiceRepository.updateInvoice).toHaveBeenCalledWith(
+        1,
+        invoiceData
+      );
     });
   });
 
   describe('deleteInvoice', () => {
     it('should call the repository', async () => {
       const mockResponse = createMockResponse({});
-      vi.mocked(invoiceRepository.deleteInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.deleteInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       await deleteInvoice(1);
 
@@ -193,7 +216,9 @@ describe('Invoice Controllers', () => {
 
     it('should handle API errors', async () => {
       const mockResponse = createMockResponse({}, false);
-      vi.mocked(invoiceRepository.deleteInvoice).mockResolvedValue(mockResponse);
+      vi.mocked(invoiceRepository.deleteInvoice).mockResolvedValue(
+        mockResponse
+      );
 
       await expect(deleteInvoice(1)).rejects.toThrow();
       expect(invoiceRepository.deleteInvoice).toHaveBeenCalledTimes(1);

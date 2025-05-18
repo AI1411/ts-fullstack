@@ -3,7 +3,5 @@
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-02-21",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  "compatibility_flags": ["nodejs_compat"]
 }

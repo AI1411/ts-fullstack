@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import Hero from '@/features/user/home/components/Hero';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="link">
       {children}
     </a>
@@ -26,12 +29,19 @@ describe('Hero Component', () => {
     });
     expect(deliveryTextElements.length).toBeGreaterThan(0);
     const welcomeTextElements = screen.getAllByText((content, element) => {
-      return element?.textContent?.includes('高品質な商品を取り揃えたオンラインストアへようこそ') ?? false;
+      return (
+        element?.textContent?.includes(
+          '高品質な商品を取り揃えたオンラインストアへようこそ'
+        ) ?? false
+      );
     });
     expect(welcomeTextElements.length).toBeGreaterThan(0);
 
     const discountTextElements = screen.getAllByText((content, element) => {
-      return element?.textContent?.includes('特別な割引や限定商品をお見逃しなく') ?? false;
+      return (
+        element?.textContent?.includes('特別な割引や限定商品をお見逃しなく') ??
+        false
+      );
     });
     expect(discountTextElements.length).toBeGreaterThan(0);
   });
@@ -58,7 +68,10 @@ describe('Hero Component', () => {
     // Check if the image is rendered
     const image = screen.getByAltText('Featured Product');
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
+    expect(image).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
   });
 
   it('should have the correct styling classes', () => {

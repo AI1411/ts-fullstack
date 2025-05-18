@@ -2,119 +2,127 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
+  createCompany,
+  deleteCompany,
   getCompanies,
   getCompanyById,
-  createCompany,
   updateCompany,
-  deleteCompany
 } from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const companyRoutes = new OpenAPIHono();
 
 // OpenAPI用の会社スキーマを定義
-const companySchema = z.object({
-  name: z.string().min(1).openapi({
-    description: '会社名',
-    example: 'テクノロジー株式会社'
-  }),
-  description: z.string().optional().openapi({
-    description: '会社説明',
-    example: 'ITソリューションを提供する会社です。'
-  }),
-  address: z.string().optional().openapi({
-    description: '住所',
-    example: '東京都渋谷区1-1-1'
-  }),
-  phone: z.string().optional().openapi({
-    description: '電話番号',
-    example: '03-1234-5678'
-  }),
-  email: z.string().email().optional().openapi({
-    description: 'メールアドレス',
-    example: 'info@example.com'
-  }),
-  website: z.string().optional().openapi({
-    description: 'ウェブサイト',
-    example: 'https://example.com'
+const companySchema = z
+  .object({
+    name: z.string().min(1).openapi({
+      description: '会社名',
+      example: 'テクノロジー株式会社',
+    }),
+    description: z.string().optional().openapi({
+      description: '会社説明',
+      example: 'ITソリューションを提供する会社です。',
+    }),
+    address: z.string().optional().openapi({
+      description: '住所',
+      example: '東京都渋谷区1-1-1',
+    }),
+    phone: z.string().optional().openapi({
+      description: '電話番号',
+      example: '03-1234-5678',
+    }),
+    email: z.string().email().optional().openapi({
+      description: 'メールアドレス',
+      example: 'info@example.com',
+    }),
+    website: z.string().optional().openapi({
+      description: 'ウェブサイト',
+      example: 'https://example.com',
+    }),
   })
-}).openapi('Company');
+  .openapi('Company');
 
 // レスポンス用の会社スキーマ（IDを含む）
-const companyResponseSchema = z.object({
-  id: z.number().openapi({
-    description: '会社ID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: '会社名',
-    example: 'テクノロジー株式会社'
-  }),
-  description: z.string().nullable().openapi({
-    description: '会社説明',
-    example: 'ITソリューションを提供する会社です。'
-  }),
-  address: z.string().nullable().openapi({
-    description: '住所',
-    example: '東京都渋谷区1-1-1'
-  }),
-  phone: z.string().nullable().openapi({
-    description: '電話番号',
-    example: '03-1234-5678'
-  }),
-  email: z.string().nullable().openapi({
-    description: 'メールアドレス',
-    example: 'info@example.com'
-  }),
-  website: z.string().nullable().openapi({
-    description: 'ウェブサイト',
-    example: 'https://example.com'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const companyResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: '会社ID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: '会社名',
+      example: 'テクノロジー株式会社',
+    }),
+    description: z.string().nullable().openapi({
+      description: '会社説明',
+      example: 'ITソリューションを提供する会社です。',
+    }),
+    address: z.string().nullable().openapi({
+      description: '住所',
+      example: '東京都渋谷区1-1-1',
+    }),
+    phone: z.string().nullable().openapi({
+      description: '電話番号',
+      example: '03-1234-5678',
+    }),
+    email: z.string().nullable().openapi({
+      description: 'メールアドレス',
+      example: 'info@example.com',
+    }),
+    website: z.string().nullable().openapi({
+      description: 'ウェブサイト',
+      example: 'https://example.com',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('CompanyResponse');
+  .openapi('CompanyResponse');
 
 // 更新用の会社スキーマ（すべてのフィールドがオプショナル）
-const companyUpdateSchema = z.object({
-  name: z.string().min(1).optional().openapi({
-    description: '会社名',
-    example: 'テクノロジー株式会社'
-  }),
-  description: z.string().optional().openapi({
-    description: '会社説明',
-    example: 'ITソリューションを提供する会社です。'
-  }),
-  address: z.string().optional().openapi({
-    description: '住所',
-    example: '東京都渋谷区1-1-1'
-  }),
-  phone: z.string().optional().openapi({
-    description: '電話番号',
-    example: '03-1234-5678'
-  }),
-  email: z.string().email().optional().openapi({
-    description: 'メールアドレス',
-    example: 'info@example.com'
-  }),
-  website: z.string().optional().openapi({
-    description: 'ウェブサイト',
-    example: 'https://example.com'
+const companyUpdateSchema = z
+  .object({
+    name: z.string().min(1).optional().openapi({
+      description: '会社名',
+      example: 'テクノロジー株式会社',
+    }),
+    description: z.string().optional().openapi({
+      description: '会社説明',
+      example: 'ITソリューションを提供する会社です。',
+    }),
+    address: z.string().optional().openapi({
+      description: '住所',
+      example: '東京都渋谷区1-1-1',
+    }),
+    phone: z.string().optional().openapi({
+      description: '電話番号',
+      example: '03-1234-5678',
+    }),
+    email: z.string().email().optional().openapi({
+      description: 'メールアドレス',
+      example: 'info@example.com',
+    }),
+    website: z.string().optional().openapi({
+      description: 'ウェブサイト',
+      example: 'https://example.com',
+    }),
   })
-}).openapi('CompanyUpdate');
+  .openapi('CompanyUpdate');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // 会社一覧取得ルート
 const getCompaniesRoute = createRoute({
@@ -129,12 +137,12 @@ const getCompaniesRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            companies: z.array(companyResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            companies: z.array(companyResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 会社取得ルート
@@ -148,9 +156,9 @@ const getCompanyByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '会社ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -158,20 +166,20 @@ const getCompanyByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            company: companyResponseSchema
-          })
-        }
-      }
+            company: companyResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '会社が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 会社作成ルート
@@ -185,10 +193,10 @@ const createCompanyRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: companySchema
-        }
-      }
-    }
+          schema: companySchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -196,20 +204,20 @@ const createCompanyRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            company: companyResponseSchema
-          })
-        }
-      }
+            company: companyResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 会社更新ルート
@@ -223,16 +231,16 @@ const updateCompanyRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '会社ID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: companyUpdateSchema
-        }
-      }
-    }
+          schema: companyUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -240,28 +248,28 @@ const updateCompanyRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            company: companyResponseSchema
-          })
-        }
-      }
+            company: companyResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '会社が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 会社削除ルート
@@ -275,9 +283,9 @@ const deleteCompanyRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '会社ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -286,20 +294,20 @@ const deleteCompanyRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '会社が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

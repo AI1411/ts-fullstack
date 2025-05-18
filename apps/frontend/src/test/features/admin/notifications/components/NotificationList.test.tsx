@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NotificationList from '@/features/admin/notifications/components/NotificationList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Notification } from '@/features/admin/notifications/controllers';
 import { notificationService } from '@/features/admin/notifications/services';
 import { userService } from '@/features/admin/users/services';
-import { Notification } from '@/features/admin/notifications/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the notification service
 vi.mock('@/features/admin/notifications/services', () => ({
@@ -12,15 +12,15 @@ vi.mock('@/features/admin/notifications/services', () => ({
     getNotifications: vi.fn(),
     updateNotification: vi.fn(),
     deleteNotification: vi.fn(),
-    toggleNotificationReadStatus: vi.fn()
-  }
+    toggleNotificationReadStatus: vi.fn(),
+  },
 }));
 
 // Mock the user service
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUsers: vi.fn()
-  }
+    getUsers: vi.fn(),
+  },
 }));
 
 describe('NotificationList Component', () => {
@@ -56,7 +56,7 @@ describe('NotificationList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(notificationService.getNotifications).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
 
@@ -71,7 +71,9 @@ describe('NotificationList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(notificationService.getNotifications).mockRejectedValue(new Error('API error'));
+    vi.mocked(notificationService.getNotifications).mockRejectedValue(
+      new Error('API error')
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
 
     render(
@@ -95,7 +97,7 @@ describe('NotificationList Component', () => {
         message: 'This is test notification 1',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
+        created_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -103,17 +105,19 @@ describe('NotificationList Component', () => {
         message: 'This is test notification 2',
         user_id: 2,
         is_read: true,
-        created_at: '2023-01-02T00:00:00Z'
-      }
+        created_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     // Mock user data
     const mockUsers = [
       { id: 1, name: 'User 1', email: 'user1@example.com' },
-      { id: 2, name: 'User 2', email: 'user2@example.com' }
+      { id: 2, name: 'User 2', email: 'user2@example.com' },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
 
     render(
@@ -130,11 +134,11 @@ describe('NotificationList Component', () => {
     // Check if notifications are displayed
     expect(screen.getByText('Test Notification 1')).toBeInTheDocument();
     expect(screen.getByText('Test Notification 2')).toBeInTheDocument();
-    
+
     // Check if user names are displayed
     expect(screen.getByText('User 1')).toBeInTheDocument();
     expect(screen.getByText('User 2')).toBeInTheDocument();
-    
+
     // Check if read status is displayed correctly
     expect(screen.getByText('未読')).toBeInTheDocument();
     expect(screen.getByText('既読')).toBeInTheDocument();
@@ -149,17 +153,19 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
     // Mock user data
     const mockUsers = [
       { id: 1, name: 'User 1', email: 'user1@example.com' },
-      { id: 2, name: 'User 2', email: 'user2@example.com' }
+      { id: 2, name: 'User 2', email: 'user2@example.com' },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
 
     render(
@@ -178,16 +184,18 @@ describe('NotificationList Component', () => {
 
     // Check if edit form is displayed
     expect(screen.getByDisplayValue('Test Notification')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('This is a test notification')).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue('This is a test notification')
+    ).toBeInTheDocument();
     expect(screen.getByText('保存')).toBeInTheDocument();
     expect(screen.getByText('キャンセル')).toBeInTheDocument();
 
     // Edit the notification
-    fireEvent.change(screen.getByDisplayValue('Test Notification'), { 
-      target: { value: 'Updated Notification' } 
+    fireEvent.change(screen.getByDisplayValue('Test Notification'), {
+      target: { value: 'Updated Notification' },
     });
-    fireEvent.change(screen.getByDisplayValue('This is a test notification'), { 
-      target: { value: 'This is an updated notification' } 
+    fireEvent.change(screen.getByDisplayValue('This is a test notification'), {
+      target: { value: 'This is an updated notification' },
     });
 
     // Mock successful update
@@ -197,7 +205,7 @@ describe('NotificationList Component', () => {
       message: 'This is an updated notification',
       user_id: 1,
       is_read: false,
-      created_at: '2023-01-01T00:00:00Z'
+      created_at: '2023-01-01T00:00:00Z',
     });
 
     // Save the changes
@@ -209,7 +217,7 @@ describe('NotificationList Component', () => {
         title: 'Updated Notification',
         message: 'This is an updated notification',
         user_id: 1,
-        is_read: false
+        is_read: false,
       });
     });
   });
@@ -223,11 +231,13 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
 
     render(
@@ -251,7 +261,9 @@ describe('NotificationList Component', () => {
     fireEvent.click(screen.getByText('キャンセル'));
 
     // Check if edit form is no longer displayed
-    expect(screen.queryByDisplayValue('Test Notification')).not.toBeInTheDocument();
+    expect(
+      screen.queryByDisplayValue('Test Notification')
+    ).not.toBeInTheDocument();
     expect(screen.getByText('Test Notification')).toBeInTheDocument();
   });
 
@@ -264,11 +276,13 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
     vi.mocked(notificationService.deleteNotification).mockResolvedValue();
 
@@ -308,11 +322,13 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
 
     // Mock window.confirm to return false (cancel)
@@ -349,15 +365,19 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 1,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([]);
-    vi.mocked(notificationService.toggleNotificationReadStatus).mockResolvedValue({
+    vi.mocked(
+      notificationService.toggleNotificationReadStatus
+    ).mockResolvedValue({
       ...mockNotifications[0],
-      is_read: true
+      is_read: true,
     });
 
     render(
@@ -376,7 +396,9 @@ describe('NotificationList Component', () => {
 
     // Verify toggleNotificationReadStatus was called with correct parameters
     await waitFor(() => {
-      expect(notificationService.toggleNotificationReadStatus).toHaveBeenCalledWith(1, true);
+      expect(
+        notificationService.toggleNotificationReadStatus
+      ).toHaveBeenCalledWith(1, true);
     });
   });
 
@@ -389,13 +411,15 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: null,
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([
-      { id: 1, name: 'User 1', email: 'user1@example.com' }
+      { id: 1, name: 'User 1', email: 'user1@example.com' },
     ]);
 
     render(
@@ -422,13 +446,15 @@ describe('NotificationList Component', () => {
         message: 'This is a test notification',
         user_id: 999, // Non-existent user ID
         is_read: false,
-        created_at: '2023-01-01T00:00:00Z'
-      }
+        created_at: '2023-01-01T00:00:00Z',
+      },
     ];
 
-    vi.mocked(notificationService.getNotifications).mockResolvedValue(mockNotifications);
+    vi.mocked(notificationService.getNotifications).mockResolvedValue(
+      mockNotifications
+    );
     vi.mocked(userService.getUsers).mockResolvedValue([
-      { id: 1, name: 'User 1', email: 'user1@example.com' }
+      { id: 1, name: 'User 1', email: 'user1@example.com' },
     ]);
 
     render(

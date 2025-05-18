@@ -1,6 +1,6 @@
 // User repositories
-import {client} from '@/common/utils/client';
-import {CreateUserInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateUserInput } from './controllers';
 
 // User repository
 export const userRepository = {
@@ -19,22 +19,22 @@ export const userRepository = {
   // Get a user by ID
   getUserById: async (id: number) => {
     return client.users[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a user
   updateUser: async (id: number, userData: Partial<CreateUserInput>) => {
     return client.users[':id'].$put({
-      param: {id: id.toString()},
-      json: userData
+      param: { id: id.toString() },
+      json: userData,
     });
   },
 
   // Delete a user
   deleteUser: async (id: number) => {
     return client.users[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

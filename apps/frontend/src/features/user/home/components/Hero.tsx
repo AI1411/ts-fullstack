@@ -1,11 +1,14 @@
-'use client'
+'use client';
 
-import React from 'react';
 import Link from 'next/link';
+import type React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <div data-testid="hero-container" className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 py-16 sm:py-24">
+    <div
+      data-testid="hero-container"
+      className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 py-16 sm:py-24"
+    >
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/90 to-purple-600/90"></div>
       </div>
@@ -14,7 +17,9 @@ const Hero: React.FC = () => {
           {/* テキストコンテンツ */}
           <div className="flex flex-col justify-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              最高の商品を<br />お届けします
+              最高の商品を
+              <br />
+              お届けします
             </h1>
             <p className="mt-6 max-w-lg text-xl text-blue-50">
               高品質な商品を取り揃えたオンラインストアへようこそ。

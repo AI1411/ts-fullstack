@@ -1,23 +1,23 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createTodo, updateTodo } from '../../../features/todos/controllers';
-import { todosTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { todosTable } from '../../../db/schema';
+import { createTodo, updateTodo } from '../../../features/todos/controllers';
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -30,7 +30,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([])
+  returning: vi.fn().mockResolvedValue([]),
 };
 
 describe('Todo Validation', () => {
@@ -44,32 +44,42 @@ describe('Todo Validation', () => {
       const mockBody = {
         title: '',
         description: 'Test Description',
-        user_id: 1
+        user_id: 1,
       };
       const mockContext = createMockContext(mockBody);
-      
+
       // Make the DB return an empty array to simulate a validation error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('Title cannot be empty'));
+      mockDbClient.returning.mockRejectedValueOnce(
+        new Error('Title cannot be empty')
+      );
 
       const result = await createTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Title cannot be empty' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Title cannot be empty' },
+        500
+      );
     });
 
     it('should handle missing user_id', async () => {
       const mockBody = {
         title: 'Test Todo',
-        description: 'Test Description'
+        description: 'Test Description',
         // user_id is missing
       };
       const mockContext = createMockContext(mockBody);
-      
+
       // Make the DB return an empty array to simulate a validation error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('User ID is required'));
+      mockDbClient.returning.mockRejectedValueOnce(
+        new Error('User ID is required')
+      );
 
       const result = await createTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'User ID is required' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'User ID is required' },
+        500
+      );
     });
 
     it('should handle very long title', async () => {
@@ -77,16 +87,21 @@ describe('Todo Validation', () => {
       const mockBody = {
         title: longTitle,
         description: 'Test Description',
-        user_id: 1
+        user_id: 1,
       };
       const mockContext = createMockContext(mockBody);
-      
+
       // Make the DB return an empty array to simulate a validation error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('Title is too long'));
+      mockDbClient.returning.mockRejectedValueOnce(
+        new Error('Title is too long')
+      );
 
       const result = await createTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Title is too long' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Title is too long' },
+        500
+      );
     });
   });
 
@@ -96,16 +111,21 @@ describe('Todo Validation', () => {
         title: 'Updated Todo',
         description: 'Updated Description',
         user_id: 1,
-        status: 'INVALID_STATUS' // Invalid status
+        status: 'INVALID_STATUS', // Invalid status
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Make the DB return an empty array to simulate a validation error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('Invalid status value'));
+      mockDbClient.returning.mockRejectedValueOnce(
+        new Error('Invalid status value')
+      );
 
       const result = await updateTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Invalid status value' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Invalid status value' },
+        500
+      );
     });
 
     it('should handle non-numeric ID', async () => {
@@ -113,16 +133,21 @@ describe('Todo Validation', () => {
         title: 'Updated Todo',
         description: 'Updated Description',
         user_id: 1,
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       };
       const mockContext = createMockContext(mockBody, { id: 'abc' }); // Non-numeric ID
-      
+
       // Make the DB return an empty array to simulate a validation error
-      mockDbClient.returning.mockRejectedValueOnce(new Error('Invalid ID format'));
+      mockDbClient.returning.mockRejectedValueOnce(
+        new Error('Invalid ID format')
+      );
 
       const result = await updateTodo(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Invalid ID format' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Invalid ID format' },
+        500
+      );
     });
   });
 });

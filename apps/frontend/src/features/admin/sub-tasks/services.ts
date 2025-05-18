@@ -1,13 +1,13 @@
 // Sub-Task services
 import {
+  type CreateSubTaskInput,
+  type SubTask,
   createSubTask as createSubTaskController,
-  CreateSubTaskInput,
   deleteSubTask as deleteSubTaskController,
   getSubTaskById as getSubTaskByIdController,
-  getSubTasks as getSubTasksController,
   getSubTasksByTaskId as getSubTasksByTaskIdController,
-  SubTask,
-  updateSubTask as updateSubTaskController
+  getSubTasks as getSubTasksController,
+  updateSubTask as updateSubTaskController,
 } from './controllers';
 
 // Sub-Task service
@@ -33,7 +33,10 @@ export const subTaskService = {
   },
 
   // Update a sub-task
-  updateSubTask: async (id: number, subTaskData: Partial<CreateSubTaskInput>): Promise<SubTask> => {
+  updateSubTask: async (
+    id: number,
+    subTaskData: Partial<CreateSubTaskInput>
+  ): Promise<SubTask> => {
     return updateSubTaskController(id, subTaskData);
   },
 
@@ -45,18 +48,18 @@ export const subTaskService = {
   // Get completed sub-tasks
   getCompletedSubTasks: async (taskId: number): Promise<SubTask[]> => {
     const subTasks = await getSubTasksByTaskIdController(taskId);
-    return subTasks.filter(subTask => subTask.status === 'COMPLETED');
+    return subTasks.filter((subTask) => subTask.status === 'COMPLETED');
   },
 
   // Get pending sub-tasks
   getPendingSubTasks: async (taskId: number): Promise<SubTask[]> => {
     const subTasks = await getSubTasksByTaskIdController(taskId);
-    return subTasks.filter(subTask => subTask.status === 'PENDING');
+    return subTasks.filter((subTask) => subTask.status === 'PENDING');
   },
 
   // Get in-progress sub-tasks
   getInProgressSubTasks: async (taskId: number): Promise<SubTask[]> => {
     const subTasks = await getSubTasksByTaskIdController(taskId);
-    return subTasks.filter(subTask => subTask.status === 'IN_PROGRESS');
-  }
+    return subTasks.filter((subTask) => subTask.status === 'IN_PROGRESS');
+  },
 };

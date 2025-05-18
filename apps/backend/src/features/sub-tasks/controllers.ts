@@ -1,20 +1,23 @@
-import { Context } from 'hono';
-import { subTasksTable } from '../../db/schema';
-import { getDB } from '../../common/utils/db';
 import { eq } from 'drizzle-orm';
+import type { Context } from 'hono';
+import { getDB } from '../../common/utils/db';
+import { subTasksTable } from '../../db/schema';
 
 // サブタスク作成
 export const createSubTask = async (c: Context) => {
   const { task_id, title, description, status, due_date } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const subTask = await db.insert(subTasksTable).values({
-      task_id,
-      title,
-      description,
-      status: status || 'PENDING',
-      due_date: due_date ? new Date(due_date) : null,
-    }).returning();
+    const subTask = await db
+      .insert(subTasksTable)
+      .values({
+        task_id,
+        title,
+        description,
+        status: status || 'PENDING',
+        due_date: due_date ? new Date(due_date) : null,
+      })
+      .returning();
     return c.json({ subTask: subTask[0] });
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
@@ -34,10 +37,13 @@ export const getSubTasks = async (c: Context) => {
 
 // タスクIDによるサブタスク取得
 export const getSubTasksByTaskId = async (c: Context) => {
-  const taskId = parseInt(c.req.param('taskId'));
+  const taskId = Number.parseInt(c.req.param('taskId'));
   const db = getDB(c);
   try {
-    const subTasks = await db.select().from(subTasksTable).where(eq(subTasksTable.task_id, taskId));
+    const subTasks = await db
+      .select()
+      .from(subTasksTable)
+      .where(eq(subTasksTable.task_id, taskId));
     return c.json({ subTasks });
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
@@ -46,10 +52,13 @@ export const getSubTasksByTaskId = async (c: Context) => {
 
 // サブタスク取得
 export const getSubTaskById = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const subTask = await db.select().from(subTasksTable).where(eq(subTasksTable.id, id));
+    const subTask = await db
+      .select()
+      .from(subTasksTable)
+      .where(eq(subTasksTable.id, id));
     if (!subTask.length) {
       return c.json({ error: 'SubTask not found' }, 404);
     }
@@ -61,11 +70,12 @@ export const getSubTaskById = async (c: Context) => {
 
 // サブタスク更新
 export const updateSubTask = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const { task_id, title, description, status, due_date } = c.req.valid('json');
   const db = getDB(c);
   try {
-    const updatedSubTask = await db.update(subTasksTable)
+    const updatedSubTask = await db
+      .update(subTasksTable)
       .set({
         task_id,
         title,
@@ -87,10 +97,11 @@ export const updateSubTask = async (c: Context) => {
 
 // サブタスク削除
 export const deleteSubTask = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
   try {
-    const deletedSubTask = await db.delete(subTasksTable)
+    const deletedSubTask = await db
+      .delete(subTasksTable)
       .where(eq(subTasksTable.id, id))
       .returning();
     if (!deletedSubTask.length) {

@@ -1,7 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createTeam, getTeams, getTeamById, updateTeam, deleteTeam } from '../../../features/teams/controllers';
-import { teamsTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { teamsTable } from '../../../db/schema';
+import {
+  createTeam,
+  deleteTeam,
+  getTeamById,
+  getTeams,
+  updateTeam,
+} from '../../../features/teams/controllers';
 
 // Mock team data
 const mockTeam = {
@@ -9,24 +15,24 @@ const mockTeam = {
   name: '開発チーム',
   description: 'フロントエンド開発を担当するチーム',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -39,7 +45,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockTeam])
+  returning: vi.fn().mockResolvedValue([mockTeam]),
 };
 
 describe('Team Controllers', () => {
@@ -52,7 +58,7 @@ describe('Team Controllers', () => {
     it('should create a new team and return it', async () => {
       const mockBody = {
         name: '開発チーム',
-        description: 'フロントエンド開発を担当するチーム'
+        description: 'フロントエンド開発を担当するチーム',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -65,7 +71,7 @@ describe('Team Controllers', () => {
     it('should handle errors', async () => {
       const mockBody = {
         name: '開発チーム',
-        description: 'フロントエンド開発を担当するチーム'
+        description: 'フロントエンド開発を担当するチーム',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -74,7 +80,10 @@ describe('Team Controllers', () => {
 
       const result = await createTeam(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -97,7 +106,10 @@ describe('Team Controllers', () => {
 
       const result = await getTeams(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -122,7 +134,10 @@ describe('Team Controllers', () => {
 
       const result = await getTeamById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Team not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Team not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -133,7 +148,10 @@ describe('Team Controllers', () => {
 
       const result = await getTeamById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -141,7 +159,7 @@ describe('Team Controllers', () => {
     it('should update a team and return it', async () => {
       const mockBody = {
         name: '更新されたチーム名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
 
@@ -155,27 +173,33 @@ describe('Team Controllers', () => {
     it('should return 404 if team not found', async () => {
       const mockBody = {
         name: '更新されたチーム名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
       mockDbClient.returning.mockResolvedValueOnce([]);
 
       const result = await updateTeam(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Team not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Team not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: '更新されたチーム名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
       mockDbClient.returning.mockRejectedValueOnce(new Error('Database error'));
 
       const result = await updateTeam(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -186,7 +210,9 @@ describe('Team Controllers', () => {
       const result = await deleteTeam(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ message: 'Team deleted successfully' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        message: 'Team deleted successfully',
+      });
     });
 
     it('should return 404 if team not found', async () => {
@@ -195,7 +221,10 @@ describe('Team Controllers', () => {
 
       const result = await deleteTeam(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Team not found' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Team not found' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -204,7 +233,10 @@ describe('Team Controllers', () => {
 
       const result = await deleteTeam(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

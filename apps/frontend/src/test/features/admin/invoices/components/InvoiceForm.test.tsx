@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import InvoiceForm from '@/features/admin/invoices/components/InvoiceForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Invoice } from '@/features/admin/invoices/controllers';
 import { invoiceService } from '@/features/admin/invoices/services';
-import { Invoice } from '@/features/admin/invoices/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the invoice service
 vi.mock('@/features/admin/invoices/services', () => ({
   invoiceService: {
-    createInvoice: vi.fn()
-  }
+    createInvoice: vi.fn(),
+  },
 }));
 
 describe('InvoiceForm Component', () => {
@@ -38,7 +38,9 @@ describe('InvoiceForm Component', () => {
     expect(typeof InvoiceForm).toBe('function');
 
     // Check if the form title is rendered
-    expect(screen.getByRole('heading', { name: '領収書を追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: '領収書を追加' })
+    ).toBeInTheDocument();
   });
 
   it('should update form fields when user inputs data', () => {
@@ -86,7 +88,7 @@ describe('InvoiceForm Component', () => {
       payment_method: 'Credit Card',
       notes: 'Test notes',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
     vi.mocked(invoiceService.createInvoice).mockResolvedValue(mockInvoice);
 
@@ -126,7 +128,7 @@ describe('InvoiceForm Component', () => {
         total_amount: 10000,
         status: 'PAID',
         payment_method: 'Credit Card',
-        notes: 'Test notes'
+        notes: 'Test notes',
       });
     });
 
@@ -151,7 +153,9 @@ describe('InvoiceForm Component', () => {
 
   it('should show error message when invoice creation fails', async () => {
     // Mock error response
-    vi.mocked(invoiceService.createInvoice).mockRejectedValue(new Error('領収書の追加に失敗しました'));
+    vi.mocked(invoiceService.createInvoice).mockRejectedValue(
+      new Error('領収書の追加に失敗しました')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -173,7 +177,9 @@ describe('InvoiceForm Component', () => {
 
     // Check if error message is displayed
     await waitFor(() => {
-      expect(screen.getByText('領収書の追加に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('領収書の追加に失敗しました')
+      ).toBeInTheDocument();
     });
 
     // Check if the service was called
@@ -183,7 +189,8 @@ describe('InvoiceForm Component', () => {
   it('should show loading state during form submission', async () => {
     // Mock a delayed response
     vi.mocked(invoiceService.createInvoice).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({} as Invoice), 100))
+      () =>
+        new Promise((resolve) => setTimeout(() => resolve({} as Invoice), 100))
     );
 
     render(

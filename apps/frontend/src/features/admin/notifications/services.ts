@@ -1,13 +1,13 @@
 // Notification services
 import {
+  type CreateNotificationInput,
+  type Notification,
   createNotification as createNotificationController,
-  CreateNotificationInput,
   deleteNotification as deleteNotificationController,
   getNotificationById as getNotificationByIdController,
   getNotifications as getNotificationsController,
-  Notification,
   toggleNotificationReadStatus as toggleNotificationReadStatusController,
-  updateNotification as updateNotificationController
+  updateNotification as updateNotificationController,
 } from './controllers';
 
 // Notification service
@@ -18,7 +18,9 @@ export const notificationService = {
   },
 
   // Create a new notification
-  createNotification: async (notificationData: CreateNotificationInput): Promise<Notification> => {
+  createNotification: async (
+    notificationData: CreateNotificationInput
+  ): Promise<Notification> => {
     return createNotificationController(notificationData);
   },
 
@@ -28,7 +30,10 @@ export const notificationService = {
   },
 
   // Update a notification
-  updateNotification: async (id: number, notificationData: Partial<CreateNotificationInput>): Promise<Notification> => {
+  updateNotification: async (
+    id: number,
+    notificationData: Partial<CreateNotificationInput>
+  ): Promise<Notification> => {
     return updateNotificationController(id, notificationData);
   },
 
@@ -38,19 +43,22 @@ export const notificationService = {
   },
 
   // Toggle notification read status
-  toggleNotificationReadStatus: async (id: number, isRead: boolean): Promise<Notification> => {
+  toggleNotificationReadStatus: async (
+    id: number,
+    isRead: boolean
+  ): Promise<Notification> => {
     return toggleNotificationReadStatusController(id, isRead);
   },
 
   // Get unread notifications
   getUnreadNotifications: async (): Promise<Notification[]> => {
     const notifications = await getNotificationsController();
-    return notifications.filter(notification => !notification.is_read);
+    return notifications.filter((notification) => !notification.is_read);
   },
 
   // Get read notifications
   getReadNotifications: async (): Promise<Notification[]> => {
     const notifications = await getNotificationsController();
-    return notifications.filter(notification => notification.is_read);
-  }
+    return notifications.filter((notification) => notification.is_read);
+  },
 };

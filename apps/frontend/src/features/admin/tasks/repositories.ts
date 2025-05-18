@@ -1,6 +1,6 @@
 // Task repositories
-import {client} from '@/common/utils/client';
-import {CreateTaskInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateTaskInput } from './controllers';
 
 // Task repository
 export const taskRepository = {
@@ -19,22 +19,22 @@ export const taskRepository = {
   // Get a task by ID
   getTaskById: async (id: number) => {
     return client.tasks[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a task
   updateTask: async (id: number, taskData: Partial<CreateTaskInput>) => {
     return client.tasks[':id'].$put({
-      param: {id: id.toString()},
-      json: taskData
+      param: { id: id.toString() },
+      json: taskData,
     });
   },
 
   // Delete a task
   deleteTask: async (id: number) => {
     return client.tasks[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

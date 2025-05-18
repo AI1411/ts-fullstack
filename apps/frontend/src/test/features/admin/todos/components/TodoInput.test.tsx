@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import TodoInput from '@/features/admin/todos/components/TodoInput';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 // Don't mock React hooks, just use the actual implementation
 // This is a simpler approach that works for our basic tests

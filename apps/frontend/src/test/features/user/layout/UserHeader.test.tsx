@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
 import UserHeader from '@/features/user/layout/UserHeader';
+import { fireEvent, render, screen } from '@testing-library/react';
+import type React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the next/navigation module
 vi.mock('next/navigation', () => ({
@@ -12,9 +12,24 @@ vi.mock('next/navigation', () => ({
 vi.mock('next/link', () => {
   return {
     __esModule: true,
-    default: ({ href, children, className, onClick }: { href: string; children: React.ReactNode; className?: string; onClick?: () => void }) => {
+    default: ({
+      href,
+      children,
+      className,
+      onClick,
+    }: {
+      href: string;
+      children: React.ReactNode;
+      className?: string;
+      onClick?: () => void;
+    }) => {
       return (
-        <a href={href} className={className} data-testid="next-link" onClick={onClick}>
+        <a
+          href={href}
+          className={className}
+          data-testid="next-link"
+          onClick={onClick}
+        >
           {children}
         </a>
       );
@@ -39,7 +54,7 @@ const localStorageMock = (() => {
     key: vi.fn((index: number) => Object.keys(store)[index] || null),
     get length() {
       return Object.keys(store).length;
-    }
+    },
   };
 })();
 
@@ -94,7 +109,9 @@ describe('UserHeader', () => {
     }
 
     // Check that the dark mode class was removed from the document
-    expect(document.documentElement.classList.remove).toHaveBeenCalledWith('dark');
+    expect(document.documentElement.classList.remove).toHaveBeenCalledWith(
+      'dark'
+    );
     expect(localStorage.getItem('darkMode')).toBe('false');
   });
 
@@ -102,7 +119,9 @@ describe('UserHeader', () => {
     render(<UserHeader />);
 
     // Mobile menu should be hidden initially
-    expect(screen.queryByText('ホーム', { selector: '.block' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('ホーム', { selector: '.block' })
+    ).not.toBeInTheDocument();
 
     // Find the mobile menu button using data-testid
     const menuButton = screen.getByTestId('mobile-menu-button');
@@ -115,7 +134,9 @@ describe('UserHeader', () => {
     }
 
     // Mobile menu should now be visible
-    expect(screen.getByText('ホーム', { selector: '.block' })).toBeInTheDocument();
+    expect(
+      screen.getByText('ホーム', { selector: '.block' })
+    ).toBeInTheDocument();
 
     // Click the button again to close the menu
     if (menuButton) {
@@ -123,7 +144,9 @@ describe('UserHeader', () => {
     }
 
     // Mobile menu should be hidden again
-    expect(screen.queryByText('ホーム', { selector: '.block' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('ホーム', { selector: '.block' })
+    ).not.toBeInTheDocument();
   });
 
   it('has correct links for navigation items', () => {
@@ -143,7 +166,9 @@ describe('UserHeader', () => {
 
     // Check that the account link has the correct href
     const links = screen.getAllByRole('link');
-    const accountLink = links.find(link => link.getAttribute('href') === '/account');
+    const accountLink = links.find(
+      (link) => link.getAttribute('href') === '/account'
+    );
     expect(accountLink).toBeDefined();
     expect(accountLink).toHaveAttribute('href', '/account');
   });
@@ -162,13 +187,17 @@ describe('UserHeader', () => {
     }
 
     // Mobile menu should be visible
-    expect(screen.getByText('ホーム', { selector: '.block' })).toBeInTheDocument();
+    expect(
+      screen.getByText('ホーム', { selector: '.block' })
+    ).toBeInTheDocument();
 
     // Click a navigation link
     const homeLink = screen.getByText('ホーム', { selector: '.block' });
     fireEvent.click(homeLink);
 
     // Mobile menu should be hidden again
-    expect(screen.queryByText('ホーム', { selector: '.block' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('ホーム', { selector: '.block' })
+    ).not.toBeInTheDocument();
   });
 });

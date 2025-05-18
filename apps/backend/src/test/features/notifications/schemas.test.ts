@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { notificationSchema } from '../../../features/notifications/schemas';
 
 describe('Notification Schemas', () => {
@@ -8,10 +8,10 @@ describe('Notification Schemas', () => {
         title: 'Test Notification',
         message: 'This is a test notification',
       };
-      
+
       const result = notificationSchema.safeParse(validNotification);
       expect(result.success).toBe(true);
-      
+
       // Check default values
       if (result.success) {
         expect(result.data.is_read).toBe(false);
@@ -26,7 +26,7 @@ describe('Notification Schemas', () => {
         message: 'This is a test notification',
         is_read: true,
       };
-      
+
       const result = notificationSchema.safeParse(validNotification);
       expect(result.success).toBe(true);
     });
@@ -37,7 +37,7 @@ describe('Notification Schemas', () => {
         message: 'This is a test notification',
         user_id: null,
       };
-      
+
       const result = notificationSchema.safeParse(validNotification);
       expect(result.success).toBe(true);
     });
@@ -47,7 +47,7 @@ describe('Notification Schemas', () => {
         title: 'A', // Too short
         message: 'This is a test notification',
       };
-      
+
       const result = notificationSchema.safeParse(invalidNotification);
       expect(result.success).toBe(false);
     });
@@ -57,7 +57,7 @@ describe('Notification Schemas', () => {
         title: 'Test Notification',
         message: '', // Empty message
       };
-      
+
       const result = notificationSchema.safeParse(invalidNotification);
       expect(result.success).toBe(false);
     });
@@ -66,7 +66,7 @@ describe('Notification Schemas', () => {
       const invalidNotification = {
         message: 'Missing title',
       };
-      
+
       const result = notificationSchema.safeParse(invalidNotification);
       expect(result.success).toBe(false);
     });
@@ -75,7 +75,7 @@ describe('Notification Schemas', () => {
       const invalidNotification = {
         title: 'Missing message',
       };
-      
+
       const result = notificationSchema.safeParse(invalidNotification);
       expect(result.success).toBe(false);
     });
@@ -86,7 +86,7 @@ describe('Notification Schemas', () => {
         message: 'This is a test notification',
         user_id: 'not-a-number',
       };
-      
+
       const result = notificationSchema.safeParse(invalidNotification);
       expect(result.success).toBe(false);
     });

@@ -1,7 +1,7 @@
-import { Context } from 'hono';
-import { chatsTable, chatMessagesTable, usersTable } from '../../db/schema';
+import { and, desc, eq, inArray, ne, or } from 'drizzle-orm';
+import type { Context } from 'hono';
 import { getDB } from '../../common/utils/db';
-import { and, desc, eq, ne, or, inArray } from 'drizzle-orm';
+import { chatMessagesTable, chatsTable, usersTable } from '../../db/schema';
 
 // チャット作成
 export const createChat = async (c: Context) => {
@@ -10,7 +10,8 @@ export const createChat = async (c: Context) => {
 
   try {
     // 既存のチャットを確認
-    const existingChat = await db.select()
+    const existingChat = await db
+      .select()
       .from(chatsTable)
       .where(
         or(
@@ -31,10 +32,13 @@ export const createChat = async (c: Context) => {
     }
 
     // 新しいチャットを作成
-    const chat = await db.insert(chatsTable).values({
-      creator_id,
-      recipient_id,
-    }).returning();
+    const chat = await db
+      .insert(chatsTable)
+      .values({
+        creator_id,
+        recipient_id,
+      })
+      .returning();
 
     return c.json({ chat: chat[0] });
   } catch (error: any) {
@@ -44,15 +48,16 @@ export const createChat = async (c: Context) => {
 
 // ユーザーのチャット一覧取得
 export const getUserChats = async (c: Context) => {
-  const userId = parseInt(c.req.param('userId'));
+  const userId = Number.parseInt(c.req.param('userId'));
   const db = getDB(c);
 
   try {
     // ユーザーが参加しているすべてのチャットを取得
-    const chats = await db.select({
-      chat: chatsTable,
-      otherUser: usersTable,
-    })
+    const chats = await db
+      .select({
+        chat: chatsTable,
+        otherUser: usersTable,
+      })
       .from(chatsTable)
       .leftJoin(
         usersTable,
@@ -82,11 +87,14 @@ export const getUserChats = async (c: Context) => {
 
 // チャット取得
 export const getChatById = async (c: Context) => {
-  const id = parseInt(c.req.param('id'));
+  const id = Number.parseInt(c.req.param('id'));
   const db = getDB(c);
 
   try {
-    const chat = await db.select().from(chatsTable).where(eq(chatsTable.id, id));
+    const chat = await db
+      .select()
+      .from(chatsTable)
+      .where(eq(chatsTable.id, id));
 
     if (!chat.length) {
       return c.json({ error: 'Chat not found' }, 404);
@@ -105,19 +113,25 @@ export const createChatMessage = async (c: Context) => {
 
   try {
     // チャットの存在確認
-    const chat = await db.select().from(chatsTable).where(eq(chatsTable.id, chat_id));
+    const chat = await db
+      .select()
+      .from(chatsTable)
+      .where(eq(chatsTable.id, chat_id));
 
     if (!chat.length) {
       return c.json({ error: 'Chat not found' }, 404);
     }
 
     // メッセージを作成
-    const message = await db.insert(chatMessagesTable).values({
-      chat_id,
-      sender_id,
-      content,
-      is_read: is_read || false,
-    }).returning();
+    const message = await db
+      .insert(chatMessagesTable)
+      .values({
+        chat_id,
+        sender_id,
+        content,
+        is_read: is_read || false,
+      })
+      .returning();
 
     return c.json({ message: message[0] });
   } catch (error: any) {
@@ -127,25 +141,29 @@ export const createChatMessage = async (c: Context) => {
 
 // チャットメッセージ一覧取得
 export const getChatMessages = async (c: Context) => {
-  const chatId = parseInt(c.req.param('chatId'));
+  const chatId = Number.parseInt(c.req.param('chatId'));
   const db = getDB(c);
 
   try {
     // チャットの存在確認
-    const chat = await db.select().from(chatsTable).where(eq(chatsTable.id, chatId));
+    const chat = await db
+      .select()
+      .from(chatsTable)
+      .where(eq(chatsTable.id, chatId));
 
     if (!chat.length) {
       return c.json({ error: 'Chat not found' }, 404);
     }
 
     // メッセージを取得
-    const messages = await db.select({
-      message: chatMessagesTable,
-      sender: {
-        id: usersTable.id,
-        name: usersTable.name,
-      }
-    })
+    const messages = await db
+      .select({
+        message: chatMessagesTable,
+        sender: {
+          id: usersTable.id,
+          name: usersTable.name,
+        },
+      })
       .from(chatMessagesTable)
       .leftJoin(usersTable, eq(chatMessagesTable.sender_id, usersTable.id))
       .where(eq(chatMessagesTable.chat_id, chatId))
@@ -159,20 +177,24 @@ export const getChatMessages = async (c: Context) => {
 
 // メッセージを既読にする
 export const markMessagesAsRead = async (c: Context) => {
-  const chatId = parseInt(c.req.param('chatId'));
-  const userId = parseInt(c.req.param('userId'));
+  const chatId = Number.parseInt(c.req.param('chatId'));
+  const userId = Number.parseInt(c.req.param('userId'));
   const db = getDB(c);
 
   try {
     // チャットの存在確認
-    const chat = await db.select().from(chatsTable).where(eq(chatsTable.id, chatId));
+    const chat = await db
+      .select()
+      .from(chatsTable)
+      .where(eq(chatsTable.id, chatId));
 
     if (!chat.length) {
       return c.json({ error: 'Chat not found' }, 404);
     }
 
     // 自分が送信していないメッセージを既読にする
-    const updatedMessages = await db.update(chatMessagesTable)
+    const updatedMessages = await db
+      .update(chatMessagesTable)
       .set({
         is_read: true,
         updated_at: new Date(),
@@ -190,7 +212,7 @@ export const markMessagesAsRead = async (c: Context) => {
     return c.json({
       success: true,
       count: updatedMessages.length,
-      messages: updatedMessages
+      messages: updatedMessages,
     });
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
@@ -199,12 +221,13 @@ export const markMessagesAsRead = async (c: Context) => {
 
 // 未読メッセージ数を取得
 export const getUnreadMessageCount = async (c: Context) => {
-  const userId = parseInt(c.req.param('userId'));
+  const userId = Number.parseInt(c.req.param('userId'));
   const db = getDB(c);
 
   try {
     // ユーザーが参加しているチャットを取得
-    const chats = await db.select()
+    const chats = await db
+      .select()
       .from(chatsTable)
       .where(
         or(
@@ -213,11 +236,12 @@ export const getUnreadMessageCount = async (c: Context) => {
         )
       );
 
-    const chatIds = chats.map(chat => chat.id);
+    const chatIds = chats.map((chat) => chat.id);
 
     // 未読メッセージ数を取得
     // 自分宛てのメッセージで未読のものを取得
-    const unreadMessages = await db.select()
+    const unreadMessages = await db
+      .select()
       .from(chatMessagesTable)
       .where(
         and(
@@ -230,7 +254,7 @@ export const getUnreadMessageCount = async (c: Context) => {
 
     return c.json({
       unreadCount: unreadMessages.length,
-      chats: chatIds
+      chats: chatIds,
     });
   } catch (error: any) {
     return c.json({ error: error.message }, 500);

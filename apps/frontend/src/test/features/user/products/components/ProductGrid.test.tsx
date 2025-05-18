@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import ProductGrid from '@/features/user/products/components/ProductGrid';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the ProductCard component
 vi.mock('@/features/user/products/components/ProductCard', () => ({
@@ -48,20 +48,38 @@ describe('ProductGrid Component', () => {
     expect(screen.getByTestId('product-card-3')).toBeInTheDocument();
 
     // Check if product details are passed correctly to ProductCard
-    expect(screen.getByTestId('product-name-1').textContent).toBe('Test Product 1');
+    expect(screen.getByTestId('product-name-1').textContent).toBe(
+      'Test Product 1'
+    );
     expect(screen.getByTestId('product-price-1').textContent).toBe('1000');
-    expect(screen.getByTestId('product-description-1').textContent).toBe('Test Description 1');
-    expect(screen.getByTestId('product-image-1').textContent).toBe('test-image-1.jpg');
+    expect(screen.getByTestId('product-description-1').textContent).toBe(
+      'Test Description 1'
+    );
+    expect(screen.getByTestId('product-image-1').textContent).toBe(
+      'test-image-1.jpg'
+    );
 
-    expect(screen.getByTestId('product-name-2').textContent).toBe('Test Product 2');
+    expect(screen.getByTestId('product-name-2').textContent).toBe(
+      'Test Product 2'
+    );
     expect(screen.getByTestId('product-price-2').textContent).toBe('2000');
-    expect(screen.getByTestId('product-description-2').textContent).toBe('Test Description 2');
-    expect(screen.getByTestId('product-image-2').textContent).toBe('test-image-2.jpg');
+    expect(screen.getByTestId('product-description-2').textContent).toBe(
+      'Test Description 2'
+    );
+    expect(screen.getByTestId('product-image-2').textContent).toBe(
+      'test-image-2.jpg'
+    );
 
-    expect(screen.getByTestId('product-name-3').textContent).toBe('Test Product 3');
+    expect(screen.getByTestId('product-name-3').textContent).toBe(
+      'Test Product 3'
+    );
     expect(screen.getByTestId('product-price-3').textContent).toBe('3000');
-    expect(screen.getByTestId('product-description-3').textContent).toBe('Test Description 3');
-    expect(screen.getByTestId('product-image-3').textContent).toBe('test-image-3.jpg');
+    expect(screen.getByTestId('product-description-3').textContent).toBe(
+      'Test Description 3'
+    );
+    expect(screen.getByTestId('product-image-3').textContent).toBe(
+      'test-image-3.jpg'
+    );
   });
 
   it('should render an empty grid when no products are provided', () => {

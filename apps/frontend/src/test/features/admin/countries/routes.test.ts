@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { COUNTRY_ROUTES } from '@/features/admin/countries/routes';
+import { describe, expect, it } from 'vitest';
 
 describe('Country Routes', () => {
   it('should have the correct list route', () => {

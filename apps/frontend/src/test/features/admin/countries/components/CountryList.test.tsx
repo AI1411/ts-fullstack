@@ -1,30 +1,35 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CountryList from '@/features/admin/countries/components/CountryList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Country } from '@/features/admin/countries/controllers';
 import { countryService } from '@/features/admin/countries/services';
-import { Country } from '@/features/admin/countries/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the country service
 vi.mock('@/features/admin/countries/services', () => ({
   countryService: {
     getCountries: vi.fn(),
     updateCountry: vi.fn(),
-    deleteCountry: vi.fn()
-  }
+    deleteCountry: vi.fn(),
+  },
 }));
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode, href: string }) => (
-    <a href={href} data-testid="next-link">{children}</a>
-  )
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
+    <a href={href} data-testid="next-link">
+      {children}
+    </a>
+  ),
 }));
 
 // Mock React Icons
 vi.mock('react-icons/ri', () => ({
   RiArrowDownSLine: () => <span data-testid="arrow-down-icon">↓</span>,
-  RiArrowRightSLine: () => <span data-testid="arrow-right-icon">→</span>
+  RiArrowRightSLine: () => <span data-testid="arrow-right-icon">→</span>,
 }));
 
 describe('CountryList Component', () => {
@@ -59,7 +64,7 @@ describe('CountryList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(countryService.getCountries).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -73,7 +78,9 @@ describe('CountryList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(countryService.getCountries).mockRejectedValue(new Error('API error'));
+    vi.mocked(countryService.getCountries).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -114,7 +121,7 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 2,
@@ -122,8 +129,8 @@ describe('CountryList Component', () => {
         code: 'US',
         flag_url: 'https://example.com/us.png',
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-04T00:00:00Z'
-      }
+        updated_at: '2023-01-04T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -154,8 +161,8 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -195,7 +202,7 @@ describe('CountryList Component', () => {
       expect(countryService.updateCountry).toHaveBeenCalledWith(1, {
         name: 'Japan Updated',
         code: 'JP',
-        flag_url: 'https://example.com/japan.png'
+        flag_url: 'https://example.com/japan.png',
       });
     });
   });
@@ -209,12 +216,14 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
-    vi.mocked(countryService.updateCountry).mockRejectedValue(new Error('Update failed'));
+    vi.mocked(countryService.updateCountry).mockRejectedValue(
+      new Error('Update failed')
+    );
 
     // Mock console.error and window.alert
     const originalConsoleError = console.error;
@@ -245,8 +254,11 @@ describe('CountryList Component', () => {
 
     // Check if error handling was triggered
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith("Failed to update country:", expect.any(Error));
-      expect(window.alert).toHaveBeenCalledWith("国の更新に失敗しました");
+      expect(console.error).toHaveBeenCalledWith(
+        'Failed to update country:',
+        expect.any(Error)
+      );
+      expect(window.alert).toHaveBeenCalledWith('国の更新に失敗しました');
     });
 
     // Restore original functions
@@ -263,8 +275,8 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -294,7 +306,9 @@ describe('CountryList Component', () => {
 
     // Check if we're back to view mode and the original name is displayed
     await waitFor(() => {
-      expect(screen.queryByDisplayValue('Japan Updated')).not.toBeInTheDocument();
+      expect(
+        screen.queryByDisplayValue('Japan Updated')
+      ).not.toBeInTheDocument();
     });
     expect(screen.getByText('Japan')).toBeInTheDocument();
     expect(countryService.updateCountry).not.toHaveBeenCalled();
@@ -309,8 +323,8 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -355,12 +369,14 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
-    vi.mocked(countryService.deleteCountry).mockRejectedValue(new Error('Delete failed'));
+    vi.mocked(countryService.deleteCountry).mockRejectedValue(
+      new Error('Delete failed')
+    );
 
     // Mock console.error and window.alert
     const originalConsoleError = console.error;
@@ -386,8 +402,11 @@ describe('CountryList Component', () => {
 
     // Check if error handling was triggered
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith("Failed to delete country:", expect.any(Error));
-      expect(window.alert).toHaveBeenCalledWith("国の削除に失敗しました");
+      expect(console.error).toHaveBeenCalledWith(
+        'Failed to delete country:',
+        expect.any(Error)
+      );
+      expect(window.alert).toHaveBeenCalledWith('国の削除に失敗しました');
     });
 
     // Restore original functions
@@ -405,8 +424,8 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -448,8 +467,8 @@ describe('CountryList Component', () => {
         code: 'JP',
         flag_url: 'https://example.com/japan.png',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(countryService.getCountries).mockResolvedValue(mockCountries);
@@ -474,7 +493,9 @@ describe('CountryList Component', () => {
     // Check if details are now visible
     expect(screen.getByText('国の詳細')).toBeInTheDocument();
     expect(screen.getByText('国旗URL:')).toBeInTheDocument();
-    expect(screen.getByText('https://example.com/japan.png')).toBeInTheDocument();
+    expect(
+      screen.getByText('https://example.com/japan.png')
+    ).toBeInTheDocument();
     expect(screen.getByText('最終更新日:')).toBeInTheDocument();
 
     // Click the collapse button

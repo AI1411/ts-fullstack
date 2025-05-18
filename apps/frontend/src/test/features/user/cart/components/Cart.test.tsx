@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import type { CartItem } from '@/contexts/CartContext';
 import Cart from '@/features/user/cart/components/Cart';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import React from 'react';
-import { CartItem } from '@/contexts/CartContext';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the CartContext
 vi.mock('@/contexts/CartContext', () => {
@@ -42,7 +42,10 @@ vi.mock('@/contexts/CartContext', () => {
 
     // Function to recalculate derived values
     const recalculate = () => {
-      subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      subtotal = items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
       tax = Math.round(subtotal * 0.1); // 10% tax
       shipping = items.length > 0 ? 800 : 0;
       total = subtotal + tax + shipping;
@@ -51,20 +54,30 @@ vi.mock('@/contexts/CartContext', () => {
     return {
       items,
       removeItem: (id: number) => {
-        items = items.filter(item => item.id !== id);
+        items = items.filter((item) => item.id !== id);
         recalculate();
       },
       updateQuantity: (id: number, quantity: number) => {
-        items = items.map(item => 
+        items = items.map((item) =>
           item.id === id ? { ...item, quantity } : item
         );
         recalculate();
       },
-      get subtotal() { return subtotal; },
-      get tax() { return tax; },
-      get total() { return total; },
-      get shipping() { return shipping; },
-      get itemCount() { return items.reduce((sum, item) => sum + item.quantity, 0); },
+      get subtotal() {
+        return subtotal;
+      },
+      get tax() {
+        return tax;
+      },
+      get total() {
+        return total;
+      },
+      get shipping() {
+        return shipping;
+      },
+      get itemCount() {
+        return items.reduce((sum, item) => sum + item.quantity, 0);
+      },
       addItem: vi.fn(),
       clearCart: vi.fn(),
     };
@@ -93,14 +106,14 @@ vi.mock('@/features/user/cart/components/CartList', () => {
       // Handle remove item
       const handleRemoveItem = (id: number) => {
         onRemoveItem(id);
-        setLocalItems(localItems.filter(item => item.id !== id));
+        setLocalItems(localItems.filter((item) => item.id !== id));
       };
 
       // Handle update quantity
       const handleUpdateQuantity = (id: number, quantity: number) => {
         onUpdateQuantity(id, quantity);
         setLocalItems(
-          localItems.map(item => 
+          localItems.map((item) =>
             item.id === id ? { ...item, quantity } : item
           )
         );
@@ -108,14 +121,11 @@ vi.mock('@/features/user/cart/components/CartList', () => {
 
       return (
         <div data-testid="cart-list">
-          <button 
-            data-testid="remove-item" 
-            onClick={() => handleRemoveItem(1)}
-          >
+          <button data-testid="remove-item" onClick={() => handleRemoveItem(1)}>
             Remove Item
           </button>
-          <button 
-            data-testid="update-quantity" 
+          <button
+            data-testid="update-quantity"
             onClick={() => handleUpdateQuantity(2, 3)}
           >
             Update Quantity

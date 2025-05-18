@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { ChatMessageWithSender } from "../controllers";
-import { formatDistanceToNow } from "date-fns";
-import { ja } from "date-fns/locale";
+import { formatDistanceToNow } from 'date-fns';
+import { ja } from 'date-fns/locale';
+import type { ChatMessageWithSender } from '../controllers';
 
 interface MessageListProps {
   messages: ChatMessageWithSender[];
@@ -19,8 +19,10 @@ const MessageList = ({ messages, currentUserId }: MessageListProps) => {
   }
 
   // メッセージを日付の新しい順に並べ替え
-  const sortedMessages = [...messages].sort((a, b) => 
-    new Date(a.message.created_at).getTime() - new Date(b.message.created_at).getTime()
+  const sortedMessages = [...messages].sort(
+    (a, b) =>
+      new Date(a.message.created_at).getTime() -
+      new Date(b.message.created_at).getTime()
   );
 
   return (
@@ -28,10 +30,10 @@ const MessageList = ({ messages, currentUserId }: MessageListProps) => {
       {sortedMessages.map((messageWithSender) => {
         const { message, sender } = messageWithSender;
         const isCurrentUser = message.sender_id === currentUserId;
-        
+
         return (
-          <div 
-            key={message.id} 
+          <div
+            key={message.id}
             className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
           >
             <div className="flex max-w-[70%]">
@@ -41,32 +43,36 @@ const MessageList = ({ messages, currentUserId }: MessageListProps) => {
                   {sender.name.charAt(0).toUpperCase()}
                 </div>
               )}
-              
+
               {/* メッセージ */}
               <div>
                 {/* 送信者名（自分のメッセージの場合は表示しない） */}
                 {!isCurrentUser && (
-                  <div className="text-xs text-gray-500 mb-1">{sender.name}</div>
+                  <div className="text-xs text-gray-500 mb-1">
+                    {sender.name}
+                  </div>
                 )}
-                
+
                 {/* メッセージ内容 */}
-                <div 
+                <div
                   className={`rounded-lg px-4 py-2 inline-block ${
-                    isCurrentUser 
-                      ? 'bg-blue-500 text-white' 
+                    isCurrentUser
+                      ? 'bg-blue-500 text-white'
                       : 'bg-gray-200 text-gray-800'
                   }`}
                 >
                   {message.content}
                 </div>
-                
+
                 {/* タイムスタンプ */}
-                <div className={`text-xs text-gray-500 mt-1 ${
-                  isCurrentUser ? 'text-right' : 'text-left'
-                }`}>
-                  {formatDistanceToNow(new Date(message.created_at), { 
+                <div
+                  className={`text-xs text-gray-500 mt-1 ${
+                    isCurrentUser ? 'text-right' : 'text-left'
+                  }`}
+                >
+                  {formatDistanceToNow(new Date(message.created_at), {
                     addSuffix: true,
-                    locale: ja
+                    locale: ja,
                   })}
                   {isCurrentUser && (
                     <span className="ml-2">

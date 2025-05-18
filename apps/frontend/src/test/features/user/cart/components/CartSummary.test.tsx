@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import CartSummary from '@/features/user/cart/components/CartSummary';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="continue-shopping-link">
       {children}
     </a>

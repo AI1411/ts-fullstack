@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  createInquiry, 
-  getInquiries, 
-  getInquiryById
-} from '../../../features/inquiries/controllers';
-import { inquiriesTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { inquiriesTable } from '../../../db/schema';
+import {
+  createInquiry,
+  getInquiries,
+  getInquiryById,
+} from '../../../features/inquiries/controllers';
 
 // Mock inquiry data
 const mockInquiry = {
@@ -16,7 +16,7 @@ const mockInquiry = {
   message: 'これはテスト用のお問い合わせメッセージです。',
   status: 'PENDING',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
@@ -29,12 +29,12 @@ const mockInquiry = {
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -45,7 +45,7 @@ const mockDbClient = {
   insert: vi.fn().mockReturnThis(),
   values: vi.fn().mockReturnThis(),
   returning: vi.fn().mockResolvedValue([mockInquiry]),
-  orderBy: vi.fn().mockReturnThis()
+  orderBy: vi.fn().mockReturnThis(),
 };
 
 describe.skip('Inquiry Controllers', () => {
@@ -60,14 +60,17 @@ describe.skip('Inquiry Controllers', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createInquiry(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ inquiry: mockInquiry }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { inquiry: mockInquiry },
+        201
+      );
     });
 
     it('should handle errors', async () => {
@@ -75,7 +78,7 @@ describe.skip('Inquiry Controllers', () => {
         name: 'テストユーザー',
         email: 'test@example.com',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -84,7 +87,10 @@ describe.skip('Inquiry Controllers', () => {
 
       const result = await createInquiry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -97,7 +103,9 @@ describe.skip('Inquiry Controllers', () => {
 
       const result = await getInquiries(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ inquiries: [mockInquiry] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        inquiries: [mockInquiry],
+      });
     });
 
     it('should handle errors', async () => {
@@ -108,7 +116,10 @@ describe.skip('Inquiry Controllers', () => {
 
       const result = await getInquiries(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -133,7 +144,10 @@ describe.skip('Inquiry Controllers', () => {
 
       const result = await getInquiryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'お問い合わせが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'お問い合わせが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -144,7 +158,10 @@ describe.skip('Inquiry Controllers', () => {
 
       const result = await getInquiryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

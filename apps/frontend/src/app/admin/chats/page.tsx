@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import ChatList from "@/features/admin/chats/components/ChatList";
-import ChatForm from "@/features/admin/chats/components/ChatForm";
+import ChatForm from '@/features/admin/chats/components/ChatForm';
+import ChatList from '@/features/admin/chats/components/ChatList';
 
 export default function ChatsPage() {
   return (
@@ -10,7 +10,9 @@ export default function ChatsPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">チャット一覧</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                チャット一覧
+              </h2>
             </div>
             <ChatList />
           </div>

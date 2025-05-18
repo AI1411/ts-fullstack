@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
 import AccountSettings from '@/features/user/account/components/AccountSettings';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the react-icons
 vi.mock('react-icons/ri', () => ({
@@ -22,7 +22,7 @@ describe('AccountSettings Component', () => {
       prefecture: '東京都',
       city: '渋谷区',
       line1: '渋谷1-2-3',
-      line2: 'アパート101'
+      line2: 'アパート101',
     },
     memberSince: '2022年10月',
   };
@@ -41,7 +41,9 @@ describe('AccountSettings Component', () => {
     expect(screen.getByText('パスワード変更')).toBeInTheDocument();
     expect(screen.getByLabelText('現在のパスワード')).toBeInTheDocument();
     expect(screen.getByLabelText('新しいパスワード')).toBeInTheDocument();
-    expect(screen.getByLabelText('新しいパスワード（確認）')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('新しいパスワード（確認）')
+    ).toBeInTheDocument();
     expect(screen.getByText('パスワードを変更')).toBeInTheDocument();
 
     // Check if the icon is rendered
@@ -91,8 +93,12 @@ describe('AccountSettings Component', () => {
     render(<AccountSettings user={mockUser} />);
 
     // Find the email notifications toggle by finding the parent element first
-    const emailNotificationSection = screen.getByText('メール通知').closest('div')?.parentElement;
-    const emailToggle = emailNotificationSection?.querySelector('input[type="checkbox"]');
+    const emailNotificationSection = screen
+      .getByText('メール通知')
+      .closest('div')?.parentElement;
+    const emailToggle = emailNotificationSection?.querySelector(
+      'input[type="checkbox"]'
+    );
 
     // Check if the toggle exists
     expect(emailToggle).toBeInTheDocument();
@@ -151,8 +157,12 @@ describe('AccountSettings Component', () => {
     render(<AccountSettings user={mockUser} />);
 
     // Find the two-factor authentication toggle by finding the parent element first
-    const twoFactorSection = screen.getByText('二段階認証').closest('div')?.parentElement;
-    const twoFactorToggle = twoFactorSection?.querySelector('input[type="checkbox"]');
+    const twoFactorSection = screen
+      .getByText('二段階認証')
+      .closest('div')?.parentElement;
+    const twoFactorToggle = twoFactorSection?.querySelector(
+      'input[type="checkbox"]'
+    );
 
     // Check if the toggle exists
     expect(twoFactorToggle).toBeInTheDocument();

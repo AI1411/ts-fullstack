@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getCategories, 
-  getCategoryById, 
-  getProductsByCategory, 
-  createCategory, 
-  updateCategory, 
-  deleteCategory 
-} from '../../../features/categories/controllers';
-import { categoriesTable, productsTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { categoriesTable, productsTable } from '../../../db/schema';
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  getCategoryById,
+  getProductsByCategory,
+  updateCategory,
+} from '../../../features/categories/controllers';
 
 // Mock category data
 const mockCategory = {
@@ -16,7 +16,7 @@ const mockCategory = {
   name: 'テストカテゴリ',
   description: 'テスト用のカテゴリです',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock product data
@@ -29,24 +29,24 @@ const mockProduct = {
   stock: 10,
   image_url: 'https://example.com/image.jpg',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -59,7 +59,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockCategory])
+  returning: vi.fn().mockResolvedValue([mockCategory]),
 };
 
 describe('Category Controllers', () => {
@@ -77,7 +77,9 @@ describe('Category Controllers', () => {
 
       const result = await getCategories(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ categories: [mockCategory] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        categories: [mockCategory],
+      });
     });
 
     it('should handle errors', async () => {
@@ -87,7 +89,10 @@ describe('Category Controllers', () => {
 
       const result = await getCategories(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -112,7 +117,10 @@ describe('Category Controllers', () => {
 
       const result = await getCategoryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'カテゴリが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'カテゴリが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -123,7 +131,10 @@ describe('Category Controllers', () => {
 
       const result = await getCategoryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -133,7 +144,7 @@ describe('Category Controllers', () => {
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
       mockDbClient.where.mockResolvedValueOnce([mockCategory]);
-      
+
       // Mock the second query for products
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -142,7 +153,9 @@ describe('Category Controllers', () => {
       const result = await getProductsByCategory(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ products: [mockProduct] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        products: [mockProduct],
+      });
     });
 
     it('should return 404 if category not found', async () => {
@@ -153,7 +166,10 @@ describe('Category Controllers', () => {
 
       const result = await getProductsByCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'カテゴリが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'カテゴリが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -164,7 +180,10 @@ describe('Category Controllers', () => {
 
       const result = await getProductsByCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -172,20 +191,23 @@ describe('Category Controllers', () => {
     it('should create a new category and return it', async () => {
       const mockBody = {
         name: 'テストカテゴリ',
-        description: 'テスト用のカテゴリです'
+        description: 'テスト用のカテゴリです',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createCategory(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ category: mockCategory }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { category: mockCategory },
+        201
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: 'テストカテゴリ',
-        description: 'テスト用のカテゴリです'
+        description: 'テスト用のカテゴリです',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -194,7 +216,10 @@ describe('Category Controllers', () => {
 
       const result = await createCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -202,10 +227,10 @@ describe('Category Controllers', () => {
     it('should update a category and return it', async () => {
       const mockBody = {
         name: '更新されたカテゴリ名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to check if category exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -221,10 +246,10 @@ describe('Category Controllers', () => {
     it('should return 404 if category not found', async () => {
       const mockBody = {
         name: '更新されたカテゴリ名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
-      
+
       // Mock the first query to check if category exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -232,16 +257,19 @@ describe('Category Controllers', () => {
 
       const result = await updateCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'カテゴリが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'カテゴリが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: '更新されたカテゴリ名',
-        description: '更新された説明'
+        description: '更新された説明',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -249,14 +277,17 @@ describe('Category Controllers', () => {
 
       const result = await updateCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
   describe('deleteCategory', () => {
     it('should delete a category and return success message', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to check if category exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -265,12 +296,15 @@ describe('Category Controllers', () => {
       const result = await deleteCategory(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: 'カテゴリが削除されました' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'カテゴリが削除されました',
+      });
     });
 
     it('should return 404 if category not found', async () => {
       const mockContext = createMockContext({}, { id: '999' });
-      
+
       // Mock the first query to check if category exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -278,12 +312,15 @@ describe('Category Controllers', () => {
 
       const result = await deleteCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'カテゴリが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'カテゴリが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -291,7 +328,10 @@ describe('Category Controllers', () => {
 
       const result = await deleteCategory(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

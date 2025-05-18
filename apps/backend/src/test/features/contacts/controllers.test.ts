@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  createContact, 
-  getContacts, 
-  getContactById, 
-  updateContact, 
-  deleteContact 
-} from '../../../features/contacts/controllers';
-import { contactsTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { contactsTable } from '../../../db/schema';
+import {
+  createContact,
+  deleteContact,
+  getContactById,
+  getContacts,
+  updateContact,
+} from '../../../features/contacts/controllers';
 
 // Mock contact data
 const mockContact = {
@@ -19,24 +19,24 @@ const mockContact = {
   message: 'これはテスト用のお問い合わせメッセージです。',
   status: 'PENDING',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -50,7 +50,7 @@ const mockDbClient = {
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
   returning: vi.fn().mockResolvedValue([mockContact]),
-  orderBy: vi.fn().mockReturnThis()
+  orderBy: vi.fn().mockReturnThis(),
 };
 
 describe('Contact Controllers', () => {
@@ -66,14 +66,17 @@ describe('Contact Controllers', () => {
         email: 'test@example.com',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createContact(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ contact: mockContact }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { contact: mockContact },
+        201
+      );
     });
 
     it('should handle errors', async () => {
@@ -82,7 +85,7 @@ describe('Contact Controllers', () => {
         email: 'test@example.com',
         phone: '03-1234-5678',
         subject: 'お問い合わせテスト',
-        message: 'これはテスト用のお問い合わせメッセージです。'
+        message: 'これはテスト用のお問い合わせメッセージです。',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -91,7 +94,10 @@ describe('Contact Controllers', () => {
 
       const result = await createContact(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -104,7 +110,9 @@ describe('Contact Controllers', () => {
 
       const result = await getContacts(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ contacts: [mockContact] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        contacts: [mockContact],
+      });
     });
 
     it('should handle errors', async () => {
@@ -115,7 +123,10 @@ describe('Contact Controllers', () => {
 
       const result = await getContacts(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -140,7 +151,10 @@ describe('Contact Controllers', () => {
 
       const result = await getContactById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'お問い合わせが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'お問い合わせが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -151,17 +165,20 @@ describe('Contact Controllers', () => {
 
       const result = await getContactById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
   describe('updateContact', () => {
     it('should update a contact status and return it', async () => {
       const mockBody = {
-        status: 'RESOLVED'
+        status: 'RESOLVED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to check if contact exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -176,10 +193,10 @@ describe('Contact Controllers', () => {
 
     it('should return 404 if contact not found', async () => {
       const mockBody = {
-        status: 'RESOLVED'
+        status: 'RESOLVED',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
-      
+
       // Mock the first query to check if contact exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -187,15 +204,18 @@ describe('Contact Controllers', () => {
 
       const result = await updateContact(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'お問い合わせが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'お問い合わせが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
-        status: 'RESOLVED'
+        status: 'RESOLVED',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -203,14 +223,17 @@ describe('Contact Controllers', () => {
 
       const result = await updateContact(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
   describe('deleteContact', () => {
     it('should delete a contact and return success message', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to check if contact exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -224,7 +247,7 @@ describe('Contact Controllers', () => {
 
     it('should return 404 if contact not found', async () => {
       const mockContext = createMockContext({}, { id: '999' });
-      
+
       // Mock the first query to check if contact exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -232,12 +255,15 @@ describe('Contact Controllers', () => {
 
       const result = await deleteContact(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'お問い合わせが見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'お問い合わせが見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -245,7 +271,10 @@ describe('Contact Controllers', () => {
 
       const result = await deleteContact(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

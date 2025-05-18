@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getTodos } from '../../../features/todos/controllers';
-import { todosTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { todosTable } from '../../../db/schema';
+import { getTodos } from '../../../features/todos/controllers';
 
 // Generate a large set of mock todos for pagination testing
 const generateMockTodos = (count) => {
@@ -12,7 +12,7 @@ const generateMockTodos = (count) => {
     user_id: Math.floor(i / 10) + 1, // Assign different user_ids
     status: i % 2 === 0 ? 'PENDING' : 'COMPLETED',
     created_at: new Date(2023, 0, i + 1),
-    updated_at: new Date(2023, 0, i + 1)
+    updated_at: new Date(2023, 0, i + 1),
   }));
 };
 
@@ -20,19 +20,19 @@ const mockTodos = generateMockTodos(50); // Generate 50 mock todos
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (query = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(query),
-    query: vi.fn((key) => query[key])
+    query: vi.fn((key) => query[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -43,7 +43,7 @@ const mockDbClient = {
   orderBy: vi.fn().mockReturnThis(),
   limit: vi.fn().mockReturnThis(),
   offset: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([])
+  returning: vi.fn().mockResolvedValue([]),
 };
 
 describe('Todo Pagination', () => {
@@ -64,7 +64,10 @@ describe('Todo Pagination', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: paginatedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: paginatedTodos },
+        200
+      );
     });
 
     it('should return the second page of todos when page=2 and limit=10', async () => {
@@ -74,7 +77,10 @@ describe('Todo Pagination', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: paginatedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: paginatedTodos },
+        200
+      );
     });
 
     it('should return an empty array when page is beyond available data', async () => {
@@ -84,7 +90,10 @@ describe('Todo Pagination', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: paginatedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: paginatedTodos },
+        200
+      );
     });
 
     it('should use default pagination values when not provided', async () => {
@@ -94,16 +103,24 @@ describe('Todo Pagination', () => {
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ todos: paginatedTodos }, 200);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { todos: paginatedTodos },
+        200
+      );
     });
 
     it('should handle errors when paginating', async () => {
       const mockContext = createMockContext({ page: 'invalid', limit: '10' });
-      mockDbClient.from.mockRejectedValueOnce(new Error('Invalid pagination parameters'));
+      mockDbClient.from.mockRejectedValueOnce(
+        new Error('Invalid pagination parameters')
+      );
 
       const result = await getTodos(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Invalid pagination parameters' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Invalid pagination parameters' },
+        500
+      );
     });
   });
 });

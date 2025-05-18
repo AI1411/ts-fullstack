@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CompanyForm from '@/features/admin/companies/components/CompanyForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Company } from '@/features/admin/companies/controllers';
 import { companyService } from '@/features/admin/companies/services';
-import { Company } from '@/features/admin/companies/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the company service
 vi.mock('@/features/admin/companies/services', () => ({
   companyService: {
-    createCompany: vi.fn()
-  }
+    createCompany: vi.fn(),
+  },
 }));
 
 describe('CompanyForm Component', () => {
@@ -38,15 +38,21 @@ describe('CompanyForm Component', () => {
     expect(typeof CompanyForm).toBe('function');
 
     // Check if form elements are rendered
-    expect(screen.getByRole('heading', { name: '会社を追加' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '会社を追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: '会社を追加' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '会社を追加' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('会社名')).toBeInTheDocument();
     expect(screen.getByLabelText('説明')).toBeInTheDocument();
     expect(screen.getByLabelText('住所')).toBeInTheDocument();
     expect(screen.getByLabelText('電話番号')).toBeInTheDocument();
     expect(screen.getByLabelText('メールアドレス')).toBeInTheDocument();
     expect(screen.getByLabelText('ウェブサイト')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '会社を追加' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '会社を追加' })
+    ).toBeInTheDocument();
   });
 
   it('should update form values when typing', () => {
@@ -66,11 +72,15 @@ describe('CompanyForm Component', () => {
 
     // Change input values
     fireEvent.change(nameInput, { target: { value: 'Test Company' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(addressInput, { target: { value: 'Test Address' } });
     fireEvent.change(phoneInput, { target: { value: '123-456-7890' } });
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.change(websiteInput, { target: { value: 'https://example.com' } });
+    fireEvent.change(websiteInput, {
+      target: { value: 'https://example.com' },
+    });
 
     // Check if input values are updated
     expect(nameInput).toHaveValue('Test Company');
@@ -92,7 +102,7 @@ describe('CompanyForm Component', () => {
       email: 'test@example.com',
       website: 'https://example.com',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     vi.mocked(companyService.createCompany).mockResolvedValue(mockCompany);
@@ -113,11 +123,15 @@ describe('CompanyForm Component', () => {
 
     // Fill in the form
     fireEvent.change(nameInput, { target: { value: 'Test Company' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
     fireEvent.change(addressInput, { target: { value: 'Test Address' } });
     fireEvent.change(phoneInput, { target: { value: '123-456-7890' } });
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.change(websiteInput, { target: { value: 'https://example.com' } });
+    fireEvent.change(websiteInput, {
+      target: { value: 'https://example.com' },
+    });
 
     // Submit the form
     const submitButton = screen.getByRole('button', { name: '会社を追加' });
@@ -131,7 +145,7 @@ describe('CompanyForm Component', () => {
         address: 'Test Address',
         phone: '123-456-7890',
         email: 'test@example.com',
-        website: 'https://example.com'
+        website: 'https://example.com',
       });
     });
   });
@@ -139,7 +153,8 @@ describe('CompanyForm Component', () => {
   it('should show loading state during submission', async () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(companyService.createCompany).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({} as Company), 100))
+      () =>
+        new Promise((resolve) => setTimeout(() => resolve({} as Company), 100))
     );
 
     render(
@@ -172,7 +187,7 @@ describe('CompanyForm Component', () => {
       email: 'test@example.com',
       website: 'https://example.com',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     vi.mocked(companyService.createCompany).mockResolvedValue(mockCompany);
@@ -189,7 +204,9 @@ describe('CompanyForm Component', () => {
 
     // Fill in the form
     fireEvent.change(nameInput, { target: { value: 'Test Company' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Test Description' },
+    });
 
     // Submit the form
     const submitButton = screen.getByRole('button', { name: '会社を追加' });
@@ -208,7 +225,9 @@ describe('CompanyForm Component', () => {
     console.error = vi.fn();
 
     // Mock failed response
-    vi.mocked(companyService.createCompany).mockRejectedValue(new Error('API error'));
+    vi.mocked(companyService.createCompany).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -294,7 +313,7 @@ describe('CompanyForm Component', () => {
       email: null,
       website: null,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     vi.mocked(companyService.createCompany).mockResolvedValue(mockCompany);
@@ -318,7 +337,9 @@ describe('CompanyForm Component', () => {
 
     // Check if invalidateQueries was called with correct key
     await waitFor(() => {
-      expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ['companies'] });
+      expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+        queryKey: ['companies'],
+      });
     });
   });
 });

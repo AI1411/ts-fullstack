@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { CreateOrderInput } from '@/features/admin/orders/controllers';
 import { orderRepository } from '@/features/admin/orders/repositories';
-import { CreateOrderInput } from '@/features/admin/orders/controllers';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock global fetch
 const originalFetch = global.fetch;
@@ -21,7 +21,7 @@ describe('Order Repository', () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ orders: [] })
+        json: () => Promise.resolve({ orders: [] }),
       });
 
       await orderRepository.getOrders();
@@ -37,16 +37,16 @@ describe('Order Repository', () => {
       items: [
         {
           product_id: 1,
-          quantity: 2
-        }
-      ]
+          quantity: 2,
+        },
+      ],
     };
 
     it('should call the correct API endpoint with the right data', async () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: {} })
+        json: () => Promise.resolve({ order: {} }),
       });
 
       await orderRepository.createOrder(orderData);
@@ -68,37 +68,42 @@ describe('Order Repository', () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: {} })
+        json: () => Promise.resolve({ order: {} }),
       });
 
       await orderRepository.getOrderById(orderId);
 
-      expect(mockFetch).toHaveBeenCalledWith(`http://localhost:8080/orders/${orderId}`);
+      expect(mockFetch).toHaveBeenCalledWith(
+        `http://localhost:8080/orders/${orderId}`
+      );
     });
   });
 
   describe('updateOrder', () => {
     const orderId = 1;
     const orderData: Partial<CreateOrderInput> = {
-      customer_name: 'Updated Customer'
+      customer_name: 'Updated Customer',
     };
 
     it('should call the correct API endpoint with the right data', async () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: {} })
+        json: () => Promise.resolve({ order: {} }),
       });
 
       await orderRepository.updateOrder(orderId, orderData);
 
-      expect(mockFetch).toHaveBeenCalledWith(`http://localhost:8080/orders/${orderId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        `http://localhost:8080/orders/${orderId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
     });
   });
 
@@ -108,14 +113,17 @@ describe('Order Repository', () => {
     it('should call the correct API endpoint', async () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
-        ok: true
+        ok: true,
       });
 
       await orderRepository.deleteOrder(orderId);
 
-      expect(mockFetch).toHaveBeenCalledWith(`http://localhost:8080/orders/${orderId}`, {
-        method: 'DELETE',
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        `http://localhost:8080/orders/${orderId}`,
+        {
+          method: 'DELETE',
+        }
+      );
     });
   });
 
@@ -127,18 +135,21 @@ describe('Order Repository', () => {
       // Mock successful response
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ order: {} })
+        json: () => Promise.resolve({ order: {} }),
       });
 
       await orderRepository.updateOrderStatus(orderId, status);
 
-      expect(mockFetch).toHaveBeenCalledWith(`http://localhost:8080/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status }),
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        `http://localhost:8080/orders/${orderId}/status`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
     });
   });
 });

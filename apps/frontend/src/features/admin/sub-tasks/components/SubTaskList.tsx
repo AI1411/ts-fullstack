@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { subTaskService } from "../services";
-import { SubTask } from "../controllers";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import type { SubTask } from '../controllers';
+import { subTaskService } from '../services';
 
 interface SubTaskListProps {
   taskId: number;
@@ -13,16 +13,20 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
   const queryClient = useQueryClient();
   const [editingSubTaskId, setEditingSubTaskId] = useState<number | null>(null);
   const [editFormData, setEditFormData] = useState({
-    title: "",
-    description: "",
-    status: "",
-    due_date: ""
+    title: '',
+    description: '',
+    status: '',
+    due_date: '',
   });
 
   // サブタスク一覧を取得
-  const { data: subTasks, isLoading, error } = useQuery({
+  const {
+    data: subTasks,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['subTasks', taskId],
-    queryFn: () => subTaskService.getSubTasksByTaskId(taskId)
+    queryFn: () => subTaskService.getSubTasksByTaskId(taskId),
   });
 
   // 編集モードを開始
@@ -30,9 +34,9 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
     setEditingSubTaskId(subTask.id);
     setEditFormData({
       title: subTask.title,
-      description: subTask.description || "",
+      description: subTask.description || '',
       status: subTask.status,
-      due_date: subTask.due_date || ""
+      due_date: subTask.due_date || '',
     });
   };
 
@@ -43,12 +47,14 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
 
   // 編集フォームの入力値を更新
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -57,7 +63,7 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
     try {
       const updateData = {
         ...editFormData,
-        task_id: taskId
+        task_id: taskId,
       };
 
       await subTaskService.updateSubTask(subTaskId, updateData);
@@ -98,15 +104,26 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
   };
 
   if (isLoading) return <div className="p-4 text-center">読み込み中...</div>;
-  if (error) return <div className="p-4 text-center text-red-500">エラーが発生しました</div>;
-  if (!subTasks || subTasks.length === 0) return <div className="p-4 text-center text-gray-500">サブタスクはありません</div>;
+  if (error)
+    return (
+      <div className="p-4 text-center text-red-500">エラーが発生しました</div>
+    );
+  if (!subTasks || subTasks.length === 0)
+    return (
+      <div className="p-4 text-center text-gray-500">
+        サブタスクはありません
+      </div>
+    );
 
   return (
     <div className="bg-gray-50 p-4 rounded-md">
       <h3 className="text-md font-medium text-gray-700 mb-3">サブタスク一覧</h3>
       <div className="space-y-2">
-        {subTasks.map(subTask => (
-          <div key={subTask.id} className="bg-white p-3 rounded-md shadow-sm border border-gray-100">
+        {subTasks.map((subTask) => (
+          <div
+            key={subTask.id}
+            className="bg-white p-3 rounded-md shadow-sm border border-gray-100"
+          >
             {editingSubTaskId === subTask.id ? (
               <div className="space-y-2">
                 <input
@@ -139,7 +156,11 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
                   <input
                     type="date"
                     name="due_date"
-                    value={editFormData.due_date ? editFormData.due_date.split('T')[0] : ''}
+                    value={
+                      editFormData.due_date
+                        ? editFormData.due_date.split('T')[0]
+                        : ''
+                    }
                     onChange={handleChange}
                     className="px-2 py-1 border rounded"
                   />
@@ -165,13 +186,20 @@ const SubTaskList = ({ taskId }: SubTaskListProps) => {
                   <div>
                     <h4 className="font-medium">{subTask.title}</h4>
                     {subTask.description && (
-                      <p className="text-sm text-gray-600 mt-1">{subTask.description}</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {subTask.description}
+                      </p>
                     )}
                   </div>
                   <div className="flex space-x-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadgeColor(subTask.status)}`}>
-                      {subTask.status === 'PENDING' ? '未着手' : 
-                       subTask.status === 'IN_PROGRESS' ? '進行中' : '完了'}
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${getStatusBadgeColor(subTask.status)}`}
+                    >
+                      {subTask.status === 'PENDING'
+                        ? '未着手'
+                        : subTask.status === 'IN_PROGRESS'
+                          ? '進行中'
+                          : '完了'}
                     </span>
                     {subTask.due_date && (
                       <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">

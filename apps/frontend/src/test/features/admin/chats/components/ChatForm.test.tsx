@@ -1,30 +1,30 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChatForm from '@/features/admin/chats/components/ChatForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { chatService } from '@/features/admin/chats/services';
+import type { User } from '@/features/admin/users/controllers';
 import { userService } from '@/features/admin/users/services';
-import { User } from '@/features/admin/users/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/chats/services', () => ({
   chatService: {
-    createChat: vi.fn()
-  }
+    createChat: vi.fn(),
+  },
 }));
 
 vi.mock('@/features/admin/users/services', () => ({
   userService: {
-    getUsers: vi.fn()
-  }
+    getUsers: vi.fn(),
+  },
 }));
 
 // Mock Next.js router
 const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: mockPush
-  })
+    push: mockPush,
+  }),
 }));
 
 describe('ChatForm Component', () => {
@@ -54,13 +54,15 @@ describe('ChatForm Component', () => {
     expect(screen.getByText('新しいチャットを開始')).toBeInTheDocument();
     expect(screen.getByText('ユーザーを選択')).toBeInTheDocument();
     expect(screen.getByText('ユーザーを選択してください')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'チャットを開始' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'チャットを開始' })
+    ).toBeInTheDocument();
   });
 
   it('should show loading state for users', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(userService.getUsers).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -71,7 +73,9 @@ describe('ChatForm Component', () => {
 
     // Select should be disabled during loading
     expect(screen.getByRole('combobox')).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'チャットを開始' })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'チャットを開始' })
+    ).toBeDisabled();
   });
 
   it('should display user options when data is available', async () => {
@@ -79,7 +83,7 @@ describe('ChatForm Component', () => {
     const mockUsers: User[] = [
       { id: 1, name: 'Current User' },
       { id: 2, name: 'User 2' },
-      { id: 3, name: 'User 3' }
+      { id: 3, name: 'User 3' },
     ];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
@@ -105,7 +109,7 @@ describe('ChatForm Component', () => {
     // Mock user data
     const mockUsers: User[] = [
       { id: 1, name: 'Current User' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
@@ -125,7 +129,11 @@ describe('ChatForm Component', () => {
     fireEvent.click(screen.getByRole('button', { name: 'チャットを開始' }));
 
     // Check for validation error
-    expect(screen.getByText('ユーザーを選択してください', { selector: '.text-red-700' })).toBeInTheDocument();
+    expect(
+      screen.getByText('ユーザーを選択してください', {
+        selector: '.text-red-700',
+      })
+    ).toBeInTheDocument();
     expect(chatService.createChat).not.toHaveBeenCalled();
   });
 
@@ -133,7 +141,7 @@ describe('ChatForm Component', () => {
     // Mock user data
     const mockUsers: User[] = [
       { id: 1, name: 'Current User' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     // Mock successful chat creation
@@ -142,7 +150,7 @@ describe('ChatForm Component', () => {
       creator_id: 1,
       recipient_id: 2,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     vi.mocked(userService.getUsers).mockResolvedValue(mockUsers);
@@ -172,7 +180,7 @@ describe('ChatForm Component', () => {
     await waitFor(() => {
       expect(chatService.createChat).toHaveBeenCalledWith({
         creator_id: 1,
-        recipient_id: 2
+        recipient_id: 2,
       });
     });
 
@@ -184,7 +192,7 @@ describe('ChatForm Component', () => {
     // Mock user data
     const mockUsers: User[] = [
       { id: 1, name: 'Current User' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     // Mock failed chat creation
@@ -222,7 +230,7 @@ describe('ChatForm Component', () => {
     // Mock user data
     const mockUsers: User[] = [
       { id: 1, name: 'Current User' },
-      { id: 2, name: 'User 2' }
+      { id: 2, name: 'User 2' },
     ];
 
     // Mock failed chat creation with a string
@@ -230,7 +238,9 @@ describe('ChatForm Component', () => {
     vi.mocked(chatService.createChat).mockRejectedValue('String error');
 
     // Spy on console.error
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -251,7 +261,9 @@ describe('ChatForm Component', () => {
 
     // Wait for the error message
     await waitFor(() => {
-      expect(screen.getByText('チャットの作成に失敗しました')).toBeInTheDocument();
+      expect(
+        screen.getByText('チャットの作成に失敗しました')
+      ).toBeInTheDocument();
     });
 
     // Check that console.error was called

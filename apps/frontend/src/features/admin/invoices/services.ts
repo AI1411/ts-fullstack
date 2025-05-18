@@ -1,12 +1,12 @@
 // Invoice services
 import {
+  type CreateInvoiceInput,
+  type Invoice,
   createInvoice as createInvoiceController,
-  CreateInvoiceInput,
   deleteInvoice as deleteInvoiceController,
   getInvoiceById as getInvoiceByIdController,
   getInvoices as getInvoicesController,
-  Invoice,
-  updateInvoice as updateInvoiceController
+  updateInvoice as updateInvoiceController,
 } from './controllers';
 
 // Invoice service
@@ -27,12 +27,15 @@ export const invoiceService = {
   },
 
   // Update an invoice
-  updateInvoice: async (id: number, invoiceData: Partial<CreateInvoiceInput>): Promise<Invoice> => {
+  updateInvoice: async (
+    id: number,
+    invoiceData: Partial<CreateInvoiceInput>
+  ): Promise<Invoice> => {
     return updateInvoiceController(id, invoiceData);
   },
 
   // Delete an invoice
   deleteInvoice: async (id: number): Promise<void> => {
     return deleteInvoiceController(id);
-  }
+  },
 };

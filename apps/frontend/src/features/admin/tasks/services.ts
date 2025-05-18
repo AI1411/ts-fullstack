@@ -1,12 +1,12 @@
 // Task services
 import {
+  type CreateTaskInput,
+  type Task,
   createTask as createTaskController,
-  CreateTaskInput,
   deleteTask as deleteTaskController,
   getTaskById as getTaskByIdController,
   getTasks as getTasksController,
-  Task,
-  updateTask as updateTaskController
+  updateTask as updateTaskController,
 } from './controllers';
 
 // Task service
@@ -27,7 +27,10 @@ export const taskService = {
   },
 
   // Update a task
-  updateTask: async (id: number, taskData: Partial<CreateTaskInput>): Promise<Task> => {
+  updateTask: async (
+    id: number,
+    taskData: Partial<CreateTaskInput>
+  ): Promise<Task> => {
     return updateTaskController(id, taskData);
   },
 
@@ -39,18 +42,18 @@ export const taskService = {
   // Get completed tasks
   getCompletedTasks: async (): Promise<Task[]> => {
     const tasks = await getTasksController();
-    return tasks.filter(task => task.status === 'COMPLETED');
+    return tasks.filter((task) => task.status === 'COMPLETED');
   },
 
   // Get pending tasks
   getPendingTasks: async (): Promise<Task[]> => {
     const tasks = await getTasksController();
-    return tasks.filter(task => task.status === 'PENDING');
+    return tasks.filter((task) => task.status === 'PENDING');
   },
 
   // Get in-progress tasks
   getInProgressTasks: async (): Promise<Task[]> => {
     const tasks = await getTasksController();
-    return tasks.filter(task => task.status === 'IN_PROGRESS');
-  }
+    return tasks.filter((task) => task.status === 'IN_PROGRESS');
+  },
 };

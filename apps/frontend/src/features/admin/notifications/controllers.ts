@@ -1,5 +1,5 @@
 // Notification controllers
-import {notificationRepository} from './repositories';
+import { notificationRepository } from './repositories';
 
 // Types
 export interface Notification {
@@ -22,7 +22,7 @@ export interface CreateNotificationInput {
 export const getNotifications = async (): Promise<Notification[]> => {
   try {
     const response = await notificationRepository.getNotifications();
-    const {notifications} = await response.json();
+    const { notifications } = await response.json();
     return notifications;
   } catch (error) {
     console.error('Error fetching notifications:', error);
@@ -31,14 +31,17 @@ export const getNotifications = async (): Promise<Notification[]> => {
 };
 
 // Create a new notification
-export const createNotification = async (notificationData: CreateNotificationInput): Promise<Notification> => {
+export const createNotification = async (
+  notificationData: CreateNotificationInput
+): Promise<Notification> => {
   try {
-    const response = await notificationRepository.createNotification(notificationData);
+    const response =
+      await notificationRepository.createNotification(notificationData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {notification} = await response.json();
+    const { notification } = await response.json();
     return notification;
   } catch (error) {
     console.error('Error creating notification:', error);
@@ -47,13 +50,15 @@ export const createNotification = async (notificationData: CreateNotificationInp
 };
 
 // Get a notification by ID
-export const getNotificationById = async (id: number): Promise<Notification> => {
+export const getNotificationById = async (
+  id: number
+): Promise<Notification> => {
   try {
     const response = await notificationRepository.getNotificationById(id);
     if (!response.ok) {
       throw new Error('Notification not found');
     }
-    const {notification} = await response.json();
+    const { notification } = await response.json();
     return notification;
   } catch (error) {
     console.error(`Error fetching notification ${id}:`, error);
@@ -62,14 +67,20 @@ export const getNotificationById = async (id: number): Promise<Notification> => 
 };
 
 // Update a notification
-export const updateNotification = async (id: number, notificationData: Partial<CreateNotificationInput>): Promise<Notification> => {
+export const updateNotification = async (
+  id: number,
+  notificationData: Partial<CreateNotificationInput>
+): Promise<Notification> => {
   try {
-    const response = await notificationRepository.updateNotification(id, notificationData);
+    const response = await notificationRepository.updateNotification(
+      id,
+      notificationData
+    );
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {notification} = await response.json();
+    const { notification } = await response.json();
     return notification;
   } catch (error) {
     console.error(`Error updating notification ${id}:`, error);
@@ -92,14 +103,19 @@ export const deleteNotification = async (id: number): Promise<void> => {
 };
 
 // Toggle notification read status
-export const toggleNotificationReadStatus = async (id: number, isRead: boolean): Promise<Notification> => {
+export const toggleNotificationReadStatus = async (
+  id: number,
+  isRead: boolean
+): Promise<Notification> => {
   try {
-    const response = await notificationRepository.updateNotification(id, {is_read: isRead});
+    const response = await notificationRepository.updateNotification(id, {
+      is_read: isRead,
+    });
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {notification} = await response.json();
+    const { notification } = await response.json();
     return notification;
   } catch (error) {
     console.error(`Error toggling notification read status ${id}:`, error);

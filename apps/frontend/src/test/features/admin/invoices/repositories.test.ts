@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { invoiceRepository } from '@/features/admin/invoices/repositories';
 import { client } from '@/common/utils/client';
-import { CreateInvoiceInput } from '@/features/admin/invoices/controllers';
+import type { CreateInvoiceInput } from '@/features/admin/invoices/controllers';
+import { invoiceRepository } from '@/features/admin/invoices/repositories';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Define a type for mock responses
 type MockResponse = {
@@ -20,10 +20,10 @@ vi.mock('@/common/utils/client', () => ({
       ':id': {
         $get: vi.fn(),
         $put: vi.fn(),
-        $delete: vi.fn()
-      }
-    }
-  }
+        $delete: vi.fn(),
+      },
+    },
+  },
 }));
 
 describe('Invoice Repository', () => {
@@ -60,7 +60,7 @@ describe('Invoice Repository', () => {
       total_amount: 10000,
       status: 'PENDING',
       payment_method: 'Credit Card',
-      notes: 'Test notes'
+      notes: 'Test notes',
     };
 
     it('should call the client with correct parameters', async () => {
@@ -71,7 +71,7 @@ describe('Invoice Repository', () => {
 
       expect(client.invoices.$post).toHaveBeenCalledTimes(1);
       expect(client.invoices.$post).toHaveBeenCalledWith({
-        json: invoiceData
+        json: invoiceData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -80,10 +80,12 @@ describe('Invoice Repository', () => {
       const error = new Error('Network error');
       vi.mocked(client.invoices.$post).mockRejectedValue(error);
 
-      await expect(invoiceRepository.createInvoice(invoiceData)).rejects.toThrow(error);
+      await expect(
+        invoiceRepository.createInvoice(invoiceData)
+      ).rejects.toThrow(error);
       expect(client.invoices.$post).toHaveBeenCalledTimes(1);
       expect(client.invoices.$post).toHaveBeenCalledWith({
-        json: invoiceData
+        json: invoiceData,
       });
     });
   });
@@ -97,7 +99,7 @@ describe('Invoice Repository', () => {
 
       expect(client.invoices[':id'].$get).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$get).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });
@@ -109,7 +111,7 @@ describe('Invoice Repository', () => {
       await expect(invoiceRepository.getInvoiceById(1)).rejects.toThrow(error);
       expect(client.invoices[':id'].$get).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$get).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
     });
   });
@@ -118,7 +120,7 @@ describe('Invoice Repository', () => {
     const invoiceData: Partial<CreateInvoiceInput> = {
       invoice_number: 'INV-001-UPDATED',
       total_amount: 15000,
-      status: 'PAID'
+      status: 'PAID',
     };
 
     it('should call the client with correct parameters', async () => {
@@ -130,7 +132,7 @@ describe('Invoice Repository', () => {
       expect(client.invoices[':id'].$put).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$put).toHaveBeenCalledWith({
         param: { id: '1' },
-        json: invoiceData
+        json: invoiceData,
       });
       expect(result).toBe(mockResponse);
     });
@@ -139,11 +141,13 @@ describe('Invoice Repository', () => {
       const error = new Error('Network error');
       vi.mocked(client.invoices[':id'].$put).mockRejectedValue(error);
 
-      await expect(invoiceRepository.updateInvoice(1, invoiceData)).rejects.toThrow(error);
+      await expect(
+        invoiceRepository.updateInvoice(1, invoiceData)
+      ).rejects.toThrow(error);
       expect(client.invoices[':id'].$put).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$put).toHaveBeenCalledWith({
         param: { id: '1' },
-        json: invoiceData
+        json: invoiceData,
       });
     });
   });
@@ -157,7 +161,7 @@ describe('Invoice Repository', () => {
 
       expect(client.invoices[':id'].$delete).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$delete).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
       expect(result).toBe(mockResponse);
     });
@@ -169,7 +173,7 @@ describe('Invoice Repository', () => {
       await expect(invoiceRepository.deleteInvoice(1)).rejects.toThrow(error);
       expect(client.invoices[':id'].$delete).toHaveBeenCalledTimes(1);
       expect(client.invoices[':id'].$delete).toHaveBeenCalledWith({
-        param: { id: '1' }
+        param: { id: '1' },
       });
     });
   });

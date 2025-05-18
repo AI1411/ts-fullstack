@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { teamSchema } from '../../../features/teams/schemas';
 
 describe('Team Schemas', () => {
@@ -7,7 +7,7 @@ describe('Team Schemas', () => {
       const validTeam = {
         name: 'Test Team',
       };
-      
+
       const result = teamSchema.safeParse(validTeam);
       expect(result.success).toBe(true);
     });
@@ -18,7 +18,7 @@ describe('Team Schemas', () => {
         name: 'Test Team',
         description: 'This is a test team',
       };
-      
+
       const result = teamSchema.safeParse(validTeam);
       expect(result.success).toBe(true);
     });
@@ -28,7 +28,7 @@ describe('Team Schemas', () => {
         name: 'Test Team',
         description: null,
       };
-      
+
       const result = teamSchema.safeParse(validTeam);
       expect(result.success).toBe(true);
     });
@@ -37,7 +37,7 @@ describe('Team Schemas', () => {
       const invalidTeam = {
         name: 'A', // Too short
       };
-      
+
       const result = teamSchema.safeParse(invalidTeam);
       expect(result.success).toBe(false);
     });
@@ -46,7 +46,7 @@ describe('Team Schemas', () => {
       const invalidTeam = {
         description: 'Missing name',
       };
-      
+
       const result = teamSchema.safeParse(invalidTeam);
       expect(result.success).toBe(false);
     });
@@ -55,7 +55,7 @@ describe('Team Schemas', () => {
       const invalidTeam = {
         name: '',
       };
-      
+
       const result = teamSchema.safeParse(invalidTeam);
       expect(result.success).toBe(false);
     });
@@ -65,7 +65,7 @@ describe('Team Schemas', () => {
         name: 'Test Team',
         id: 'not-a-number',
       };
-      
+
       const result = teamSchema.safeParse(invalidTeam);
       expect(result.success).toBe(false);
     });

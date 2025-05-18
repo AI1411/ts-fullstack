@@ -1,11 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import SalesProducts from '@/features/user/sales/components/SalesProducts';
 import ProductCard from '@/features/user/products/components/ProductCard';
+import SalesProducts from '@/features/user/sales/components/SalesProducts';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the ProductCard component
 vi.mock('@/features/user/products/components/ProductCard', () => ({
-  default: vi.fn(() => <div data-testid="product-card">Mocked Product Card</div>)
+  default: vi.fn(() => (
+    <div data-testid="product-card">Mocked Product Card</div>
+  )),
 }));
 
 describe('SalesProducts Component', () => {
@@ -46,8 +48,9 @@ describe('SalesProducts Component', () => {
         id: 101,
         name: 'プレミアムレザーウォレット【セール】',
         price: 8980,
-        description: '高品質な本革を使用した長財布。耐久性と美しさを兼ね備えたデザイン。期間限定30%オフ！',
-        imageUrl: expect.any(String)
+        description:
+          '高品質な本革を使用した長財布。耐久性と美しさを兼ね備えたデザイン。期間限定30%オフ！',
+        imageUrl: expect.any(String),
       })
     );
 
@@ -57,8 +60,9 @@ describe('SalesProducts Component', () => {
         id: 106,
         name: 'ステンレスウォーターボトル【セール】',
         price: 1980,
-        description: '真空断熱構造で温かい飲み物も冷たい飲み物も長時間保温・保冷。環境に優しいエコボトル。期間限定30%オフ！',
-        imageUrl: expect.any(String)
+        description:
+          '真空断熱構造で温かい飲み物も冷たい飲み物も長時間保温・保冷。環境に優しいエコボトル。期間限定30%オフ！',
+        imageUrl: expect.any(String),
       })
     );
   });
@@ -67,7 +71,9 @@ describe('SalesProducts Component', () => {
     render(<SalesProducts />);
 
     // Check if the grid container exists
-    const gridContainer = screen.getByText('セール商品').closest('div')?.nextElementSibling;
+    const gridContainer = screen
+      .getByText('セール商品')
+      .closest('div')?.nextElementSibling;
     expect(gridContainer).toHaveClass('grid');
 
     // Check if there are 6 product cards

@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
-  getCountries, 
-  getCountryById, 
-  createCountry, 
-  updateCountry, 
-  deleteCountry 
-} from '../../../features/countries/controllers';
-import { countriesTable } from '../../../db/schema';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as dbModule from '../../../common/utils/db';
+import { countriesTable } from '../../../db/schema';
+import {
+  createCountry,
+  deleteCountry,
+  getCountries,
+  getCountryById,
+  updateCountry,
+} from '../../../features/countries/controllers';
 
 // Mock country data
 const mockCountry = {
@@ -16,24 +16,24 @@ const mockCountry = {
   code: 'JP',
   flag_url: 'https://example.com/flags/jp.png',
   created_at: new Date(),
-  updated_at: new Date()
+  updated_at: new Date(),
 };
 
 // Mock the database module
 vi.mock('../../../common/utils/db', () => ({
-  getDB: vi.fn()
+  getDB: vi.fn(),
 }));
 
 // Mock context
 const createMockContext = (body = {}, params = {}) => ({
   req: {
     valid: vi.fn().mockReturnValue(body),
-    param: vi.fn((key) => params[key])
+    param: vi.fn((key) => params[key]),
   },
   json: vi.fn().mockImplementation((data, status) => ({ data, status })),
   env: {
-    DATABASE_URL: 'postgres://test:test@localhost:5432/test'
-  }
+    DATABASE_URL: 'postgres://test:test@localhost:5432/test',
+  },
 });
 
 // Mock DB client
@@ -46,7 +46,7 @@ const mockDbClient = {
   update: vi.fn().mockReturnThis(),
   set: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
-  returning: vi.fn().mockResolvedValue([mockCountry])
+  returning: vi.fn().mockResolvedValue([mockCountry]),
 };
 
 describe('Country Controllers', () => {
@@ -64,7 +64,9 @@ describe('Country Controllers', () => {
 
       const result = await getCountries(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ countries: [mockCountry] });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        countries: [mockCountry],
+      });
     });
 
     it('should handle errors', async () => {
@@ -74,7 +76,10 @@ describe('Country Controllers', () => {
 
       const result = await getCountries(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -99,7 +104,10 @@ describe('Country Controllers', () => {
 
       const result = await getCountryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '国が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '国が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
@@ -110,7 +118,10 @@ describe('Country Controllers', () => {
 
       const result = await getCountryById(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -119,21 +130,24 @@ describe('Country Controllers', () => {
       const mockBody = {
         name: '日本',
         code: 'JP',
-        flag_url: 'https://example.com/flags/jp.png'
+        flag_url: 'https://example.com/flags/jp.png',
       };
       const mockContext = createMockContext(mockBody);
 
       const result = await createCountry(mockContext);
 
       expect(mockContext.req.valid).toHaveBeenCalledWith('json');
-      expect(mockContext.json).toHaveBeenCalledWith({ country: mockCountry }, 201);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { country: mockCountry },
+        201
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: '日本',
         code: 'JP',
-        flag_url: 'https://example.com/flags/jp.png'
+        flag_url: 'https://example.com/flags/jp.png',
       };
       const mockContext = createMockContext(mockBody);
 
@@ -142,7 +156,10 @@ describe('Country Controllers', () => {
 
       const result = await createCountry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
@@ -151,10 +168,10 @@ describe('Country Controllers', () => {
       const mockBody = {
         name: '日本（更新）',
         code: 'JPN',
-        flag_url: 'https://example.com/flags/japan.png'
+        flag_url: 'https://example.com/flags/japan.png',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to check if country exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -170,10 +187,10 @@ describe('Country Controllers', () => {
     it('should return 404 if country not found', async () => {
       const mockBody = {
         name: '日本（更新）',
-        code: 'JPN'
+        code: 'JPN',
       };
       const mockContext = createMockContext(mockBody, { id: '999' });
-      
+
       // Mock the first query to check if country exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -181,16 +198,19 @@ describe('Country Controllers', () => {
 
       const result = await updateCountry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '国が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '国が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockBody = {
         name: '日本（更新）',
-        code: 'JPN'
+        code: 'JPN',
       };
       const mockContext = createMockContext(mockBody, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -198,14 +218,17 @@ describe('Country Controllers', () => {
 
       const result = await updateCountry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 
   describe('deleteCountry', () => {
     it('should delete a country and return success message', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to check if country exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -214,12 +237,15 @@ describe('Country Controllers', () => {
       const result = await deleteCountry(mockContext);
 
       expect(mockContext.req.param).toHaveBeenCalledWith('id');
-      expect(mockContext.json).toHaveBeenCalledWith({ success: true, message: '国が削除されました' });
+      expect(mockContext.json).toHaveBeenCalledWith({
+        success: true,
+        message: '国が削除されました',
+      });
     });
 
     it('should return 404 if country not found', async () => {
       const mockContext = createMockContext({}, { id: '999' });
-      
+
       // Mock the first query to check if country exists
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -227,12 +253,15 @@ describe('Country Controllers', () => {
 
       const result = await deleteCountry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: '国が見つかりません' }, 404);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: '国が見つかりません' },
+        404
+      );
     });
 
     it('should handle errors', async () => {
       const mockContext = createMockContext({}, { id: '1' });
-      
+
       // Mock the first query to throw an error
       mockDbClient.select.mockReturnThis();
       mockDbClient.from.mockReturnThis();
@@ -240,7 +269,10 @@ describe('Country Controllers', () => {
 
       const result = await deleteCountry(mockContext);
 
-      expect(mockContext.json).toHaveBeenCalledWith({ error: 'Database error' }, 500);
+      expect(mockContext.json).toHaveBeenCalledWith(
+        { error: 'Database error' },
+        500
+      );
     });
   });
 });

@@ -2,19 +2,19 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
-  getBaseballPlayerMedia,
-  getBaseballPlayerMediaByPlayerId,
-  getBaseballPlayerMediaById,
   createBaseballPlayerMedia,
-  updateBaseballPlayerMedia,
   deleteBaseballPlayerMedia,
-  getFeaturedBaseballPlayerMedia
+  getBaseballPlayerMedia,
+  getBaseballPlayerMediaById,
+  getBaseballPlayerMediaByPlayerId,
+  getFeaturedBaseballPlayerMedia,
+  updateBaseballPlayerMedia,
 } from './controllers';
 import {
-  baseballPlayerMediaSchema,
   baseballPlayerMediaResponseSchema,
+  baseballPlayerMediaSchema,
   baseballPlayerMediaUpdateSchema,
-  errorResponseSchema
+  errorResponseSchema,
 } from './schemas';
 
 // OpenAPIHonoインスタンスを作成
@@ -33,12 +33,12 @@ const getBaseballPlayerMediaRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: z.array(baseballPlayerMediaResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            media: z.array(baseballPlayerMediaResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 注目メディアコンテンツ一覧取得ルート
@@ -54,12 +54,12 @@ const getFeaturedBaseballPlayerMediaRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: z.array(baseballPlayerMediaResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            media: z.array(baseballPlayerMediaResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 特定の選手のメディアコンテンツ一覧取得ルート
@@ -73,9 +73,9 @@ const getBaseballPlayerMediaByPlayerIdRoute = createRoute({
     params: z.object({
       playerId: z.string().openapi({
         description: '選手ID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -83,20 +83,20 @@ const getBaseballPlayerMediaByPlayerIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: z.array(baseballPlayerMediaResponseSchema)
-          })
-        }
-      }
+            media: z.array(baseballPlayerMediaResponseSchema),
+          }),
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // メディアコンテンツ取得ルート
@@ -110,9 +110,9 @@ const getBaseballPlayerMediaByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'メディアコンテンツID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -120,20 +120,20 @@ const getBaseballPlayerMediaByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: baseballPlayerMediaResponseSchema
-          })
-        }
-      }
+            media: baseballPlayerMediaResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'メディアコンテンツが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // メディアコンテンツ作成ルート
@@ -147,10 +147,10 @@ const createBaseballPlayerMediaRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: baseballPlayerMediaSchema
-        }
-      }
-    }
+          schema: baseballPlayerMediaSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -158,28 +158,28 @@ const createBaseballPlayerMediaRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: baseballPlayerMediaResponseSchema
-          })
-        }
-      }
+            media: baseballPlayerMediaResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // メディアコンテンツ更新ルート
@@ -193,16 +193,16 @@ const updateBaseballPlayerMediaRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'メディアコンテンツID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: baseballPlayerMediaUpdateSchema
-        }
-      }
-    }
+          schema: baseballPlayerMediaUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -210,28 +210,28 @@ const updateBaseballPlayerMediaRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            media: baseballPlayerMediaResponseSchema
-          })
-        }
-      }
+            media: baseballPlayerMediaResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'メディアコンテンツまたは選手が見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // メディアコンテンツ削除ルート
@@ -245,9 +245,9 @@ const deleteBaseballPlayerMediaRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'メディアコンテンツID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -256,29 +256,50 @@ const deleteBaseballPlayerMediaRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: 'メディアコンテンツが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装
-baseballPlayerMediaRoutes.openapi(getBaseballPlayerMediaRoute, getBaseballPlayerMedia);
-baseballPlayerMediaRoutes.openapi(getFeaturedBaseballPlayerMediaRoute, getFeaturedBaseballPlayerMedia);
-baseballPlayerMediaRoutes.openapi(getBaseballPlayerMediaByPlayerIdRoute, getBaseballPlayerMediaByPlayerId);
-baseballPlayerMediaRoutes.openapi(getBaseballPlayerMediaByIdRoute, getBaseballPlayerMediaById);
-baseballPlayerMediaRoutes.openapi(createBaseballPlayerMediaRoute, createBaseballPlayerMedia);
-baseballPlayerMediaRoutes.openapi(updateBaseballPlayerMediaRoute, updateBaseballPlayerMedia);
-baseballPlayerMediaRoutes.openapi(deleteBaseballPlayerMediaRoute, deleteBaseballPlayerMedia);
+baseballPlayerMediaRoutes.openapi(
+  getBaseballPlayerMediaRoute,
+  getBaseballPlayerMedia
+);
+baseballPlayerMediaRoutes.openapi(
+  getFeaturedBaseballPlayerMediaRoute,
+  getFeaturedBaseballPlayerMedia
+);
+baseballPlayerMediaRoutes.openapi(
+  getBaseballPlayerMediaByPlayerIdRoute,
+  getBaseballPlayerMediaByPlayerId
+);
+baseballPlayerMediaRoutes.openapi(
+  getBaseballPlayerMediaByIdRoute,
+  getBaseballPlayerMediaById
+);
+baseballPlayerMediaRoutes.openapi(
+  createBaseballPlayerMediaRoute,
+  createBaseballPlayerMedia
+);
+baseballPlayerMediaRoutes.openapi(
+  updateBaseballPlayerMediaRoute,
+  updateBaseballPlayerMedia
+);
+baseballPlayerMediaRoutes.openapi(
+  deleteBaseballPlayerMediaRoute,
+  deleteBaseballPlayerMedia
+);
 
 export default baseballPlayerMediaRoutes;

@@ -1,7 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { subTaskService } from '@/features/admin/sub-tasks/services';
 import * as controllers from '@/features/admin/sub-tasks/controllers';
-import { SubTask, CreateSubTaskInput } from '@/features/admin/sub-tasks/controllers';
+import type {
+  CreateSubTaskInput,
+  SubTask,
+} from '@/features/admin/sub-tasks/controllers';
+import { subTaskService } from '@/features/admin/sub-tasks/services';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the controllers
 vi.mock('@/features/admin/sub-tasks/controllers', () => ({
@@ -13,7 +16,7 @@ vi.mock('@/features/admin/sub-tasks/controllers', () => ({
   deleteSubTask: vi.fn(),
   // Re-export types
   SubTask: {},
-  CreateSubTaskInput: {}
+  CreateSubTaskInput: {},
 }));
 
 describe('Sub-Task Service', () => {
@@ -31,7 +34,7 @@ describe('Sub-Task Service', () => {
         status: 'PENDING',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -41,8 +44,8 @@ describe('Sub-Task Service', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     it('should call the controller method with the correct arguments', async () => {
@@ -50,7 +53,7 @@ describe('Sub-Task Service', () => {
       vi.mocked(controllers.getSubTasks).mockResolvedValue(mockSubTasks);
 
       const result = await subTaskService.getSubTasks();
-      
+
       expect(controllers.getSubTasks).toHaveBeenCalled();
       expect(result).toEqual(mockSubTasks);
     });
@@ -67,7 +70,7 @@ describe('Sub-Task Service', () => {
         status: 'PENDING',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -77,16 +80,18 @@ describe('Sub-Task Service', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     it('should call the controller method with the correct arguments', async () => {
       // Mock successful response
-      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(
+        mockSubTasks
+      );
 
       const result = await subTaskService.getSubTasksByTaskId(taskId);
-      
+
       expect(controllers.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
       expect(result).toEqual(mockSubTasks);
     });
@@ -98,7 +103,7 @@ describe('Sub-Task Service', () => {
       title: 'New Sub-Task',
       description: 'New Description',
       status: 'PENDING',
-      due_date: '2023-01-01T00:00:00Z'
+      due_date: '2023-01-01T00:00:00Z',
     };
     const mockSubTask: SubTask = {
       id: 3,
@@ -108,7 +113,7 @@ describe('Sub-Task Service', () => {
       status: 'PENDING',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-03T00:00:00Z',
-      updated_at: '2023-01-03T00:00:00Z'
+      updated_at: '2023-01-03T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -116,7 +121,7 @@ describe('Sub-Task Service', () => {
       vi.mocked(controllers.createSubTask).mockResolvedValue(mockSubTask);
 
       const result = await subTaskService.createSubTask(subTaskData);
-      
+
       expect(controllers.createSubTask).toHaveBeenCalledWith(subTaskData);
       expect(result).toEqual(mockSubTask);
     });
@@ -132,7 +137,7 @@ describe('Sub-Task Service', () => {
       status: 'PENDING',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -140,7 +145,7 @@ describe('Sub-Task Service', () => {
       vi.mocked(controllers.getSubTaskById).mockResolvedValue(mockSubTask);
 
       const result = await subTaskService.getSubTaskById(subTaskId);
-      
+
       expect(controllers.getSubTaskById).toHaveBeenCalledWith(subTaskId);
       expect(result).toEqual(mockSubTask);
     });
@@ -150,7 +155,7 @@ describe('Sub-Task Service', () => {
     const subTaskId = 1;
     const subTaskData: Partial<CreateSubTaskInput> = {
       title: 'Updated Sub-Task',
-      status: 'COMPLETED'
+      status: 'COMPLETED',
     };
     const mockSubTask: SubTask = {
       id: 1,
@@ -160,7 +165,7 @@ describe('Sub-Task Service', () => {
       status: 'COMPLETED',
       due_date: '2023-01-01T00:00:00Z',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-04T00:00:00Z'
+      updated_at: '2023-01-04T00:00:00Z',
     };
 
     it('should call the controller method with the correct arguments', async () => {
@@ -168,8 +173,11 @@ describe('Sub-Task Service', () => {
       vi.mocked(controllers.updateSubTask).mockResolvedValue(mockSubTask);
 
       const result = await subTaskService.updateSubTask(subTaskId, subTaskData);
-      
-      expect(controllers.updateSubTask).toHaveBeenCalledWith(subTaskId, subTaskData);
+
+      expect(controllers.updateSubTask).toHaveBeenCalledWith(
+        subTaskId,
+        subTaskData
+      );
       expect(result).toEqual(mockSubTask);
     });
   });
@@ -182,7 +190,7 @@ describe('Sub-Task Service', () => {
       vi.mocked(controllers.deleteSubTask).mockResolvedValue(undefined);
 
       await subTaskService.deleteSubTask(subTaskId);
-      
+
       expect(controllers.deleteSubTask).toHaveBeenCalledWith(subTaskId);
     });
   });
@@ -198,7 +206,7 @@ describe('Sub-Task Service', () => {
         status: 'COMPLETED',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -208,7 +216,7 @@ describe('Sub-Task Service', () => {
         status: 'PENDING',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 3,
@@ -218,19 +226,23 @@ describe('Sub-Task Service', () => {
         status: 'COMPLETED',
         due_date: '2023-01-03T00:00:00Z',
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-03T00:00:00Z'
-      }
+        updated_at: '2023-01-03T00:00:00Z',
+      },
     ];
 
     it('should filter completed sub-tasks', async () => {
       // Mock successful response
-      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(
+        mockSubTasks
+      );
 
       const result = await subTaskService.getCompletedSubTasks(taskId);
-      
+
       expect(controllers.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
       expect(result).toEqual([mockSubTasks[0], mockSubTasks[2]]);
-      expect(result.every(subTask => subTask.status === 'COMPLETED')).toBe(true);
+      expect(result.every((subTask) => subTask.status === 'COMPLETED')).toBe(
+        true
+      );
     });
   });
 
@@ -245,7 +257,7 @@ describe('Sub-Task Service', () => {
         status: 'COMPLETED',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -255,7 +267,7 @@ describe('Sub-Task Service', () => {
         status: 'PENDING',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 3,
@@ -265,19 +277,23 @@ describe('Sub-Task Service', () => {
         status: 'PENDING',
         due_date: '2023-01-03T00:00:00Z',
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-03T00:00:00Z'
-      }
+        updated_at: '2023-01-03T00:00:00Z',
+      },
     ];
 
     it('should filter pending sub-tasks', async () => {
       // Mock successful response
-      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(
+        mockSubTasks
+      );
 
       const result = await subTaskService.getPendingSubTasks(taskId);
-      
+
       expect(controllers.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
       expect(result).toEqual([mockSubTasks[1], mockSubTasks[2]]);
-      expect(result.every(subTask => subTask.status === 'PENDING')).toBe(true);
+      expect(result.every((subTask) => subTask.status === 'PENDING')).toBe(
+        true
+      );
     });
   });
 
@@ -292,7 +308,7 @@ describe('Sub-Task Service', () => {
         status: 'COMPLETED',
         due_date: '2023-01-01T00:00:00Z',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-01T00:00:00Z'
+        updated_at: '2023-01-01T00:00:00Z',
       },
       {
         id: 2,
@@ -302,7 +318,7 @@ describe('Sub-Task Service', () => {
         status: 'IN_PROGRESS',
         due_date: null,
         created_at: '2023-01-02T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 3,
@@ -312,19 +328,23 @@ describe('Sub-Task Service', () => {
         status: 'IN_PROGRESS',
         due_date: '2023-01-03T00:00:00Z',
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-03T00:00:00Z'
-      }
+        updated_at: '2023-01-03T00:00:00Z',
+      },
     ];
 
     it('should filter in-progress sub-tasks', async () => {
       // Mock successful response
-      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(mockSubTasks);
+      vi.mocked(controllers.getSubTasksByTaskId).mockResolvedValue(
+        mockSubTasks
+      );
 
       const result = await subTaskService.getInProgressSubTasks(taskId);
-      
+
       expect(controllers.getSubTasksByTaskId).toHaveBeenCalledWith(taskId);
       expect(result).toEqual([mockSubTasks[1], mockSubTasks[2]]);
-      expect(result.every(subTask => subTask.status === 'IN_PROGRESS')).toBe(true);
+      expect(result.every((subTask) => subTask.status === 'IN_PROGRESS')).toBe(
+        true
+      );
     });
   });
 });

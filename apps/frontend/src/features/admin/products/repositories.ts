@@ -1,6 +1,6 @@
 // Product repositories
-import {client} from '@/common/utils/client';
-import {CreateProductInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateProductInput } from './controllers';
 
 // Product repository
 export const productRepository = {
@@ -19,22 +19,25 @@ export const productRepository = {
   // Get a product by ID
   getProductById: async (id: number) => {
     return client.products[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a product
-  updateProduct: async (id: number, productData: Partial<CreateProductInput>) => {
+  updateProduct: async (
+    id: number,
+    productData: Partial<CreateProductInput>
+  ) => {
     return client.products[':id'].$put({
-      param: {id: id.toString()},
-      json: productData
+      param: { id: id.toString() },
+      json: productData,
     });
   },
 
   // Delete a product
   deleteProduct: async (id: number) => {
     return client.products[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

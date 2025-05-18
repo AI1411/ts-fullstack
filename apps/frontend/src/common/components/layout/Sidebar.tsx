@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import Link from "next/link";
-import {usePathname} from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
+  RiBuildingLine,
   RiDashboardLine,
+  RiFileList3Line,
+  RiFileTextLine,
+  RiGlobalLine,
   RiHome2Line,
+  RiMessage2Line,
   RiNotificationLine,
+  RiProductHuntLine,
   RiTaskLine,
   RiTeamLine,
   RiUserLine,
-  RiMessage2Line,
-  RiProductHuntLine,
-  RiFileList3Line,
-  RiGlobalLine,
-  RiBuildingLine,
-  RiFileTextLine
-} from "react-icons/ri";
+} from 'react-icons/ri';
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
-const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
 
   const isActive = (path: string) => {
@@ -35,7 +35,10 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
     >
       {/* サイドバーヘッダー */}
       <div className="flex items-center justify-between gap-2 px-6 py-5 lg:py-6">
-        <Link href="/management" className="text-2xl font-bold text-gray-900 dark:text-white">
+        <Link
+          href="/management"
+          className="text-2xl font-bold text-gray-900 dark:text-white"
+        >
           管理画面
         </Link>
         <button
@@ -73,7 +76,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/management"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${pathname === '/management' ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiDashboardLine className="text-xl"/>
+                  <RiDashboardLine className="text-xl" />
                   ダッシュボード
                 </Link>
               </li>
@@ -84,7 +87,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/products"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/products') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiProductHuntLine className="text-xl"/>
+                  <RiProductHuntLine className="text-xl" />
                   商品管理
                 </Link>
               </li>
@@ -95,7 +98,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/orders"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/orders') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiFileList3Line className="text-xl"/>
+                  <RiFileList3Line className="text-xl" />
                   注文管理
                 </Link>
               </li>
@@ -106,7 +109,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/todos"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/todos') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiTaskLine className="text-xl"/>
+                  <RiTaskLine className="text-xl" />
                   Todo管理
                 </Link>
               </li>
@@ -117,7 +120,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/users"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/users') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiUserLine className="text-xl"/>
+                  <RiUserLine className="text-xl" />
                   ユーザー管理
                 </Link>
               </li>
@@ -128,7 +131,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/tasks"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/tasks') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiTaskLine className="text-xl"/>
+                  <RiTaskLine className="text-xl" />
                   タスク管理
                 </Link>
               </li>
@@ -139,7 +142,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/teams"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/teams') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiTeamLine className="text-xl"/>
+                  <RiTeamLine className="text-xl" />
                   チーム管理
                 </Link>
               </li>
@@ -150,7 +153,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/notifications"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/notifications') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiNotificationLine className="text-xl"/>
+                  <RiNotificationLine className="text-xl" />
                   通知管理
                 </Link>
               </li>
@@ -161,7 +164,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/chats"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/chats') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiMessage2Line className="text-xl"/>
+                  <RiMessage2Line className="text-xl" />
                   チャット管理
                 </Link>
               </li>
@@ -172,7 +175,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/countries"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/countries') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiGlobalLine className="text-xl"/>
+                  <RiGlobalLine className="text-xl" />
                   国管理
                 </Link>
               </li>
@@ -183,7 +186,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/companies"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/companies') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiBuildingLine className="text-xl"/>
+                  <RiBuildingLine className="text-xl" />
                   会社管理
                 </Link>
               </li>
@@ -194,7 +197,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
                   href="/admin/invoices"
                   className={`group relative flex items-center gap-2.5 rounded-md px-4 py-2 font-medium duration-300 ease-in-out ${isActive('/management/invoices') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-500/10 dark:text-gray-300 dark:hover:bg-blue-500/10'}`}
                 >
-                  <RiFileTextLine className="text-xl"/>
+                  <RiFileTextLine className="text-xl" />
                   領収書管理
                 </Link>
               </li>
@@ -209,7 +212,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
           href="/"
           className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white"
         >
-          <RiHome2Line className="text-lg"/>
+          <RiHome2Line className="text-lg" />
           トップページに戻る
         </Link>
       </div>

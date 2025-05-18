@@ -2,17 +2,17 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
 import {
-  getBaseballTeams,
-  getBaseballTeamById,
   createBaseballTeam,
+  deleteBaseballTeam,
+  getBaseballTeamById,
+  getBaseballTeams,
   updateBaseballTeam,
-  deleteBaseballTeam
 } from './controllers';
 import {
-  baseballTeamSchema,
   baseballTeamResponseSchema,
+  baseballTeamSchema,
   baseballTeamUpdateSchema,
-  errorResponseSchema
+  errorResponseSchema,
 } from './schemas';
 
 // OpenAPIHonoインスタンスを作成
@@ -31,12 +31,12 @@ const getBaseballTeamsRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            teams: z.array(baseballTeamResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            teams: z.array(baseballTeamResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 野球チーム取得ルート
@@ -50,9 +50,9 @@ const getBaseballTeamByIdRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球チームID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -60,20 +60,20 @@ const getBaseballTeamByIdRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: baseballTeamResponseSchema
-          })
-        }
-      }
+            team: baseballTeamResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: '野球チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球チーム作成ルート
@@ -87,10 +87,10 @@ const createBaseballTeamRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: baseballTeamSchema
-        }
-      }
-    }
+          schema: baseballTeamSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -98,20 +98,20 @@ const createBaseballTeamRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: baseballTeamResponseSchema
-          })
-        }
-      }
+            team: baseballTeamResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球チーム更新ルート
@@ -125,16 +125,16 @@ const updateBaseballTeamRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球チームID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: baseballTeamUpdateSchema
-        }
-      }
-    }
+          schema: baseballTeamUpdateSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -142,28 +142,28 @@ const updateBaseballTeamRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            team: baseballTeamResponseSchema
-          })
-        }
-      }
+            team: baseballTeamResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: '野球チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // 野球チーム削除ルート
@@ -177,9 +177,9 @@ const deleteBaseballTeamRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: '野球チームID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -188,20 +188,20 @@ const deleteBaseballTeamRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            message: z.string()
-          })
-        }
-      }
+            message: z.string(),
+          }),
+        },
+      },
     },
     404: {
       description: '野球チームが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

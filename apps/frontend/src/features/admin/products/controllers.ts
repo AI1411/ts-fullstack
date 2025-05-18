@@ -1,5 +1,5 @@
 // Product controllers
-import {productRepository} from './repositories';
+import { productRepository } from './repositories';
 
 // Types
 export interface Product {
@@ -25,7 +25,7 @@ export interface CreateProductInput {
 export const getProducts = async (): Promise<Product[]> => {
   try {
     const response = await productRepository.getProducts();
-    const {products} = await response.json();
+    const { products } = await response.json();
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -34,14 +34,16 @@ export const getProducts = async (): Promise<Product[]> => {
 };
 
 // Create a new product
-export const createProduct = async (productData: CreateProductInput): Promise<Product> => {
+export const createProduct = async (
+  productData: CreateProductInput
+): Promise<Product> => {
   try {
     const response = await productRepository.createProduct(productData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {product} = await response.json();
+    const { product } = await response.json();
     return product;
   } catch (error) {
     console.error('Error creating product:', error);
@@ -56,7 +58,7 @@ export const getProductById = async (id: number): Promise<Product> => {
     if (!response.ok) {
       throw new Error('Product not found');
     }
-    const {product} = await response.json();
+    const { product } = await response.json();
     return product;
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
@@ -65,14 +67,17 @@ export const getProductById = async (id: number): Promise<Product> => {
 };
 
 // Update a product
-export const updateProduct = async (id: number, productData: Partial<CreateProductInput>): Promise<Product> => {
+export const updateProduct = async (
+  id: number,
+  productData: Partial<CreateProductInput>
+): Promise<Product> => {
   try {
     const response = await productRepository.updateProduct(id, productData);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText);
     }
-    const {product} = await response.json();
+    const { product } = await response.json();
     return product;
   } catch (error) {
     console.error(`Error updating product ${id}:`, error);

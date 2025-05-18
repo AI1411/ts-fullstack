@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CompanyList from '@/features/admin/companies/components/CompanyList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Company } from '@/features/admin/companies/controllers';
 import { companyService } from '@/features/admin/companies/services';
-import { Company } from '@/features/admin/companies/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the company service
 vi.mock('@/features/admin/companies/services', () => ({
   companyService: {
     getCompanies: vi.fn(),
     updateCompany: vi.fn(),
-    deleteCompany: vi.fn()
-  }
+    deleteCompany: vi.fn(),
+  },
 }));
 
 // Mock window.confirm
@@ -22,11 +22,14 @@ window.confirm = vi.fn();
 vi.mock('next/link', () => {
   return {
     __esModule: true,
-    default: ({ href, children }: { href: string; children: React.ReactNode }) => (
+    default: ({
+      href,
+      children,
+    }: { href: string; children: React.ReactNode }) => (
       <a href={href} data-testid="next-link">
         {children}
       </a>
-    )
+    ),
   };
 });
 
@@ -67,7 +70,7 @@ describe('CompanyList Component', () => {
   it('should show loading state initially', () => {
     // Mock a delayed response to ensure we see the loading state
     vi.mocked(companyService.getCompanies).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
     );
 
     render(
@@ -81,7 +84,9 @@ describe('CompanyList Component', () => {
 
   it('should show error state when API call fails', async () => {
     // Mock a failed response
-    vi.mocked(companyService.getCompanies).mockRejectedValue(new Error('API error'));
+    vi.mocked(companyService.getCompanies).mockRejectedValue(
+      new Error('API error')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -125,7 +130,7 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
+        updated_at: '2023-01-02T00:00:00Z',
       },
       {
         id: 2,
@@ -136,8 +141,8 @@ describe('CompanyList Component', () => {
         email: 'test2@example.com',
         website: 'https://example2.com',
         created_at: '2023-01-03T00:00:00Z',
-        updated_at: '2023-01-04T00:00:00Z'
-      }
+        updated_at: '2023-01-04T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -176,8 +181,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -198,9 +203,10 @@ describe('CompanyList Component', () => {
 
     // Find and click the expand button
     const expandButtons = screen.getAllByRole('button');
-    const expandButton = expandButtons.find(button => 
-      button.className.includes('text-gray-600') && 
-      button.className.includes('flex items-center')
+    const expandButton = expandButtons.find(
+      (button) =>
+        button.className.includes('text-gray-600') &&
+        button.className.includes('flex items-center')
     );
 
     if (expandButton) {
@@ -237,8 +243,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -284,8 +290,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -333,8 +339,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     const updatedCompany = {
@@ -346,7 +352,7 @@ describe('CompanyList Component', () => {
       email: 'updated@example.com',
       website: 'https://example1.com',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-05T00:00:00Z'
+      updated_at: '2023-01-05T00:00:00Z',
     };
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -392,7 +398,7 @@ describe('CompanyList Component', () => {
         phone: '555-555-5555',
         description: 'Description 1',
         address: 'Address 1',
-        website: 'https://example1.com'
+        website: 'https://example1.com',
       });
     });
 
@@ -415,8 +421,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -467,8 +473,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -491,7 +497,9 @@ describe('CompanyList Component', () => {
     fireEvent.click(deleteButton);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('本当にこの会社を削除しますか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      '本当にこの会社を削除しますか？'
+    );
 
     // Check if deleteCompany was called with correct ID
     await waitFor(() => {
@@ -511,8 +519,8 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
@@ -534,7 +542,9 @@ describe('CompanyList Component', () => {
     fireEvent.click(deleteButton);
 
     // Check if confirm was called
-    expect(window.confirm).toHaveBeenCalledWith('本当にこの会社を削除しますか？');
+    expect(window.confirm).toHaveBeenCalledWith(
+      '本当にこの会社を削除しますか？'
+    );
 
     // Check that deleteCompany was not called
     expect(companyService.deleteCompany).not.toHaveBeenCalled();
@@ -556,12 +566,14 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
-    vi.mocked(companyService.updateCompany).mockRejectedValue(new Error('Update failed'));
+    vi.mocked(companyService.updateCompany).mockRejectedValue(
+      new Error('Update failed')
+    );
 
     // Mock window.alert
     const originalAlert = window.alert;
@@ -612,12 +624,14 @@ describe('CompanyList Component', () => {
         email: 'test1@example.com',
         website: 'https://example1.com',
         created_at: '2023-01-01T00:00:00Z',
-        updated_at: '2023-01-02T00:00:00Z'
-      }
+        updated_at: '2023-01-02T00:00:00Z',
+      },
     ];
 
     vi.mocked(companyService.getCompanies).mockResolvedValue(mockCompanies);
-    vi.mocked(companyService.deleteCompany).mockRejectedValue(new Error('Delete failed'));
+    vi.mocked(companyService.deleteCompany).mockRejectedValue(
+      new Error('Delete failed')
+    );
     vi.mocked(window.confirm).mockReturnValue(true);
 
     // Mock window.alert

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
 import Account from '@/features/user/account/components/Account';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the child components
 vi.mock('@/features/user/account/components/AccountProfile', () => ({
@@ -17,7 +17,9 @@ vi.mock('@/features/user/account/components/AccountOrders', () => ({
 }));
 
 vi.mock('@/features/user/account/components/AccountWishlist', () => ({
-  default: vi.fn(() => <div data-testid="account-wishlist">Wishlist Content</div>),
+  default: vi.fn(() => (
+    <div data-testid="account-wishlist">Wishlist Content</div>
+  )),
 }));
 
 vi.mock('@/features/user/account/components/AccountSettings', () => ({
@@ -46,12 +48,17 @@ describe('Account Component', () => {
 
     // Check if user information is displayed
     expect(screen.getByTestId('profile-name')).toHaveTextContent('山田 太郎');
-    expect(screen.getByTestId('profile-email')).toHaveTextContent('yamada.taro@example.com');
+    expect(screen.getByTestId('profile-email')).toHaveTextContent(
+      'yamada.taro@example.com'
+    );
 
     // Check if the avatar is displayed
     const avatar = screen.getByAltText('山田 太郎');
     expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveAttribute('src', expect.stringContaining('unsplash.com'));
+    expect(avatar).toHaveAttribute(
+      'src',
+      expect.stringContaining('unsplash.com')
+    );
   });
 
   it('should render all navigation tabs', () => {
@@ -135,10 +142,14 @@ describe('Account Component', () => {
 
     // Check if the profile component receives the correct user data
     expect(screen.getByTestId('profile-name').textContent).toBe('山田 太郎');
-    expect(screen.getByTestId('profile-email').textContent).toBe('yamada.taro@example.com');
+    expect(screen.getByTestId('profile-email').textContent).toBe(
+      'yamada.taro@example.com'
+    );
 
     // Switch to settings tab and check if it receives the correct user data
     fireEvent.click(screen.getByText('設定'));
-    expect(screen.getByTestId('settings-email').textContent).toBe('yamada.taro@example.com');
+    expect(screen.getByTestId('settings-email').textContent).toBe(
+      'yamada.taro@example.com'
+    );
   });
 });

@@ -1,11 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import ProductCard from '@/features/user/products/components/ProductCard';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+  default: ({
+    children,
+    href,
+  }: { children: React.ReactNode; href: string }) => (
     <a href={href} data-testid="product-link">
       {children}
     </a>
@@ -44,7 +47,9 @@ describe('ProductCard Component', () => {
 
     // Check if the component renders without crashing
     expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('This is a test product description')).toBeInTheDocument();
+    expect(
+      screen.getByText('This is a test product description')
+    ).toBeInTheDocument();
     expect(screen.getByText('¥1,000')).toBeInTheDocument();
 
     // Check if the image is rendered with correct props
@@ -75,13 +80,16 @@ describe('ProductCard Component', () => {
   it('should truncate long descriptions', () => {
     const propsWithLongDescription = {
       ...mockProps,
-      description: 'This is a very long product description that should be truncated in the UI. It contains a lot of text that will not be fully displayed.',
+      description:
+        'This is a very long product description that should be truncated in the UI. It contains a lot of text that will not be fully displayed.',
     };
 
     render(<ProductCard {...propsWithLongDescription} />);
 
     // Check if the description is rendered
-    const description = screen.getByText(/This is a very long product description/);
+    const description = screen.getByText(
+      /This is a very long product description/
+    );
     expect(description).toBeInTheDocument();
 
     // Check if the description has the line-clamp-2 class

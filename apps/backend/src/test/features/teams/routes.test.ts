@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { app } from '../../../app';
-import teamRoutes from '../../../features/teams/routes';
 import * as controllers from '../../../features/teams/controllers';
+import teamRoutes from '../../../features/teams/routes';
 
 // Mock the controllers
 vi.mock('../../../features/teams/controllers', () => ({
@@ -9,7 +9,7 @@ vi.mock('../../../features/teams/controllers', () => ({
   getTeams: vi.fn().mockImplementation(() => ({ status: 200 })),
   getTeamById: vi.fn().mockImplementation(() => ({ status: 200 })),
   updateTeam: vi.fn().mockImplementation(() => ({ status: 200 })),
-  deleteTeam: vi.fn().mockImplementation(() => ({ status: 204 }))
+  deleteTeam: vi.fn().mockImplementation(() => ({ status: 204 })),
 }));
 
 describe('Team Routes', () => {
@@ -23,7 +23,7 @@ describe('Team Routes', () => {
       vi.mocked(controllers.getTeams).mockResolvedValueOnce(mockResponse);
 
       const res = await teamRoutes.request('/teams', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -40,7 +40,7 @@ describe('Team Routes', () => {
       vi.mocked(controllers.getTeamById).mockResolvedValueOnce(mockResponse);
 
       const res = await teamRoutes.request('/teams/1', {
-        method: 'GET'
+        method: 'GET',
       });
 
       // Set the status code manually for testing
@@ -59,12 +59,12 @@ describe('Team Routes', () => {
       const res = await teamRoutes.request('/teams', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: 'New Team',
-          description: 'New Team Description'
-        })
+          description: 'New Team Description',
+        }),
       });
 
       // Set the status code manually for testing
@@ -83,12 +83,12 @@ describe('Team Routes', () => {
       const res = await teamRoutes.request('/teams/1', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: 'Updated Team',
-          description: 'Updated Team Description'
-        })
+          description: 'Updated Team Description',
+        }),
       });
 
       // Set the status code manually for testing
@@ -105,7 +105,7 @@ describe('Team Routes', () => {
       vi.mocked(controllers.deleteTeam).mockResolvedValueOnce(mockResponse);
 
       const res = await teamRoutes.request('/teams/1', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Set the status code manually for testing

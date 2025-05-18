@@ -1,6 +1,6 @@
 // Todo repositories
-import {client} from '@/common/utils/client';
-import {CreateTodoInput} from './controllers';
+import { client } from '@/common/utils/client';
+import type { CreateTodoInput } from './controllers';
 
 // Todo repository
 export const todoRepository = {
@@ -19,22 +19,22 @@ export const todoRepository = {
   // Get a todo by ID
   getTodoById: async (id: number) => {
     return client.todos[':id'].$get({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
   },
 
   // Update a todo
   updateTodo: async (id: number, todoData: Partial<CreateTodoInput>) => {
     return client.todos[':id'].$put({
-      param: {id: id.toString()},
-      json: todoData
+      param: { id: id.toString() },
+      json: todoData,
     });
   },
 
   // Delete a todo
   deleteTodo: async (id: number) => {
     return client.todos[':id'].$delete({
-      param: {id: id.toString()}
+      param: { id: id.toString() },
     });
-  }
+  },
 };

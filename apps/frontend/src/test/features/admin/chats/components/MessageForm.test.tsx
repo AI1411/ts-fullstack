@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MessageForm from '@/features/admin/chats/components/MessageForm';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { chatService } from '@/features/admin/chats/services';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the chat service
 vi.mock('@/features/admin/chats/services', () => ({
   chatService: {
-    createChatMessage: vi.fn()
-  }
+    createChatMessage: vi.fn(),
+  },
 }));
 
 describe('MessageForm Component', () => {
@@ -33,7 +33,9 @@ describe('MessageForm Component', () => {
       </QueryClientProvider>
     );
 
-    expect(screen.getByPlaceholderText('メッセージを入力...')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('メッセージを入力...')
+    ).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeDisabled(); // Button should be disabled initially
   });
@@ -59,15 +61,15 @@ describe('MessageForm Component', () => {
     );
 
     const input = screen.getByPlaceholderText('メッセージを入力...');
-    
+
     // Enter some text
     fireEvent.change(input, { target: { value: 'Hello' } });
     expect(screen.getByRole('button')).not.toBeDisabled();
-    
+
     // Clear the text
     fireEvent.change(input, { target: { value: '' } });
     expect(screen.getByRole('button')).toBeDisabled();
-    
+
     // Enter only whitespace
     fireEvent.change(input, { target: { value: '   ' } });
     expect(screen.getByRole('button')).toBeDisabled();
@@ -95,7 +97,7 @@ describe('MessageForm Component', () => {
       content: 'Hello',
       is_read: false,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -107,23 +109,23 @@ describe('MessageForm Component', () => {
     // Enter a message
     const input = screen.getByPlaceholderText('メッセージを入力...');
     fireEvent.change(input, { target: { value: 'Hello' } });
-    
+
     // Submit the form
     const form = screen.getByRole('form');
     fireEvent.submit(form);
-    
+
     // Check for loading state
     expect(screen.getByRole('status')).toBeInTheDocument();
     expect(input).toBeDisabled();
-    
+
     // Wait for the submission to complete
     await waitFor(() => {
       expect(chatService.createChatMessage).toHaveBeenCalledWith(mockChatId, {
         sender_id: 1,
-        content: 'Hello'
+        content: 'Hello',
       });
     });
-    
+
     // Input should be cleared
     expect(input).toHaveValue('');
     expect(input).not.toBeDisabled();
@@ -133,9 +135,11 @@ describe('MessageForm Component', () => {
     // Mock failed message creation
     const mockError = new Error('Failed to send message');
     vi.mocked(chatService.createChatMessage).mockRejectedValue(mockError);
-    
+
     // Spy on console.error
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -146,11 +150,11 @@ describe('MessageForm Component', () => {
     // Enter a message
     const input = screen.getByPlaceholderText('メッセージを入力...');
     fireEvent.change(input, { target: { value: 'Hello' } });
-    
+
     // Submit the form
     const form = screen.getByRole('form');
     fireEvent.submit(form);
-    
+
     // Wait for the error to be logged
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -158,11 +162,11 @@ describe('MessageForm Component', () => {
         mockError
       );
     });
-    
+
     // Input should not be cleared and should be enabled
     expect(input).toHaveValue('Hello');
     expect(input).not.toBeDisabled();
-    
+
     consoleErrorSpy.mockRestore();
   });
 
@@ -175,7 +179,7 @@ describe('MessageForm Component', () => {
       content: 'Hello',
       is_read: false,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -187,16 +191,16 @@ describe('MessageForm Component', () => {
     // Enter a message with whitespace
     const input = screen.getByPlaceholderText('メッセージを入力...');
     fireEvent.change(input, { target: { value: '  Hello  ' } });
-    
+
     // Submit the form
     const form = screen.getByRole('form');
     fireEvent.submit(form);
-    
+
     // Wait for the submission to complete
     await waitFor(() => {
       expect(chatService.createChatMessage).toHaveBeenCalledWith(mockChatId, {
         sender_id: 1,
-        content: 'Hello' // Whitespace should be trimmed
+        content: 'Hello', // Whitespace should be trimmed
       });
     });
   });
@@ -210,7 +214,7 @@ describe('MessageForm Component', () => {
       content: 'Hello',
       is_read: false,
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     });
 
     render(
@@ -222,16 +226,16 @@ describe('MessageForm Component', () => {
     // Enter a message
     const input = screen.getByPlaceholderText('メッセージを入力...');
     fireEvent.change(input, { target: { value: 'Hello' } });
-    
+
     // Click the send button
     const button = screen.getByRole('button');
     fireEvent.click(button);
-    
+
     // Wait for the submission to complete
     await waitFor(() => {
       expect(chatService.createChatMessage).toHaveBeenCalledWith(mockChatId, {
         sender_id: 1,
-        content: 'Hello'
+        content: 'Hello',
       });
     });
   });

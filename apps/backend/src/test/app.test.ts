@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { OpenAPIHono } from '@hono/zod-openapi';
 import { swaggerUI } from '@hono/swagger-ui';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
+import { describe, expect, it } from 'vitest';
 
 // Simple test to verify the app exists
 describe('App Configuration', () => {

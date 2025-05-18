@@ -1,58 +1,70 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { z } from '@hono/zod-openapi';
-import { createUser, deleteUser, getUserById, getUsers, updateUser } from './controllers';
+import {
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser,
+} from './controllers';
 
 // OpenAPIHonoインスタンスを作成
 const userRoutes = new OpenAPIHono();
 
 // OpenAPI用のユーザースキーマを定義
-const userSchema = z.object({
-  name: z.string().min(2).openapi({
-    description: 'ユーザー名',
-    example: '山田太郎'
-  }),
-  email: z.string().email().openapi({
-    description: 'メールアドレス',
-    example: 'user@example.com'
-  }),
-  password: z.string().min(6).openapi({
-    description: 'パスワード（6文字以上）',
-    example: 'password123'
+const userSchema = z
+  .object({
+    name: z.string().min(2).openapi({
+      description: 'ユーザー名',
+      example: '山田太郎',
+    }),
+    email: z.string().email().openapi({
+      description: 'メールアドレス',
+      example: 'user@example.com',
+    }),
+    password: z.string().min(6).openapi({
+      description: 'パスワード（6文字以上）',
+      example: 'password123',
+    }),
   })
-}).openapi('User');
+  .openapi('User');
 
 // レスポンス用のユーザースキーマ（IDを含む）
-const userResponseSchema = z.object({
-  id: z.number().openapi({
-    description: 'ユーザーID',
-    example: 1
-  }),
-  name: z.string().openapi({
-    description: 'ユーザー名',
-    example: '山田太郎'
-  }),
-  email: z.string().email().openapi({
-    description: 'メールアドレス',
-    example: 'user@example.com'
-  }),
-  created_at: z.string().openapi({
-    description: '作成日時',
-    example: '2023-01-01T00:00:00Z'
-  }),
-  updated_at: z.string().openapi({
-    description: '更新日時',
-    example: '2023-01-01T00:00:00Z'
+const userResponseSchema = z
+  .object({
+    id: z.number().openapi({
+      description: 'ユーザーID',
+      example: 1,
+    }),
+    name: z.string().openapi({
+      description: 'ユーザー名',
+      example: '山田太郎',
+    }),
+    email: z.string().email().openapi({
+      description: 'メールアドレス',
+      example: 'user@example.com',
+    }),
+    created_at: z.string().openapi({
+      description: '作成日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
+    updated_at: z.string().openapi({
+      description: '更新日時',
+      example: '2023-01-01T00:00:00Z',
+    }),
   })
-}).openapi('UserResponse');
+  .openapi('UserResponse');
 
 // エラーレスポンススキーマ
-const errorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'エラーメッセージ',
-    example: '入力が無効です'
+const errorResponseSchema = z
+  .object({
+    error: z.string().openapi({
+      description: 'エラーメッセージ',
+      example: '入力が無効です',
+    }),
   })
-}).openapi('ErrorResponse');
+  .openapi('ErrorResponse');
 
 // ユーザー一覧取得ルート
 const getUsersRoute = createRoute({
@@ -67,12 +79,12 @@ const getUsersRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            users: z.array(userResponseSchema)
-          })
-        }
-      }
-    }
-  }
+            users: z.array(userResponseSchema),
+          }),
+        },
+      },
+    },
+  },
 });
 
 // 単一のユーザー取得ルート
@@ -86,9 +98,9 @@ const getUserRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -96,20 +108,20 @@ const getUserRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            user: userResponseSchema
-          })
-        }
-      }
+            user: userResponseSchema,
+          }),
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ユーザー作成ルート
@@ -123,10 +135,10 @@ const createUserRoute = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: userSchema
-        }
-      }
-    }
+          schema: userSchema,
+        },
+      },
+    },
   },
   responses: {
     201: {
@@ -134,20 +146,20 @@ const createUserRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            user: userResponseSchema
-          })
-        }
-      }
+            user: userResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ユーザー更新ルート
@@ -161,16 +173,16 @@ const updateUserRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
+        example: '1',
+      }),
     }),
     body: {
       content: {
         'application/json': {
-          schema: userSchema
-        }
-      }
-    }
+          schema: userSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -178,28 +190,28 @@ const updateUserRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            user: userResponseSchema
-          })
-        }
-      }
+            user: userResponseSchema,
+          }),
+        },
+      },
     },
     400: {
       description: 'バリデーションエラー',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
+          schema: errorResponseSchema,
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ユーザー削除ルート
@@ -213,9 +225,9 @@ const deleteUserRoute = createRoute({
     params: z.object({
       id: z.string().openapi({
         description: 'ユーザーID',
-        example: '1'
-      })
-    })
+        example: '1',
+      }),
+    }),
   },
   responses: {
     200: {
@@ -225,21 +237,21 @@ const deleteUserRoute = createRoute({
           schema: z.object({
             message: z.string().openapi({
               description: '成功メッセージ',
-              example: 'User deleted successfully'
-            })
-          })
-        }
-      }
+              example: 'User deleted successfully',
+            }),
+          }),
+        },
+      },
     },
     404: {
       description: 'ユーザーが見つかりません',
       content: {
         'application/json': {
-          schema: errorResponseSchema
-        }
-      }
-    }
-  }
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
 });
 
 // ルートの実装

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import OrderList from "@/features/admin/orders/components/OrderList";
-import OrderForm from "@/features/admin/orders/components/OrderForm";
+import OrderForm from '@/features/admin/orders/components/OrderForm';
+import OrderList from '@/features/admin/orders/components/OrderList';
 
 export default function OrdersPage() {
   return (

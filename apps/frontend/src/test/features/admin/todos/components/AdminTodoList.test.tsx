@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AdminTodoList from '@/features/admin/todos/components/AdminTodoList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Todo } from '@/features/admin/todos/controllers';
 import { todoService } from '@/features/admin/todos/services';
-import { Todo } from '@/features/admin/todos/controllers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the services
 vi.mock('@/features/admin/todos/services', () => ({
   todoService: {
     getTodos: vi.fn(),
     updateTodo: vi.fn(),
-    deleteTodo: vi.fn()
-  }
+    deleteTodo: vi.fn(),
+  },
 }));
 
 describe('AdminTodoList Component', () => {
@@ -24,7 +24,7 @@ describe('AdminTodoList Component', () => {
       description: 'Description 1',
       status: 'PENDING',
       created_at: '2023-01-01T00:00:00Z',
-      updated_at: '2023-01-01T00:00:00Z'
+      updated_at: '2023-01-01T00:00:00Z',
     },
     {
       id: 2,
@@ -33,7 +33,7 @@ describe('AdminTodoList Component', () => {
       description: 'Description 2',
       status: 'IN_PROGRESS',
       created_at: '2023-01-02T00:00:00Z',
-      updated_at: '2023-01-02T00:00:00Z'
+      updated_at: '2023-01-02T00:00:00Z',
     },
     {
       id: 3,
@@ -42,8 +42,8 @@ describe('AdminTodoList Component', () => {
       description: 'Description 3',
       status: 'COMPLETED',
       created_at: '2023-01-03T00:00:00Z',
-      updated_at: '2023-01-03T00:00:00Z'
-    }
+      updated_at: '2023-01-03T00:00:00Z',
+    },
   ];
 
   beforeEach(() => {
@@ -73,13 +73,18 @@ describe('AdminTodoList Component', () => {
 
     // Check if the component renders without crashing
     // The component might be in a loading state or showing the table
-    const component = screen.queryByTestId('loading') || screen.queryByTestId('admin-todo-list') || screen.queryByTestId('admin-todo-table');
+    const component =
+      screen.queryByTestId('loading') ||
+      screen.queryByTestId('admin-todo-list') ||
+      screen.queryByTestId('admin-todo-table');
     expect(component).toBeInTheDocument();
   });
 
   it('should show loading state initially', () => {
     // Mock getTodos to return a promise that never resolves
-    vi.mocked(todoService.getTodos).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(todoService.getTodos).mockImplementation(
+      () => new Promise(() => {})
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -94,7 +99,9 @@ describe('AdminTodoList Component', () => {
 
   it('should show error state when fetching todos fails', async () => {
     // Mock getTodos to reject with an error
-    vi.mocked(todoService.getTodos).mockRejectedValue(new Error('Failed to fetch todos'));
+    vi.mocked(todoService.getTodos).mockRejectedValue(
+      new Error('Failed to fetch todos')
+    );
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -221,7 +228,7 @@ describe('AdminTodoList Component', () => {
       ...mockTodos[0],
       title: 'Updated Todo',
       description: 'Updated Description',
-      status: 'COMPLETED'
+      status: 'COMPLETED',
     };
     vi.mocked(todoService.updateTodo).mockResolvedValue(updatedTodo);
 
@@ -245,7 +252,9 @@ describe('AdminTodoList Component', () => {
     fireEvent.change(titleInput, { target: { value: 'Updated Todo' } });
 
     const descriptionInput = screen.getByDisplayValue('Description 1');
-    fireEvent.change(descriptionInput, { target: { value: 'Updated Description' } });
+    fireEvent.change(descriptionInput, {
+      target: { value: 'Updated Description' },
+    });
 
     const statusSelect = screen.getByRole('combobox');
     fireEvent.change(statusSelect, { target: { value: 'COMPLETED' } });
@@ -259,7 +268,7 @@ describe('AdminTodoList Component', () => {
       expect(todoService.updateTodo).toHaveBeenCalledWith(1, {
         title: 'Updated Todo',
         description: 'Updated Description',
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       });
     });
   });
